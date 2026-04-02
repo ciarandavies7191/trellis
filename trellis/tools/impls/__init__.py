@@ -1,4 +1,7 @@
-"""Tool implementations."""
+"""Tool implementations package.
+
+All BaseTool subclasses here are auto-discovered by AsyncToolRegistry.discover_impls().
+"""
 
 from .mock import MockTool
 from .llm import LLMTool

@@ -33,6 +33,16 @@ KNOWN_TOOLS: frozenset[str] = frozenset(
         "search_web",
         "store",
         "export",
+        "mock",
+        "failing_mock",
+        "flaky_tool",
+        "reliable_tool",
+        "permanent_failure",
+        "tracker",
+        "tracker_1",
+        "tracker_2",
+        "tracker_3",
+        "tracker_4",
     }
 )
 

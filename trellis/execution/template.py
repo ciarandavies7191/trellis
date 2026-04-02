@@ -74,6 +74,17 @@ class ResolutionContext:
     session:         dict[str, Any] = field(default_factory=dict)
     item:            Any            = None
 
+    def set_task_output(self, task_id: str, output: Any) -> None:
+        """Record a completed task's output in the context."""
+        self.task_outputs[task_id] = output
+
+    def with_item(self, item: Any) -> ResolutionContext:
+        """Return a shallow copy of this context with {{item}} bound to item."""
+        import copy
+        ctx = copy.copy(self)
+        ctx.item = item
+        return ctx
+
 
 # ---------------------------------------------------------------------------
 # Field path walking

@@ -14,14 +14,11 @@ trellis/
 ├── README.md                    # Project README with quick start guide
 ├── LICENSE                      # Project license
 ├── pyproject.toml               # Single source of truth for dependencies & build config
+├── uv.lock                      # Lock file for uv package manager
 │
-├── .github/
-│   └── workflows/
-│       ├── ci.yml               # GitHub Actions: lint, test, type-check on PR
-│       └── publish.yml          # GitHub Actions: PyPI publish on tag
-│
-├── core/                        # ⭐ Core library (shared by all entry points)
+├── trellis/                     # ⭐ Core library (shared by all entry points)
 │   ├── __init__.py              # Exports all public APIs
+│   ├── exceptions.py            # Custom exception classes
 │   ├── models/                  # Pydantic DSL models
 │   │   ├── __init__.py
 │   │   ├── plan.py              # Plan model (intermediate representation)
@@ -72,6 +69,7 @@ trellis/
 │
 ├── tests/                       # Comprehensive test suite
 │   ├── __init__.py
+│   ├── conftest.py              # Pytest configuration and fixtures
 │   ├── unit/                    # Unit tests
 │   │   ├── __init__.py
 │   │   ├── models/
@@ -89,7 +87,7 @@ trellis/
 │   │   ├── __init__.py
 │   │   └── pipelines/
 │   │       ├── __init__.py
-│   │       └── test_full_pipeline.py
+│       └── test_full_pipeline.py
 │   └── fixtures/                # Test fixtures & data
 │       ├── __init__.py
 │       └── yaml/
@@ -98,21 +96,29 @@ trellis/
 │
 ├── docs/                        # Documentation
 │   ├── architecture.md          # Architecture overview
-│   ├── dsl-spec-v1.3.md         # DSL specification (preserved)
-│   └── pipeline-dsl-v1.md       # Pipeline DSL reference (preserved)
+│   ├── pipeline-dsl-v1.md       # Pipeline DSL reference (preserved)
+│   └── PROJECT_STRUCTURE.md     # This file
 │
-└── scripts/                     # Utility scripts
-    ├── smoke_test.sh            # Smoke test script
-    └── benchmark.py             # Model benchmarking harness
+├── scripts/                     # Utility scripts
+│   ├── smoke_test.sh            # Smoke test script
+│   └── benchmark.py             # Model benchmarking harness
+│
+└── trellis.egg-info/            # Package metadata (generated)
+    ├── dependency_links.txt
+    ├── entry_points.txt
+    ├── PKG-INFO
+    ├── requires.txt
+    ├── SOURCES.txt
+    └── top_level.txt
 ```
 
 ---
 
 ## Core Components Explained
 
-### `core/` — The Shared Library
+### `trellis/` — The Shared Library
 
-All entry points (API, CLI, MCP) import from `core/`. This ensures:
+All entry points (API, CLI, MCP) import from `trellis/`. This ensures:
 - **Single source of truth** for domain logic
 - **Easy testing** in isolation
 - **Consistency** across entry points
@@ -133,7 +139,7 @@ Thin FastAPI layer exposing core functionality:
 
 **Start server:**
 ```bash
-python -m trellis_api.main
+python -m trelis_api.main
 # Server runs on http://localhost:8000
 ```
 
@@ -210,6 +216,7 @@ pytest tests/integration/ -v  # Integration tests
 **Dev dependencies**:
 - `pytest>=7.0` — Testing framework
 - `pytest-cov>=4.0` — Coverage reporting
+- `pytest-asyncio>=0.21.0` — Async test support
 - `black>=23.0` — Code formatting
 - `isort>=5.12` — Import sorting
 - `mypy>=1.0` — Type checking
@@ -232,7 +239,7 @@ pytest tests/ -v
 
 ### 3. Start API server
 ```bash
-python -m trellis_api.main
+python -m trelis_api.main
 ```
 
 ### 4. Use CLI
@@ -268,7 +275,7 @@ trellis --help
 
 3. **Start the API** and test endpoints:
    ```bash
-   python -m trellis_api.main
+   python -m trelis_api.main
    curl http://localhost:8000/health
    ```
 
