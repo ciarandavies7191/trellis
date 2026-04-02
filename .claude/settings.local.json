@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//mnt/d/projects/**)",
+      "Bash(python -m pytest tests/unit/validation/test_graph.py -v)",
+      "Bash(pip install:*)",
+      "Bash(.venv/Scripts/pip install:*)",
+      "Bash(.venv/Scripts/python -m pytest tests/unit/validation/test_graph.py -v)",
+      "Bash(/d/projects/trellis/.venv/Scripts/pip install:*)",
+      "Bash(/d/projects/trellis/.venv/Scripts/python -m pytest tests/unit/validation/test_graph.py -v)",
+      "Bash(\"D:/projects/trellis/.venv/Scripts/python.exe\" -m ensurepip)",
+      "Bash(\"D:/projects/trellis/.venv/Scripts/python.exe\" -m pip install pytest)",
+      "Bash(\"D:/projects/trellis/.venv/Scripts/python.exe\" -m pip install pytest pydantic pyyaml -q)",
+      "Bash(\"D:/projects/trellis/.venv/Scripts/python.exe\" -m pytest tests/unit/validation/test_graph.py -v)"
+    ]
+  }
+}
