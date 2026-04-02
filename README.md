@@ -62,7 +62,7 @@ results = executor.execute({})
 
 ## Architecture
 
-See [docs/architecture.md](docs/architecture.md) for detailed architecture documentation.
+See [docs/architecture.md](docs/ARCHITECTURE.md) for detailed architecture documentation.
 
 ## Project Structure
 

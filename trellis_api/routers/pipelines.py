@@ -10,7 +10,7 @@ from trellis_api.schemas import (
 )
 from trellis.models.pipeline import Pipeline
 from trellis.execution.orchestrator import Orchestrator
-from trellis.execution.dag import ExecutionOptions
+from trellis.execution.dag import ExecutionOptions, TaskError
 from trellis.tools.registry import build_default_registry
 
 router = APIRouter()
@@ -47,13 +47,24 @@ async def run_pipeline(req: PipelineRunRequest) -> PipelineRunResponse:
     )
 
     orch = Orchestrator()
-    result = await orch.run_pipeline(
-        pipeline,
-        inputs=req.inputs,
-        session=req.session,
-        options=options,
-        collect_events=req.collect_events,
-    )
+    try:
+        result = await orch.run_pipeline(
+            pipeline,
+            inputs=req.inputs,
+            session=req.session,
+            options=options,
+            collect_events=req.collect_events,
+        )
+    except TaskError as exc:
+        # If the underlying cause is a RuntimeError (e.g., provider/model misconfiguration),
+        # return a 400 with a clear message instead of a generic 500.
+        cause = getattr(exc, "cause", None)
+        if isinstance(cause, RuntimeError):
+            raise HTTPException(status_code=400, detail=str(cause)) from exc
+        # Otherwise treat as server error
+        raise HTTPException(status_code=500, detail=f"Task {exc.task_id} failed: {cause}") from exc
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"Execution failed: {exc}") from exc
 
     return PipelineRunResponse(
         outputs=result.outputs,
@@ -61,4 +72,3 @@ async def run_pipeline(req: PipelineRunRequest) -> PipelineRunResponse:
         tasks_executed=result.tasks_executed,
         events=result.events if req.collect_events else None,
     )
-
