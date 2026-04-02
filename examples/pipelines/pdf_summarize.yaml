@@ -1,0 +1,20 @@
+pipeline:
+  id: pdf_summarize
+  goal: "Load a PDF from URL and summarize key points"
+  tasks:
+    - id: ingest_pdf
+      tool: load_document
+      inputs:
+        path: "https://www.princexml.com/samples/newsletter/drylab.pdf"
+
+    - id: summarize_pdf
+      tool: llm_job
+      inputs:
+        prompt: |
+          Summarize the following newsletter PDF in 5 concise bullet points for a busy executive.
+          Focus on key announcements, product updates, and any notable metrics.
+
+          {{ingest_pdf.output.handle.content_preview}}
+        temperature: 0.3
+        max_tokens: 256
+

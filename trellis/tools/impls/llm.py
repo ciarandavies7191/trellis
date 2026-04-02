@@ -2,11 +2,13 @@
 
 Provider-agnostic `llm_job` tool with OpenAI and Ollama backends.
 Configuration via environment variables (override per-call via inputs):
-- TRELLIS_LLM_PROVIDER: "openai" | "ollama" (default: "openai")
-- OPENAI_API_KEY: API key for OpenAI
-- OPENAI_MODEL: default model (e.g., "gpt-4o-mini" or "gpt-3.5-turbo")
-- OLLAMA_HOST: base URL for Ollama (default: http://localhost:11434)
-- OLLAMA_MODEL: default model (e.g., "llama3")
+ - TRELLIS_LLM_PROVIDER: "openai" | "ollama" (default: "openai")
+ - OPENAI_API_KEY: API key for OpenAI
+ - OPENAI_MODEL: default model (e.g., "gpt-4o-mini" or "gpt-3.5-turbo")
+ - OLLAMA_HOST: base URL for Ollama (default: http://localhost:11434)
+ - OLLAMA_MODEL: default model (e.g., "llama3")
+ - ANTHROPIC_API_KEY: API key for Anthropic
+ - ANTHROPIC_MODEL: default model (e.g., "claude-3-haiku-20240307")
 """
 
 from __future__ import annotations
@@ -134,6 +136,80 @@ class _OllamaProvider(_ProviderBase):
             raise RuntimeError(f"Ollama network error: {e.reason}")
 
 
+class _AnthropicProvider(_ProviderBase):
+    def __init__(self, api_key: Optional[str]) -> None:
+        self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
+        if not self.api_key:
+            raise RuntimeError("ANTHROPIC_API_KEY is not set")
+
+    def generate(
+        self,
+        prompt: str,
+        *,
+        model: Optional[str],
+        temperature: Optional[float],
+        max_tokens: Optional[int],
+    ) -> str:
+        # Try SDK first; fall back to HTTP if unavailable
+        try:
+            from anthropic import Anthropic  # type: ignore
+
+            client = Anthropic(api_key=self.api_key)
+            msg = client.messages.create(
+                model=model or os.environ.get("ANTHROPIC_MODEL", "claude-3-haiku-20240307"),
+                max_tokens=max_tokens or 512,
+                temperature=temperature,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            # content is a list of blocks; take text of first
+            for block in getattr(msg, "content", []) or []:
+                text = getattr(block, "text", None)
+                if text:
+                    return text
+            return ""
+        except Exception:
+            return self._http_messages(prompt, model, temperature, max_tokens)
+
+    def _http_messages(
+        self,
+        prompt: str,
+        model: Optional[str],
+        temperature: Optional[float],
+        max_tokens: Optional[int],
+    ) -> str:
+        url = "https://api.anthropic.com/v1/messages"
+        payload: Dict[str, Any] = {
+            "model": model or os.environ.get("ANTHROPIC_MODEL", "claude-3-haiku-20240307"),
+            "max_tokens": max_tokens or 512,
+            "messages": [{"role": "user", "content": prompt}],
+        }
+        if temperature is not None:
+            payload["temperature"] = temperature
+        req = urllib.request.Request(
+            url,
+            method="POST",
+            headers={
+                "Content-Type": "application/json",
+                "x-api-key": self.api_key,
+                "anthropic-version": "2023-06-01",
+            },
+            data=json.dumps(payload).encode("utf-8"),
+        )
+        try:
+            with urllib.request.urlopen(req) as resp:
+                body = json.loads(resp.read().decode("utf-8"))
+                # Find text in content blocks
+                for block in body.get("content", []) or []:
+                    text = block.get("text")
+                    if text:
+                        return text
+                return ""
+        except urllib.error.HTTPError as e:
+            raise RuntimeError(f"Anthropic HTTP error: {e.code} {e.read().decode('utf-8', errors='ignore')}")
+        except urllib.error.URLError as e:
+            raise RuntimeError(f"Anthropic network error: {e.reason}")
+
+
 class LLMTool(BaseTool):
     """Provider-agnostic tool that delegates to OpenAI or Ollama."""
 
@@ -147,7 +223,11 @@ class LLMTool(BaseTool):
             return _OpenAIProvider(api_key=os.environ.get("OPENAI_API_KEY"))
         if which == "ollama":
             return _OllamaProvider(host=os.environ.get("OLLAMA_HOST"))
-        raise RuntimeError(f"Unsupported TRELLIS_LLM_PROVIDER: {which!r}. Use 'openai' or 'ollama'.")
+        if which in ("anthropic", "claude"):
+            return _AnthropicProvider(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+        raise RuntimeError(
+            f"Unsupported TRELLIS_LLM_PROVIDER: {which!r}. Use 'openai' | 'ollama' | 'anthropic'."
+        )
 
     def execute(
         self,
@@ -204,7 +284,7 @@ class LLMTool(BaseTool):
             ),
             "provider": ToolInput(
                 name="provider",
-                description="LLM provider override ('openai'|'ollama')",
+                description="LLM provider override ('openai'|'ollama'|'anthropic')",
                 required=False,
                 default=None,
             ),

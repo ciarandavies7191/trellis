@@ -1,33 +1,237 @@
-# Pipeline DSL v1 — Reference Specification
+# Pipeline DSL v1.3 — Reference Specification
 
 ## Overview
 
-Pipeline DSL v1 is a declarative, YAML-based language for describing agentic execution workflows as directed acyclic graphs (DAGs). It is designed to be:
+Pipeline DSL v1.3 is a declarative, YAML-based language for describing agentic
+execution workflows as directed acyclic graphs (DAGs). It is designed to be:
 
-- **Generatable by a small fine-tuned language model** from a natural language goal description
+- **Generatable by a single fine-tuned small language model** operating in two modes:
+  Planner and Generator
 - **Executable by a DAG runtime** (e.g. Prefect, Airflow, or a custom executor)
-- **Minimal by design** — logic and reasoning are delegated to `llm_job` tasks, not encoded in the DSL itself
+- **Minimal by design** — logic and reasoning are delegated to `llm_job` tasks, not
+  encoded in the DSL itself
+- **Scalable to 20-30+ task workflows** via plan-level decomposition into sub-pipelines
 
-The DSL does not include conditionals, loops, or decorators. Control flow complexity lives inside `llm_job` tool calls, not in the pipeline structure.
+The DSL does not include conditionals, loops, or decorators. Control flow complexity
+lives inside `llm_job` tool calls, not in the pipeline structure.
 
 ---
 
-## Top-Level Structure
+## Two-Level Generation Architecture
+
+Complex workflows exceeding ~10 tasks are handled by decomposing them into a **plan**
+of named sub-pipelines, each of which is then generated independently. This keeps
+individual pipelines within the reliable generation window of a small fine-tuned model
+while supporting arbitrarily large overall workflows.
+
+A single fine-tuned model handles both levels, distinguished by a **task token**
+prepended to every prompt:
+
+| Token | Output schema | Purpose |
+|---|---|---|
+| `[PLAN]` | Plan YAML | Decompose a complex goal into named sub-pipelines |
+| `[PIPELINE]` | Pipeline YAML | Generate a single sub-pipeline's DAG |
+
+The two output schemas share structural similarity (both YAML, both `id`/`goal`-rooted,
+both express dependency) but have no overlapping field names, giving the model a clean
+discriminative signal from the root key (`plan:` vs `pipeline:`).
+
+### Generation and Execution Loop
+
+```
+[PLAN] <user prompt>
+    └──► model generates Plan YAML
+              └──► orchestrator topological-sorts sub-pipelines by reads/stores
+                        └──► for each sub-pipeline in order:
+                                  [PIPELINE] goal: <goal> | reads: <keys> | inputs: <params>
+                                      └──► model generates Pipeline YAML
+                                                └──► validate
+                                                          └──► execute
+                                                                    └──► store outputs to blackboard
+```
+
+The `reads` list passed to each `[PIPELINE]` prompt reflects what is currently
+available on the session blackboard at the point of generation, preventing hallucinated
+`{{session.*}}` references.
+
+### Complexity Budget
+
+| Level | Ceiling | Rationale |
+|---|---|---|
+| Tasks per sub-pipeline | ~10 | Reliable generation window for a 3-4B model |
+| Sub-pipelines per plan | ~8 | Keeps plan document tractable |
+| Effective total tasks | ~60-80 | Well beyond the 20-30 task requirement |
+
+---
+
+## Plan Document
+
+The plan is the intermediate representation between a complex user goal and the
+individual pipeline YAMLs. It is produced by the model in `[PLAN]` mode and consumed
+by the orchestrator.
 
 ```yaml
-pipeline:
-  id: <string>        # unique identifier, snake_case
-  goal: <string>      # natural language description of the overall intent
-  tasks: <list>       # ordered list of task definitions (order is cosmetic only)
+plan:
+  id: <string>          # unique identifier, snake_case
+  goal: <string>        # natural language restatement of the overall intent
+  inputs:               # optional — top-level parameters passed into the plan
+    <key>: <value>
+  sub_pipelines: <list>
+```
+
+### Sub-Pipeline Entry
+
+```yaml
+- id: <string>          # unique sub-pipeline identifier, snake_case
+  goal: <string>        # natural language goal for this sub-pipeline
+  reads: [<key>, ...]   # session blackboard keys this sub-pipeline will read
+  stores: [<key>, ...]  # session blackboard keys this sub-pipeline will write
+  inputs: [<key>, ...]  # optional — pipeline.inputs keys forwarded from plan.inputs
 ```
 
 ### Fields
 
-| Field | Type | Required | Description |
-|---|---|---|---|
-| `id` | string | yes | Unique pipeline identifier, snake_case |
-| `goal` | string | yes | Human-readable description of the pipeline's intent |
-| `tasks` | list | yes | List of task objects (see below) |
+| Field | Required | Description |
+|---|---|---|
+| `id` | yes | Unique sub-pipeline identifier, snake_case |
+| `goal` | yes | Passed verbatim as the goal of the generated pipeline |
+| `reads` | yes | Blackboard keys consumed. Drives topological ordering. Empty list `[]` for root sub-pipelines |
+| `stores` | yes | Blackboard keys produced. Must match `store` task keys in the generated pipeline |
+| `inputs` | no | Plan-level input keys forwarded to this sub-pipeline |
+
+### Dependency Resolution in Plans
+
+Sub-pipeline execution order is derived from `reads`/`stores` relationships, exactly
+as task dependencies are derived from `{{ref}}` templates within a pipeline. A
+sub-pipeline whose `reads` list is empty or fully satisfied runs immediately. Multiple
+sub-pipelines with satisfied reads run in parallel.
+
+### Plan Example
+
+```yaml
+plan:
+  id: gulf_disruption_assessment
+  goal: >
+    Assess disruption, impact, and credit risk across three energy disruption
+    scenarios. Report on liquidity, supply-chain, and energy-cost sensitivity.
+  inputs:
+    companies: [Google, Apple, Microsoft, Agilent]
+    year: 2025
+
+  sub_pipelines:
+
+    - id: data_acquisition
+      goal: "Fetch company financials, energy exposure, market data, and web context"
+      reads: []
+      stores: [company_financials, energy_exposure, energy_markets, disruption_context]
+      inputs: [companies, year]
+
+    - id: short_term_assessment
+      goal: "Assess disruption, impact and credit for 1-month risk premium shock"
+      reads: [company_financials, energy_exposure, energy_markets, disruption_context]
+      stores: [credit_short, impact_short]
+      inputs: [companies]
+
+    - id: medium_term_assessment
+      goal: >
+        Assess disruption, impact and credit for 1-3 month supply constraint scenario,
+        building on short-term credit assessment
+      reads: [company_financials, energy_exposure, energy_markets,
+              disruption_context, credit_short]
+      stores: [credit_medium, impact_medium]
+      inputs: [companies]
+
+    - id: long_term_assessment
+      goal: >
+        Assess disruption, impact and credit for >6 month sustained disruption,
+        building on medium-term credit assessment
+      reads: [company_financials, energy_exposure, energy_markets,
+              disruption_context, credit_medium]
+      stores: [credit_long, impact_long]
+      inputs: [companies]
+
+    - id: synthesis
+      goal: >
+        Synthesise liquidity, supply-chain, and energy-cost sensitivity analysis
+        across all three scenario horizons for all companies
+      reads: [company_financials, energy_exposure,
+              credit_short, credit_medium, credit_long,
+              impact_short, impact_medium, impact_long]
+      stores: [liquidity_analysis, supply_chain_analysis, energy_cost_analysis]
+      inputs: [companies]
+
+    - id: final_report
+      goal: "Produce executive credit assessment report across all scenarios"
+      reads: [liquidity_analysis, supply_chain_analysis, energy_cost_analysis]
+      stores: []
+```
+
+### Inferred Sub-Pipeline DAG
+
+```
+data_acquisition
+    └──► short_term_assessment
+               └──► medium_term_assessment
+                          └──► long_term_assessment ──┐
+                                                       ├──► synthesis ──► final_report
+    └──────────────────────────────────────────────────┘
+```
+
+`data_acquisition` is the sole root. The three assessment sub-pipelines are sequential
+(credit assessments chain). `synthesis` waits on all three. `final_report` waits on
+`synthesis`.
+
+---
+
+## Pipeline Document
+
+A pipeline is the executable unit. Each sub-pipeline entry in the plan produces one
+pipeline document when the model runs in `[PIPELINE]` mode.
+
+### Top-Level Structure
+
+```yaml
+pipeline:
+  id: <string>        # matches the sub-pipeline id from the plan
+  goal: <string>      # matches the sub-pipeline goal from the plan
+  inputs:             # optional — named parameters provided by the orchestrator
+    <key>: <value>
+  tasks: <list>
+```
+
+### Fields
+
+| Field | Required | Description |
+|---|---|---|
+| `id` | yes | Unique pipeline identifier, snake_case. Should match plan sub-pipeline id |
+| `goal` | yes | Human-readable description of this pipeline's intent |
+| `inputs` | no | Named input parameters. Referenced as `{{pipeline.inputs.key}}` |
+| `tasks` | yes | List of task objects |
+
+### Pipeline Inputs
+
+The `inputs` block declares parameters provided by the orchestrator at execution time.
+These are values that vary per invocation and should not be hardcoded in task
+definitions.
+
+```yaml
+pipeline:
+  id: data_acquisition
+  goal: "Fetch company financials, energy exposure, market data, and web context"
+  inputs:
+    companies: [Google, Apple, Microsoft, Agilent]
+    year: 2025
+  tasks:
+    - id: fetch_financials
+      tool: fetch_data
+      inputs:
+        source: company_info
+        companies: "{{pipeline.inputs.companies}}"
+        year: "{{pipeline.inputs.year}}"
+```
+
+**Parameters** vary per invocation and belong in `inputs`. **Configuration** is fixed
+vocabulary belonging inline in tasks (source names, prompt strings, format hints).
 
 ---
 
@@ -38,35 +242,41 @@ pipeline:
   tool: <string>
   inputs:
     <key>: <value | template>
-  parallel_over: <template>   # optional
-  retry: <int>                # optional
-  await: [<task_id>, ...]     # optional, escape hatch only
+  parallel_over: <template>     # optional
+  retry: <int>                  # optional, default 0
+  await: [<task_id>, ...]       # optional, escape hatch only
 ```
 
 ### Fields
 
-| Field | Type | Required | Description |
-|---|---|---|---|
-| `id` | string | yes | Unique task identifier within the pipeline, snake_case |
-| `tool` | string | yes | Name of the tool or skill to invoke (see Tool Registry) |
-| `inputs` | map | yes | Key-value pairs passed to the tool. Values may be literals or templates |
-| `parallel_over` | template | no | Fan-out: runs the task once per item in the referenced list. Item is bound to `{{item}}` |
-| `retry` | int | no | Number of retry attempts on failure. Default: 0 |
-| `await` | list[string] | no | Explicit barrier — wait for listed task IDs without consuming their output. Use only when no input reference exists |
+| Field | Required | Description |
+|---|---|---|
+| `id` | yes | Unique task identifier within the pipeline, snake_case |
+| `tool` | yes | Name of the tool to invoke (see Tool Registry) |
+| `inputs` | yes | Key-value pairs passed to the tool. Values may be literals or templates |
+| `parallel_over` | no | Fan-out: runs the task once per item in the referenced list. Item bound to `{{item}}` |
+| `retry` | no | Number of retry attempts on task failure. Default: `0` |
+| `await` | no | Explicit barrier — wait for listed task IDs without consuming output. Use only when no input reference exists |
 
 ---
 
 ## Dependency Resolution
 
-**Dependencies are implicit and inferred from input templates.** There is no `depends_on` field.
+**Within a pipeline, dependencies are implicit and inferred from input templates.**
+There is no `depends_on` field.
 
-The runtime parses all `{{task_id.output}}` references in `inputs` and `parallel_over` fields to construct the dependency graph. Tasks with no upstream references are roots and execute immediately. Tasks sharing the same upstream dependency execute in parallel once that dependency resolves.
+The runtime parses all `{{task_id.output}}` references across `inputs` and
+`parallel_over` fields to construct the DAG. Tasks with no upstream references are
+roots and execute immediately. Tasks whose inputs are all satisfied execute in parallel
+automatically.
 
 ### Rules
 
 - A task may not reference its own output
-- Circular references are invalid and should be rejected at parse time
-- The `await` field is the only mechanism for expressing a dependency that produces no consumed output
+- Circular references are invalid and must be rejected at parse time
+- `await` is the only mechanism for a dependency that produces no consumed output
+- `{{session.*}}` references never create intra-pipeline dependencies — they resolve
+  from the blackboard at task execution time
 
 ---
 
@@ -74,114 +284,254 @@ The runtime parses all `{{task_id.output}}` references in `inputs` and `parallel
 
 Templates use double-brace syntax: `{{expression}}`
 
-### Reference forms
+### Reference Forms
 
 | Template | Resolves to |
 |---|---|
-| `{{task_id.output}}` | The full output of a completed task |
-| `{{task_id.output.field}}` | A named field within a task's output |
-| `{{item}}` | The current element when inside a `parallel_over` task |
+| `{{task_id.output}}` | Full output of a completed task in this pipeline |
+| `{{task_id.output.field}}` | Named field within a task's output |
+| `{{pipeline.inputs.key}}` | A named pipeline input parameter |
 | `{{pipeline.goal}}` | The top-level pipeline goal string |
+| `{{session.key}}` | A value previously stored to the session blackboard |
+| `{{item}}` | Current element when inside a `parallel_over` task |
 
-Templates may appear in any input value and in the `parallel_over` field. They may not appear in `id`, `tool`, or structural fields.
+Templates may appear in any input value and in `parallel_over`. They may not appear in
+`id`, `tool`, or other structural fields.
+
+### Session References
+
+`{{session.key}}` references must only be used for keys listed in the sub-pipeline's
+`reads` field in the plan. The generator prompt will include the list of currently
+available session keys to prevent hallucinated references.
+
+---
+
+## Tool Design Philosophy
+
+All tools are **polymorphic on their inputs**. A tool interprets what it receives
+contextually and does its best to fulfil the request:
+
+- A string path or URL is treated as a single resource
+- A list of paths or URLs is treated as a set, processed accordingly
+- A document handle is used directly
+- A list of handles is processed as a collection
+
+The pipeline author does not need to wrap inputs, add type hints, or explicitly loop
+over lists in most cases. The tool decides how to handle what it receives.
 
 ---
 
-## Built-in Tools
-
-These are the standard tools available to the DSL. Additional domain tools may be registered in the accompanying Tool Registry.
-
-### `llm_job`
-
-Delegates a reasoning, extraction, transformation, or generation task to an LLM.
-
-```yaml
-- id: summarize
-  tool: llm_job
-  inputs:
-    document: "{{ingest.output}}"
-    prompt: "Summarize the key financial figures in this document"
-```
-
-| Input | Type | Description |
-|---|---|---|
-| `prompt` | string | Instruction to the LLM. Should be focused and single-purpose |
-| `*` | any | Any additional inputs are injected into the LLM's context |
-
-`llm_job` is the primary workhorse of the DSL. Complex logic, conditionals, validation, and multi-step reasoning should be expressed inside a `prompt`, not in the pipeline structure.
-
----
+## Tool Registry
 
 ### `load_document`
 
-Loads a document into working memory and returns a handle for downstream tasks.
+Loads one or more documents into working memory.
+
+Accepts a file path, a URL, or a list of either. Handles PDF, XLSX, CSV, DOCX, and
+plain text automatically. For scanned or image-based PDFs, OCR is applied
+transparently — the pipeline author does not need to handle this explicitly.
 
 ```yaml
-- id: ingest_pdf
+- id: ingest_report
   tool: load_document
   inputs:
-    path: "Q3_earnings.pdf"
-    format: pdf          # optional: pdf | xlsx | csv | auto (default: auto)
+    path: "{{pipeline.inputs.report_path}}"
 ```
 
-| Input | Type | Description |
-|---|---|---|
-| `path` | string | File path or URI |
-| `format` | enum | `pdf`, `xlsx`, `csv`, `auto`. Default: `auto` |
+**Emits:** A document handle or list of handles, each carrying raw content, detected
+format, page structure, and metadata (filename, page count, source URL if applicable).
+
+---
+
+### `select`
+
+Filters a document down to a relevant subset of pages, sections, or sheets using a
+natural language selection prompt.
+
+Analogous to RAG retrieval but operating on document structure rather than embedding
+chunks. Accepts a document handle, a list of pages, a multi-sheet workbook, or a list
+of documents. Run `select` before extraction or `llm_job` tasks when working with large
+documents to avoid context pollution and reduce cost.
+
+```yaml
+- id: select_financial_pages
+  tool: select
+  inputs:
+    document: "{{ingest_report.output}}"
+    prompt: "Pages containing financial tables, balance sheets, or annual projections"
+```
+
+**Emits:** A reduced document handle or page/sheet list with provenance (original page
+numbers, sheet names, source document).
 
 ---
 
 ### `extract_table`
 
-Extracts structured tabular data from a loaded document.
+Extracts structured tabular data from a document handle, page list, or raw text.
+
+Uses deterministic parsing where possible (PDF table detection, XLSX sheet parsing).
+Falls back to LLM-assisted extraction for ambiguous layouts. Accepts an optional
+selector hint to target tables by name or region.
 
 ```yaml
 - id: extract_tables
   tool: extract_table
   inputs:
-    document: "{{ingest_pdf.output}}"
-    selector: "financial_statements"    # optional hint
+    document: "{{select_financial_pages.output}}"
+    selector: "income statement"    # optional
 ```
 
-| Input | Type | Description |
-|---|---|---|
-| `document` | DocumentHandle | Output of a `load_document` task |
-| `selector` | string | Optional hint for which tables to target |
+**Emits:** One or more tables with named columns, row data, and source provenance.
+
+---
+
+### `extract_text`
+
+Extracts plain text from a document handle or a specific region within one.
+
+This tool is polymorphic and may choose the optimal extraction strategy internally:
+- If the input contains embedded images or appears to be a scanned PDF/image-based PDF, it may run OCR automatically.
+- If the input contains extractable text (e.g., digital PDFs, text layers), it will return text directly without OCR.
+
+Useful for narrative sections, footnotes, management commentary, or non‑tabular content. Complements `extract_table` —
+use this for prose, use `extract_table` for structured data.
+
+```yaml
+- id: extract_notes
+  tool: extract_text
+  inputs:
+    document: "{{ingest_report.output}}"
+    selector: "notes to financial statements"
+```
+
+**Emits:** A text string or list of strings with source provenance.
+
+---
+
+### `llm_job`
+
+Delegates a reasoning, extraction, classification, transformation, or generation task
+to an LLM.
+
+All inputs are injected into the LLM's context alongside the prompt. The prompt should
+be focused and single-purpose. For complex multi-step reasoning, prefer multiple
+chained `llm_job` tasks over a single large prompt.
+
+```yaml
+- id: reconcile
+  tool: llm_job
+  inputs:
+    tables: "{{extract_tables.output}}"
+    supplement: "{{summarize_supplement.output}}"
+    prompt: "Identify any discrepancies between the two sources for revenue line items"
+```
+
+`llm_job` is the primary workhorse of the DSL. Conditionals, validation, classification,
+and multi-source synthesis all belong here, not in the pipeline structure.
+
+**Emits:** Text or structured data as directed by the prompt.
 
 ---
 
 ### `fetch_data`
 
-Retrieves external data such as market prices, reference data, or API responses.
+Retrieves structured data from a named external source.
+
+Source-specific parameters are passed through loosely. Built-in sources: `sec_edgar`,
+`market_data`, `company_info`, `exchange_rates`. Additional sources can be registered
+at runtime.
 
 ```yaml
-- id: get_prices
+- id: fetch_filings
   tool: fetch_data
   inputs:
-    source: market_data
-    ticker: "AAPL"
-    fields: ["close", "volume"]
-    date_range: "2024-Q3"
+    source: sec_edgar
+    companies: "{{pipeline.inputs.companies}}"
+    year: "{{pipeline.inputs.year}}"
 ```
 
-| Input | Type | Description |
-|---|---|---|
-| `source` | string | Named data source from the registry |
-| `*` | any | Source-specific parameters |
+**Emits:** Raw structured data in the shape native to the source.
+
+---
+
+### `search_web`
+
+Performs one or more web searches and returns results as text snippets with URLs.
+
+Accepts a query string or a list of queries run in parallel. Prefer this over embedding
+search queries inside `llm_job` prompts — explicit retrieval improves auditability.
+
+```yaml
+- id: find_context
+  tool: search_web
+  inputs:
+    query: "{{pipeline.inputs.company}} SEC investigation 2025"
+```
+
+**Emits:** A list of results, each with title, snippet, and source URL.
+
+---
+
+### `store`
+
+Persists a value to the session blackboard under a named key.
+
+Accepts any value. Subsequent pipelines in the same session read the value via
+`{{session.key}}`. Overwrites existing keys unless `append: true`. Blackboard writes
+are always **explicit** — no tool writes to the session silently.
+
+The `store` key must match an entry in the sub-pipeline's `stores` list in the plan.
+
+```yaml
+- id: persist_financials
+  tool: store
+  inputs:
+    key: company_financials
+    value: "{{fetch_financials.output}}"
+```
+
+**Emits:** Confirmation of the stored key and a value summary.
+
+---
+
+### `export`
+
+Produces a final output artifact in a specified format.
+
+`export` is a terminal tool and should always be a leaf node with no downstream
+dependents. Supported formats: `markdown`, `pdf`, `csv`, `xlsx`, `json`.
+
+```yaml
+- id: produce_report
+  tool: export
+  inputs:
+    content: "{{final_summary.output}}"
+    format: markdown
+    filename: "q3_analysis_report"
+```
+
+**Emits:** A file handle or download reference for the produced artifact.
 
 ---
 
 ## Fan-out with `parallel_over`
 
-When a task should run once per element in a list, use `parallel_over`. The runtime fans out into parallel executions and collects results into a list before passing to downstream tasks.
+Runs a task once per element in a list with explicit per-item parallelism. The runtime
+fans out, runs instances in parallel, and collects results into a list.
+
+In most cases, passing a list directly to a tool is sufficient — tools handle lists
+internally. Use `parallel_over` when downstream tasks need to reference per-item
+results individually.
 
 ```yaml
-- id: extract_per_page
+- id: assess_per_company
   tool: llm_job
-  parallel_over: "{{ingest_pdf.output.pages}}"
+  parallel_over: "{{pipeline.inputs.companies}}"
   inputs:
-    page: "{{item}}"
-    prompt: "Extract any tables or financial figures from this page"
+    company: "{{item}}"
+    financials: "{{fetch_financials.output}}"
+    prompt: "Assess credit risk for {{item}} under current scenario"
 ```
 
 The output of a `parallel_over` task is always a list, one element per input item.
@@ -201,77 +551,116 @@ For the rare case where a task must wait on another without consuming its output
     prompt: "Generate the final analyst report"
 ```
 
-Use sparingly. If you find yourself using `await` frequently, the pipeline structure likely needs revisiting.
+Use sparingly. Frequent use of `await` indicates the pipeline structure needs
+revisiting.
 
 ---
 
 ## Full Example
 
+The `data_acquisition` sub-pipeline from the Gulf disruption assessment plan,
+showing session blackboard persistence via `store`.
+
 ```yaml
 pipeline:
-  id: q3_earnings_analysis
-  goal: "Extract and reconcile revenue figures from the Q3 earnings package"
+  id: data_acquisition
+  goal: "Fetch company financials, energy exposure, market data, and web context"
+  inputs:
+    companies: [Google, Apple, Microsoft, Agilent]
+    year: 2025
 
   tasks:
 
-    - id: ingest_pdf
-      tool: load_document
+    - id: fetch_financials
+      tool: fetch_data
       inputs:
-        path: "Q3_earnings.pdf"
+        source: company_info
+        companies: "{{pipeline.inputs.companies}}"
+        fields: [liquidity_ratios, debt_structure, credit_ratings, revenue_breakdown]
+        year: "{{pipeline.inputs.year}}"
 
-    - id: ingest_supplement
-      tool: load_document
+    - id: fetch_energy_exposure
+      tool: fetch_data
       inputs:
-        path: "supplement.xlsx"
+        source: company_info
+        companies: "{{pipeline.inputs.companies}}"
+        fields: [energy_cost_pct_revenue, supply_chain_geography, energy_procurement]
 
-    - id: extract_tables
-      tool: extract_table
+    - id: fetch_energy_markets
+      tool: fetch_data
       inputs:
-        document: "{{ingest_pdf.output}}"
+        source: market_data
+        markets: [crude_oil, natural_gas, energy_risk_premium]
+        fields: [price, volatility, forward_curve]
 
-    - id: summarize_supplement
-      tool: llm_job
+    - id: search_disruption_context
+      tool: search_web
       inputs:
-        document: "{{ingest_supplement.output}}"
-        prompt: "Extract all numeric financial figures with their labels and units"
+        query: "Gulf energy export disruption logistics bottleneck 2025"
 
-    - id: reconcile
-      tool: llm_job
+    - id: store_financials
+      tool: store
       inputs:
-        tables: "{{extract_tables.output}}"
-        supplement_data: "{{summarize_supplement.output}}"
-        prompt: "Identify any discrepancies between the two sources for revenue line items"
+        key: company_financials
+        value: "{{fetch_financials.output}}"
 
-    - id: final_report
-      tool: llm_job
+    - id: store_energy_exposure
+      tool: store
       inputs:
-        findings: "{{reconcile.output}}"
-        prompt: "Produce a concise analyst summary of findings and any anomalies"
+        key: energy_exposure
+        value: "{{fetch_energy_exposure.output}}"
+
+    - id: store_energy_markets
+      tool: store
+      inputs:
+        key: energy_markets
+        value: "{{fetch_energy_markets.output}}"
+
+    - id: store_disruption_context
+      tool: store
+      inputs:
+        key: disruption_context
+        value: "{{search_disruption_context.output}}"
 ```
 
-### Inferred DAG for the above
+### Inferred DAG
 
 ```
-ingest_pdf  ──► extract_tables ──┐
-                                  ├──► reconcile ──► final_report
-ingest_supplement ──► summarize_supplement ──┘
+fetch_financials ──────────► store_financials
+fetch_energy_exposure ─────► store_energy_exposure
+fetch_energy_markets ──────► store_energy_markets
+search_disruption_context ─► store_disruption_context
 ```
 
-`ingest_pdf` and `ingest_supplement` are roots — they run in parallel immediately.
-`extract_tables` and `summarize_supplement` run in parallel once their respective roots complete.
-`reconcile` runs once both are done.
-`final_report` runs last.
+All four fetch/search tasks are roots — they run in parallel immediately. Each `store`
+task runs as soon as its upstream task completes.
 
 ---
 
 ## Design Principles
 
-1. **Topology only.** The DSL encodes execution order and data flow, not logic or reasoning.
-2. **Dependencies are implicit.** Derived from `{{template}}` references. No `depends_on`.
-3. **Logic lives in `llm_job`.** Conditionals, validation, and decisions are expressed in natural language prompts, not DSL constructs.
-4. **Flat by default.** Avoid nesting. A linear list of tasks with reference wiring is the normal form.
-5. **Parallelism is automatic.** Any tasks whose inputs are all satisfied run concurrently. No explicit parallel blocks.
-6. **Minimal vocabulary.** If a concept can be handled by an `llm_job` prompt, it should not be a DSL construct.
+1. **Topology only.** The DSL encodes execution order and data flow, not logic or
+   reasoning.
+2. **Two levels of composition.** Complex goals decompose into plans; plans decompose
+   into pipelines; pipelines decompose into tasks. Each level has a hard complexity
+   ceiling.
+3. **Dependencies are implicit.** Inferred from `{{template}}` references within
+   pipelines, and from `reads`/`stores` relationships between sub-pipelines.
+4. **Logic lives in `llm_job`.** Conditionals, validation, and decisions belong in
+   natural language prompts, not DSL constructs.
+5. **Tools are polymorphic.** Tools interpret inputs contextually. No type coercion or
+   format hints required.
+6. **Flat by default.** A linear list of tasks with reference wiring is the normal
+   form. Avoid nesting.
+7. **Parallelism is automatic.** Tasks with satisfied inputs run concurrently. No
+   explicit parallel blocks needed in most cases.
+8. **Scope before processing.** Use `select` to reduce document scope before passing to
+   `extract_table`, `extract_text`, or `llm_job`.
+9. **Persistence is explicit.** Nothing writes to the session blackboard unless a
+   `store` task is present. `store` keys must match the sub-pipeline's `stores`
+   declaration in the plan.
+10. **Session references are declared.** `{{session.key}}` references must correspond
+    to keys listed in the sub-pipeline's `reads`. Undeclared reads are invalid.
 
 ---
 
@@ -280,15 +669,45 @@ ingest_supplement ──► summarize_supplement ──┘
 | Concept | Rationale |
 |---|---|
 | Conditionals / branching | Handled inside `llm_job` prompts |
-| Loops / iteration (non-fan-out) | Handled inside `llm_job` or modelled as `parallel_over` |
+| Loops / iteration (non-fan-out) | Handled inside `llm_job` or as `parallel_over` |
 | Error handling / fallback paths | Runtime concern, not DSL concern |
-| Variable assignment | Outputs are referenced directly via templates |
-| Subpipelines / nesting | Out of scope for v1 |
+| Variable assignment | Outputs referenced directly via templates |
+| Type constraints on inputs | Tools interpret inputs polymorphically |
+| Implicit blackboard writes | All persistence is via explicit `store` tasks |
 
 ---
 
-## Version
+## Tool Summary
 
-**DSL Version:** 1.0  
-**Status:** Draft  
-**Intended consumers:** Fine-tuned small language model (generator), DAG runtime executor (consumer)
+| Tool | Purpose | Terminal? |
+|---|---|---|
+| `load_document` | Load files or URLs into working memory | no |
+| `select` | Filter document to relevant pages/sections/sheets | no |
+| `extract_table` | Deterministic table extraction from documents | no |
+| `extract_text` | Plain text extraction from documents | no |
+| `llm_job` | LLM reasoning, extraction, synthesis, generation | no |
+| `fetch_data` | Retrieve structured data from external sources | no |
+| `search_web` | Web search, returns snippets and URLs | no |
+| `store` | Persist a value to the session blackboard | yes* |
+| `export` | Produce a file artifact (md, pdf, csv, xlsx, json) | yes |
+
+*`store` is logically terminal but may appear mid-pipeline if persistence is needed
+before further processing steps.
+
+---
+
+## Version History
+
+| Version | Changes |
+|---|---|
+| 1.0 | Initial spec: pipeline structure, tool registry, template syntax |
+| 1.1 | Added `pipeline.inputs` block; polymorphic tool philosophy |
+| 1.2 | Added full tool registry: `select`, `extract_text`, `search_web`, `store`, `export` |
+| 1.3 | Added two-level Planner/Generator architecture; Plan document schema; task tokens `[PLAN]` / `[PIPELINE]`; session `reads`/`stores` contract; complexity budget guidance |
+
+---
+
+**DSL Version:** 1.3
+**Status:** Draft
+**Intended consumers:** Fine-tuned small language model (Planner + Generator modes),
+DAG runtime executor (consumer)

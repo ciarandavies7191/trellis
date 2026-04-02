@@ -7,9 +7,9 @@ from typing import Any, Dict
 class FetchTool(BaseTool):
     """Tool for fetching data from URLs."""
 
-    def __init__(self, name: str = "fetch"):
+    def __init__(self, name: str = "fetch_data"):
         """Initialize fetch tool."""
-        super().__init__(name, "Fetch data from URLs")
+        super().__init__(name, "Fetch data from URLs or external sources")
 
     def execute(self, url: str, method: str = "GET", **kwargs) -> Dict[str, Any]:
         """
