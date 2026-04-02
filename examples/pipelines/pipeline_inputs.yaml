@@ -1,0 +1,11 @@
+pipeline:
+  id: pipeline_inputs
+  goal: "Use pipeline inputs in a task"
+  inputs:
+    user_name: "Ada"
+  tasks:
+    - id: greet
+      tool: mock
+      inputs:
+        message: "Hello, {{pipeline.inputs.user_name}}!"
+

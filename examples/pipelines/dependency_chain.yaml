@@ -1,0 +1,19 @@
+pipeline:
+  id: dependency_chain
+  goal: "Show implicit dependencies via templates"
+  tasks:
+    - id: first
+      tool: mock
+      inputs:
+        input_data: "start"
+
+    - id: second
+      tool: mock
+      inputs:
+        from_first: "{{first.output.status}}"
+
+    - id: third
+      tool: mock
+      inputs:
+        from_second: "{{second.output.status}}"
+

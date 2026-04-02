@@ -7,7 +7,7 @@ from typing import Any, Dict, Optional
 class LLMTool(BaseTool):
     """Tool for executing LLM-based tasks."""
 
-    def __init__(self, name: str = "llm", model: Optional[str] = None):
+    def __init__(self, name: str = "llm_job", model: Optional[str] = None):
         """
         Initialize LLM tool.
 

@@ -1,0 +1,15 @@
+pipeline:
+  id: fan_out_example
+  goal: "Demonstrate parallel_over fan-out with mock tool"
+  tasks:
+    - id: seed
+      tool: mock
+      inputs:
+        items: ["alpha", "beta", "gamma", "delta"]
+
+    - id: process_items
+      tool: mock
+      parallel_over: "{{seed.output.inputs.items}}"
+      inputs:
+        item_value: "{{item}}"
+

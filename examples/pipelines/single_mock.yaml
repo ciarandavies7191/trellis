@@ -1,0 +1,9 @@
+pipeline:
+  id: hello_mock
+  goal: "Run a single mock task"
+  tasks:
+    - id: say_hello
+      tool: mock
+      inputs:
+        text: "hello world"
+

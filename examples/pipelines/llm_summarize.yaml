@@ -1,0 +1,12 @@
+pipeline:
+  id: summarize_doc
+  goal: "Summarize text using the llm tool"
+  tasks:
+    - id: summarize
+      tool: llm_job
+      inputs:
+        prompt: |
+          Summarize the following text in one sentence:
+
+          Trellis is a modular agentic pipeline system for planning and execution.
+

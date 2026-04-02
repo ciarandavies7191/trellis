@@ -11,11 +11,11 @@ async def test_discovery_explicit_names():
     reg.discover_impls()
 
     # Implementations should be registered by their implementation names only
-    for impl in ["llm", "fetch", "document", "mock"]:
+    for impl in ["llm_job", "fetch", "document", "mock"]:
         assert impl in reg.registered_tools()
 
     # Invoking an implementation name should work
-    out = await reg.invoke("llm", {"prompt": "hi"})
+    out = await reg.invoke("llm_job", {"prompt": "hi"})
     assert isinstance(out, str) and "LLM response" in out
 
 
@@ -33,5 +33,5 @@ async def test_register_callable_and_sync_adapter():
 
     # Register BaseTool (sync execute) via discovery alternative
     reg.discover_impls()
-    out2 = await reg.invoke("llm", {"prompt": "test"})
+    out2 = await reg.invoke("llm_job", {"prompt": "test"})
     assert isinstance(out2, str)

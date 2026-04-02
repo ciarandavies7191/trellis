@@ -10,13 +10,13 @@ Public API
 
     execute_pipeline(
         pipeline:  Pipeline,
-        registry:  ToolRegistry,
+        registry:  AsyncToolRegistry,
         context:   ResolutionContext,
         *,
         options:   ExecutionOptions | None = None,
     ) -> PipelineResult
 
-    class ToolRegistry
+    class AsyncToolRegistry
         register(name, fn)          # fn may be sync or async
         invoke(name, inputs) → Any  # async; wraps sync fns in executor
 
@@ -279,7 +279,7 @@ class PipelineResult:
 async def _invoke_once(
     task: Task,
     resolved_inputs: dict[str, Any],
-    registry: ToolRegistry,
+    registry: AsyncToolRegistry,
 ) -> Any:
     """Invoke a tool exactly once. No retry logic. Pure delegation."""
     return await registry.invoke(task.tool, resolved_inputs)
@@ -293,7 +293,7 @@ async def _invoke_once(
 async def _invoke_with_retry(
     task: Task,
     resolved_inputs: dict[str, Any],
-    registry: ToolRegistry,
+    registry: AsyncToolRegistry,
     options: ExecutionOptions,
 ) -> Any:
     """
@@ -354,7 +354,7 @@ async def _invoke_with_retry(
 async def _execute_fan_out(
     task: Task,
     context: ResolutionContext,
-    registry: ToolRegistry,
+    registry: AsyncToolRegistry,
     options: ExecutionOptions,
     result: PipelineResult,
 ) -> list[Any]:
@@ -415,7 +415,7 @@ async def _execute_fan_out(
 async def _execute_task(
     task: Task,
     context: ResolutionContext,
-    registry: ToolRegistry,
+    registry: AsyncToolRegistry,
     options: ExecutionOptions,
     result: PipelineResult,
     event_sink: Any | None = None,
@@ -511,7 +511,7 @@ async def execute_pipeline(
 
     Args:
         pipeline: A structurally valid, contract-checked Pipeline instance.
-        registry: ToolRegistry containing implementations for all tools the
+        registry: AsyncToolRegistry containing implementations for all tools the
                   pipeline references.
         context:  ResolutionContext seeded with pipeline.inputs and any
                   session keys listed in the pipeline's sub-pipeline reads
@@ -563,7 +563,7 @@ async def execute_pipeline(
         )
 
         # All tasks in the wave run concurrently. asyncio.gather preserves
-        # insertion order for results but we don't use them directly here —
+        # insertion order for results, but we don't use them directly here —
         # each coroutine mutates `result` and `context` directly.
         await asyncio.gather(*[
             _execute_task(task, context, registry, options, result, event_sink)
