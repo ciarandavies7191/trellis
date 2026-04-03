@@ -1,0 +1,27 @@
+pipeline:
+  id: image_ocr_summarize
+  goal: "Load an image from URL, run OCR to extract text, then summarize key points"
+  tasks:
+    - id: ingest_image
+      tool: load_document
+      inputs:
+        path: "https://ocr.space/Content/Images/receipt-ocr-original.jpg"
+
+    - id: ocr_image
+      tool: extract_text
+      inputs:
+        document: "{{ingest_image.output}}"
+        # Optional: override litellm model for OCR/selector, e.g. "openai/gpt-4o"
+        model: "openai/gpt-4o"
+
+    - id: summarize_ocr
+      tool: llm_job
+      inputs:
+        prompt: |
+          You are a helpful assistant. Summarize the extracted text in 3 concise bullet points.
+          If the text is very short, still produce a brief, accurate summary.
+
+          Extracted text:
+          {{ocr_image.output}}
+        temperature: 0.3
+        max_tokens: 200

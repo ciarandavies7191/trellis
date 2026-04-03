@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
+import dataclasses
+from typing import Any
 
 from trellis_api.schemas import (
     PipelineRunRequest,
@@ -14,6 +16,45 @@ from trellis.execution.dag import ExecutionOptions, TaskError
 from trellis.tools.registry import build_default_registry
 
 router = APIRouter()
+
+
+def _json_sanitize(value: Any) -> Any:
+    """
+    Recursively convert outputs to JSON-serializable structures.
+
+    - dataclasses → dict
+    - bytes       → placeholder dict with size to avoid large payloads
+    - sets/tuples → lists
+    - unknown objects → str(value)
+    """
+    # Bytes: avoid utf-8 decoding errors and huge payloads
+    if isinstance(value, (bytes, bytearray)):
+        return {"__bytes__": True, "size": len(value)}
+
+    # Dataclasses: convert to dict, then recurse
+    if dataclasses.is_dataclass(value):
+        try:
+            value = dataclasses.asdict(value)
+        except Exception:
+            value = dict(value.__dict__)  # type: ignore[attr-defined]
+
+    # Dicts: sanitize values
+    if isinstance(value, dict):
+        return {k: _json_sanitize(v) for k, v in value.items()}
+
+    # Lists/Tuples/Sets: to list and sanitize
+    if isinstance(value, (list, tuple, set)):
+        return [_json_sanitize(v) for v in list(value)]
+
+    # Simple scalars are fine
+    if isinstance(value, (str, int, float, bool)) or value is None:
+        return value
+
+    # Fallback to string representation
+    try:
+        return str(value)
+    except Exception:
+        return repr(value)
 
 
 @router.post("/validate", response_model=ValidateResponse)
@@ -66,9 +107,13 @@ async def run_pipeline(req: PipelineRunRequest) -> PipelineRunResponse:
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=500, detail=f"Execution failed: {exc}") from exc
 
+    # Sanitize non-JSON-serializable values (e.g., bytes in DocumentHandle pages)
+    safe_outputs = _json_sanitize(result.outputs)
+    safe_events = _json_sanitize(result.events) if req.collect_events else None
+
     return PipelineRunResponse(
-        outputs=result.outputs,
+        outputs=safe_outputs,
         waves_executed=result.waves_executed,
         tasks_executed=result.tasks_executed,
-        events=result.events if req.collect_events else None,
+        events=safe_events,
     )
