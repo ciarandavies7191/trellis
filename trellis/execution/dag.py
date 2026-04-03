@@ -400,6 +400,18 @@ async def _execute_fan_out(
                 output = await _invoke_with_retry(task, resolved_inputs, registry, options)
         else:
             output = await _invoke_with_retry(task, resolved_inputs, registry, options)
+        # Special-case: persist to tenant blackboard for `store` tool
+        if task.tool == "store":
+            key = resolved_inputs.get("key")
+            value = resolved_inputs.get("value")
+            append = bool(resolved_inputs.get("append", False))
+            if isinstance(key, str):
+                try:
+                    item_context.blackboard.write(item_context.tenant_id, key, value, append=append)
+                    # Make immediately visible within this pipeline execution
+                    item_context.session[key] = value if not append else item_context.session.get(key, []) + [value]
+                except Exception:
+                    pass
         result.tasks_executed += 1
         return output
 
@@ -456,6 +468,17 @@ async def _execute_task(
         else:
             resolved_inputs = {key: resolve(value, context) for key, value in task.inputs.items()}
             output = await _invoke_with_retry(task, resolved_inputs, registry, options)
+            # Special-case: persist to tenant blackboard for `store` tool
+            if task.tool == "store":
+                key = resolved_inputs.get("key")
+                value = resolved_inputs.get("value")
+                append = bool(resolved_inputs.get("append", False))
+                if isinstance(key, str):
+                    try:
+                        context.blackboard.write(context.tenant_id, key, value, append=append)
+                        context.session[key] = value if not append else context.session.get(key, []) + [value]
+                    except Exception:
+                        pass
             result.tasks_executed += 1
     except Exception as exc:
         duration_ms = (time.perf_counter() - start) * 1000.0

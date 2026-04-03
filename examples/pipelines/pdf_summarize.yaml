@@ -7,6 +7,11 @@ pipeline:
       inputs:
         path: "https://www.princexml.com/samples/newsletter/drylab.pdf"
 
+    - id: extract_text
+      tool: extract_text
+      inputs:
+        document: "{{ingest_pdf.output}}"
+
     - id: summarize_pdf
       tool: llm_job
       inputs:
@@ -14,7 +19,6 @@ pipeline:
           Summarize the following newsletter PDF in 5 concise bullet points for a busy executive.
           Focus on key announcements, product updates, and any notable metrics.
 
-          {{ingest_pdf.output.handle.content_preview}}
+          {{extract_text.output.text}}
         temperature: 0.3
         max_tokens: 256
-

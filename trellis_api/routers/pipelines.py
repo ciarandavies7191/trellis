@@ -9,11 +9,16 @@ from trellis_api.schemas import (
     PipelineRunResponse,
     ValidateResponse,
     ToolListResponse,
+    QueuedRunRequest,
+    QueuedRunResponse,
+    RunStatusResponse,
 )
 from trellis.models.pipeline import Pipeline
 from trellis.execution.orchestrator import Orchestrator
 from trellis.execution.dag import ExecutionOptions, TaskError
+from trellis.execution.run_queue import run_manager
 from trellis.tools.registry import build_default_registry
+from trellis.tools.base import BaseTool, ToolInput, ToolOutput
 
 router = APIRouter()
 
@@ -70,7 +75,51 @@ def validate_pipeline(req: PipelineRunRequest) -> ValidateResponse:
 @router.get("/tools", response_model=ToolListResponse)
 def list_tools() -> ToolListResponse:
     reg = build_default_registry()
-    return ToolListResponse(tools=reg.registered_tools())
+    names = reg.registered_tools()
+
+    # Build metadata by instantiating the tool classes already in registry
+    metadata = []
+    for name in names:
+        # Access the underlying tool object if available via registry internals
+        tool_obj: BaseTool | None = getattr(reg, "_tools_by_name", {}).get(name)  # type: ignore[attr-defined]
+        if tool_obj is None:
+            # As a fallback, try importing metadata via get_tool_metadata pattern
+            try:
+                # Best-effort: skip if not a BaseTool-backed entry
+                continue
+            except Exception:
+                continue
+        # Inputs schema to plain dicts
+        inputs_spec = {}
+        try:
+            for key, spec in tool_obj.get_inputs().items():
+                inputs_spec[key] = {
+                    "name": spec.name,
+                    "description": spec.description,
+                    "required": spec.required,
+                    "default": spec.default,
+                }
+        except Exception:
+            inputs_spec = {}
+        # Output spec to dict
+        try:
+            out = tool_obj.get_output()
+            output_spec = {
+                "name": out.name,
+                "description": out.description,
+                "type": getattr(out, "type_", "object"),
+            }
+        except Exception:
+            output_spec = {"name": "output", "description": "Tool output", "type": "object"}
+
+        metadata.append({
+            "name": tool_obj.name,
+            "description": tool_obj.description,
+            "inputs": inputs_spec,
+            "output": output_spec,
+        })
+
+    return ToolListResponse(tools=names, metadata=metadata)
 
 
 @router.post("/run", response_model=PipelineRunResponse)
@@ -116,4 +165,60 @@ async def run_pipeline(req: PipelineRunRequest) -> PipelineRunResponse:
         waves_executed=result.waves_executed,
         tasks_executed=result.tasks_executed,
         events=safe_events,
+    )
+
+
+@router.post("/run_async", response_model=QueuedRunResponse)
+async def run_pipeline_async(req: QueuedRunRequest) -> QueuedRunResponse:
+    try:
+        pipeline = Pipeline.model_validate(req.pipeline.model_dump())
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=400, detail=f"Invalid pipeline: {exc}")
+
+    options = ExecutionOptions(
+        per_task_timeout=req.options.per_task_timeout if req.options else None,
+        fan_out_concurrency=req.options.fan_out_concurrency if req.options else None,
+        backoff_jitter=req.options.backoff_jitter if req.options else 0.0,
+    )
+
+    run_id = await run_manager.submit(
+        pipeline,
+        inputs=req.inputs,
+        session=req.session,
+        options=options,
+        tenant_id=req.tenant_id,
+        collect_events=req.collect_events,
+    )
+    return QueuedRunResponse(run_id=run_id, status="queued")
+
+
+@router.get("/runs/{run_id}", response_model=RunStatusResponse)
+async def get_run_status(run_id: str) -> RunStatusResponse:
+    rec = await run_manager.get(run_id)
+    if not rec:
+        raise HTTPException(status_code=404, detail="Run not found")
+    return RunStatusResponse(
+        run_id=rec.run_id,
+        status=rec.status,
+        result=_json_sanitize(rec.result) if rec.result else None,
+        error=rec.error,
+        events=_json_sanitize(rec.events) if rec.events else None,
+    )
+
+
+@router.post("/runs/{run_id}/cancel", response_model=RunStatusResponse)
+async def cancel_run(run_id: str) -> RunStatusResponse:
+    rec = await run_manager.get(run_id)
+    if not rec:
+        raise HTTPException(status_code=404, detail="Run not found")
+    ok = await run_manager.cancel(run_id)
+    if not ok:
+        raise HTTPException(status_code=400, detail="Cannot cancel run in current state")
+    rec = await run_manager.get(run_id)  # refresh
+    return RunStatusResponse(
+        run_id=rec.run_id,  # type: ignore[union-attr]
+        status=rec.status,  # type: ignore[union-attr]
+        result=_json_sanitize(rec.result) if rec and rec.result else None,
+        error=rec.error if rec else None,
+        events=_json_sanitize(rec.events) if rec and rec.events else None,
     )

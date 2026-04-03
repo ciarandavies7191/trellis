@@ -15,6 +15,7 @@ import asyncio
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
+from trellis.execution.blackboard import Blackboard, InMemoryBlackboard
 from trellis.execution.dag import ExecutionOptions, PipelineResult, execute_pipeline
 from trellis.execution.template import ResolutionContext
 from trellis.models.pipeline import Pipeline
@@ -37,9 +38,14 @@ class Orchestrator:
     def __init__(
         self,
         registry: Optional[AsyncToolRegistry] = None,
+        *,
+        blackboard: Blackboard | None = None,
+        tenant_id: str = "default",
     ) -> None:
         self.registry = registry or build_default_registry()
         self._cancel_event: asyncio.Event = asyncio.Event()
+        self.blackboard: Blackboard = blackboard or InMemoryBlackboard()
+        self.tenant_id: str = tenant_id
 
     def cancel(self) -> None:
         """Request cooperative cancellation before scheduling the next wave."""
@@ -62,6 +68,8 @@ class Orchestrator:
             pipeline_inputs=inputs or pipeline.inputs or {},
             pipeline_goal=pipeline.goal,
             session=session or {},
+            tenant_id=self.tenant_id,
+            blackboard=self.blackboard,
         )
 
         if options is None:
@@ -86,4 +94,3 @@ class Orchestrator:
             tasks_executed=result.tasks_executed,
             events=events,
         )
-

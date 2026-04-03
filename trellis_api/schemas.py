@@ -43,8 +43,16 @@ class ValidateResponse(BaseModel):
     message: str | None = None
 
 
+class ToolMetadata(BaseModel):
+    name: str
+    description: str
+    inputs: Dict[str, Dict[str, Any]]
+    output: Dict[str, Any]
+
+
 class ToolListResponse(BaseModel):
     tools: List[str]
+    metadata: List[ToolMetadata] | None = None
 
 
 class PlanValidateRequest(BaseModel):
@@ -55,4 +63,26 @@ class PlanValidateResponse(BaseModel):
     ok: bool
     errors: List[str] | None = None
     message: str | None = None
+
+
+class QueuedRunRequest(BaseModel):
+    pipeline: Pipeline
+    inputs: Dict[str, Any] | None = None
+    session: Dict[str, Any] | None = None
+    options: ExecutionOptionsIn | None = None
+    tenant_id: str = Field(default="default")
+    collect_events: bool = Field(default=False)
+
+
+class QueuedRunResponse(BaseModel):
+    run_id: str
+    status: str
+
+
+class RunStatusResponse(BaseModel):
+    run_id: str
+    status: str
+    result: Dict[str, Any] | None = None
+    error: str | None = None
+    events: List[Dict[str, Any]] | None = None
 

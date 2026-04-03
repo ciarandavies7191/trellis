@@ -36,6 +36,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from trellis.exceptions import ResolutionError
+from trellis.execution.blackboard import Blackboard, InMemoryBlackboard
 
 # ---------------------------------------------------------------------------
 # Template regex
@@ -73,6 +74,8 @@ class ResolutionContext:
     pipeline_goal:   str            = ""
     session:         dict[str, Any] = field(default_factory=dict)
     item:            Any            = None
+    tenant_id:       str            = "default"
+    blackboard:      Blackboard     = field(default_factory=InMemoryBlackboard)
 
     def set_task_output(self, task_id: str, output: Any) -> None:
         """Record a completed task's output in the context."""

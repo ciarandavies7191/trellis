@@ -1,0 +1,24 @@
+pipeline:
+  id: async_demo
+  goal: "Demonstrate queued async execution with fan-out and blackboard store"
+  inputs:
+    items: [alpha, beta, gamma, delta, epsilon]
+
+  tasks:
+    - id: kickoff
+      tool: mock
+      inputs:
+        input_data: "queued run started"
+
+    - id: process_items
+      tool: mock
+      parallel_over: "{{pipeline.inputs.items}}"
+      inputs:
+        input_data: "processing {{item}}"
+
+    - id: persist_results
+      tool: store
+      inputs:
+        key: async_demo_results
+        value: "{{process_items.output}}"
+

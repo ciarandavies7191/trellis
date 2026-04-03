@@ -50,7 +50,9 @@ trellis/
 │   ├── template.py                  # ResolutionContext, resolve*, {{}} template engine
 │   ├── dag.py                       # Async DAG executor (waves, retries, fan-out)
 │   ├── orchestrator.py              # Orchestrator (registry, context, cancel, events)
-│   └── blackboard.py                # Placeholder (blackboard pattern captured in context)
+│   ├── blackboard.py                # Tenant-scoped Blackboard + InMemoryBlackboard impl
+│   ├── run_queue.py                 # In-memory async run manager (submit/get/cancel)
+│   └── prefect_adapter.py           # Prefect executor skeleton (pluggable backend)
 │
 ├── tools/
 │   ├── __init__.py
@@ -60,17 +62,13 @@ trellis/
 │       ├── document.py              # load_document → DocumentHandle/PageList
 │       ├── extract.py               # extract_text (litellm OCR/selector) + extract_table (stub)
 │       ├── llm.py                   # llm_job (provider-agnostic)
-│       └── ...
+│       ├── mock.py                  # mock tool (dev/testing)
+│       └── store.py                 # store (echo; persistence handled by executor)
 │
 ├── trellis_api/                     # FastAPI server
 ├── trellis_cli/                     # Typer CLI (validate/run)
 ├── trellis_mcp/                     # MCP server
 └── tests/                           # Unit & integration tests
-
-data/
-├── generate_dataset.py
-├── prompts/
-└── archetypes/
 ```
 
 ---
@@ -105,9 +103,23 @@ Generation and execution loop:
 
 ### 4.3 Runtime Execution Model
 
-- `execution.template.ResolutionContext` holds execution state: task outputs, pipeline inputs, goal, session, and current `{{item}}` during fan-out.
+- `execution.template.ResolutionContext` holds execution state: task outputs, pipeline inputs, goal, session, current `{{item}}`, and now also `tenant_id` and a `blackboard` handle.
 - `execution.dag.execute_pipeline(...)` runs tasks wave-by-wave (async), resolves templates, fans out over `parallel_over`, applies retries with backoff and optional jitter, supports per-task timeout.
-- `execution.orchestrator.Orchestrator` builds the registry and context, calls `execute_pipeline`, collects stats/events, and exposes `cancel()` for cooperative cancellation.
+- `store` persistence: when a `store` task completes, the executor writes the value to the tenant-scoped blackboard (`blackboard.write(tenant_id, key, value, append=...)`) and mirrors it into the in-run `session` so downstream tasks can immediately read `{{session.key}}` in the same run.
+- `execution.orchestrator.Orchestrator` constructs `ResolutionContext` (injects `tenant_id` and `blackboard`), builds the default async tool registry, executes, collects stats/events, and exposes `cancel()` for cooperative cancellation.
+
+### 4.4 Background Execution (Queue Fallback)
+
+- For production-style async runs, an in-memory queue is provided: `execution/run_queue.py` with `submit/get/cancel`.
+- The API exposes:
+  - `POST /pipelines/run_async` → `{ run_id, status: "queued" }`
+  - `GET /pipelines/runs/{id}` → `{ status, result?, error?, events? }` (JSON-sanitized)
+  - `POST /pipelines/runs/{id}/cancel`
+- This queue is a dev/local fallback and can be replaced by Prefect or other backends without changing callers.
+
+### 4.5 Pluggable Execution Backends (Prefect)
+
+- `execution/prefect_adapter.py` contains a skeleton for a Prefect-backed executor. It will map waves/tasks to a Prefect Flow/Tasks graph, propagate `tenant_id`, enforce retries/timeouts, and use a durable blackboard (e.g., Redis or Prefect Blocks).
 
 ---
 
@@ -150,7 +162,7 @@ All core models use Pydantic v2; document models use dataclasses for efficiency 
 
 ## 7. Template System (`trellis.execution.template`)
 
-- `ResolutionContext`: task_outputs, pipeline_inputs, pipeline_goal, session, item
+- `ResolutionContext`: task_outputs, pipeline_inputs, pipeline_goal, session, item, tenant_id, blackboard
 - `resolve(value, ctx)`: recursively resolves `{{...}}` in str/list/dict; whole-string templates return native types
 - `resolve_inputs(inputs, ctx)`: convenience wrapper for dicts
 - `resolve_parallel_over(expr, ctx)`: ensures a list (errors on strings/non-iterables)
@@ -171,9 +183,11 @@ All core models use Pydantic v2; document models use dataclasses for efficiency 
 
 ### 8.3 Built-in Tools (`trellis.tools.impls`)
 - `document.load_document`: emits `DocumentHandle` (or list) from path/URL; PDFs parsed via PyPDF2; images emit `Page` with `image_bytes` for OCR
-- `extract.extract_text`: LLM-enhanced extraction; OCR via litellm vision models when needed; optional selector scoping via litellm; returns a dataclass with `__str__` → combined text
+- `extract.extract_text`: LLM-enhanced extraction; OCR via litellm vision models when needed; optional selector; returns a dataclass with `__str__` → combined text
 - `extract.extract_table`: stub implementation (extensible)
-- `llm.llm_job`: provider-agnostic LLM calls (OpenAI/Ollama/Anthropic)
+- `llm.llm_job`: provider-agnostic LLM calls
+- `store.store`: echo tool; persistence handled by executor’s blackboard integration
+- `mock.mock`: test helper tool
 
 ---
 
@@ -181,6 +195,11 @@ All core models use Pydantic v2; document models use dataclasses for efficiency 
 
 - CLI (`trellis_cli/main.py`): `trellis validate PATH`; `trellis run PATH [--inputs JSON] [--session JSON] [--timeout SECONDS] [--concurrency N] [--jitter FRACTION] [--json]`
 - API (`trellis_api/main.py`): FastAPI app with routers for pipelines/plans
+  - Sync: `POST /pipelines/run`
+  - Async (queue fallback):
+    - `POST /pipelines/run_async` (returns `run_id`)
+    - `GET /pipelines/runs/{run_id}` (status/result/events)
+    - `POST /pipelines/runs/{run_id}/cancel`
 - MCP (`trellis_mcp/server.py`): exposes tools to MCP clients
 
 ---
@@ -201,6 +220,8 @@ from trellis.validation.contract import validate_contract, assert_contract, Cont
 from trellis.execution.template import ResolutionContext, resolve, resolve_inputs, resolve_parallel_over
 from trellis.execution.dag import execute_pipeline, ExecutionOptions, PipelineResult
 from trellis.execution.orchestrator import Orchestrator
+from trellis.execution.blackboard import Blackboard, InMemoryBlackboard
+from trellis.execution.run_queue import InMemoryRunManager
 
 # Tools
 from trellis.tools.base import BaseTool
@@ -218,6 +239,7 @@ from trellis.tools.registry import AsyncToolRegistry, build_default_registry
 5. `Task.tool` is always a member of `KNOWN_TOOLS`.
 6. `Task.id` and `Pipeline.id` always satisfy snake_case constraints.
 7. Contract invariants: declared stores are written exactly once; `{{session.*}}` and `{{pipeline.inputs.*}}` references resolve to declared keys.
+8. Tenant invariants: persisted blackboard reads/writes are isolated by `tenant_id`.
 
 ---
 
