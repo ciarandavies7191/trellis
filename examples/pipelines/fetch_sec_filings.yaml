@@ -1,0 +1,28 @@
+pipeline:
+  id: fetch_sec_filings
+  goal: "Fetch recent SEC EDGAR filings for selected tickers"
+  inputs:
+    tickers: [AAPL, MSFT]
+    forms: [10-K, 10-Q]
+    year: 2025
+
+  tasks:
+    - id: fetch_filings
+      tool: fetch_data
+      inputs:
+        source: sec_edgar
+        companies: "{{pipeline.inputs.tickers}}"
+        forms: "{{pipeline.inputs.forms}}"
+        year: "{{pipeline.inputs.year}}"
+        count: 3
+
+    - id: summarize
+      tool: llm_job
+      inputs:
+        prompt: |
+          Summarize the latest filings per company (limit 3 each) in concise bullets.
+          Data:
+          {{fetch_filings.output.results}}
+        temperature: 0.2
+        max_tokens: 300
+

@@ -27,6 +27,7 @@ import os
 from pathlib import Path
 from typing import Optional, Any
 import dataclasses
+import logging
 
 import typer
 
@@ -35,6 +36,19 @@ from trellis.execution.orchestrator import Orchestrator
 from trellis.execution.dag import ExecutionOptions
 
 app = typer.Typer(help="Trellis CLI — validate and run pipelines")
+
+
+def _configure_logging() -> None:
+    """Configure root logging once at DEBUG level with a concise format."""
+    if logging.getLogger().handlers:
+        # Respect existing configuration (e.g., tests)
+        return
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+    )
+    # Make sure our package logs are visible
+    logging.getLogger("trellis").setLevel(logging.DEBUG)
 
 
 def _load_pipeline(path: Path) -> Pipeline:
@@ -68,6 +82,7 @@ def validate(
     path: Path = typer.Argument(..., exists=True, readable=True, help="Path to pipeline YAML"),
 ) -> None:
     """Validate a pipeline YAML file."""
+    _configure_logging()
     try:
         _ = _load_pipeline(path)
         typer.secho("Pipeline is valid.", fg=typer.colors.GREEN)
@@ -162,6 +177,11 @@ def run(
     ),
 ) -> None:
     """Run a pipeline YAML with options."""
+    _configure_logging()
+    logging.getLogger(__name__).debug(
+        "CLI run invoked: path=%s, timeout=%s, concurrency=%s, jitter=%.2f, json=%s",
+        str(path), timeout, concurrency, jitter, output_json,
+    )
     try:
         pipeline = _load_pipeline(path)
     except Exception as exc:  # noqa: BLE001
@@ -236,6 +256,7 @@ def run(
 
 
 def main() -> None:
+    _configure_logging()
     app()
 
 

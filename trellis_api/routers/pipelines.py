@@ -18,7 +18,7 @@ from trellis.execution.orchestrator import Orchestrator
 from trellis.execution.dag import ExecutionOptions, TaskError
 from trellis.execution.run_queue import run_manager
 from trellis.tools.registry import build_default_registry
-from trellis.tools.base import BaseTool, ToolInput, ToolOutput
+from trellis.tools.base import BaseTool
 
 router = APIRouter()
 
