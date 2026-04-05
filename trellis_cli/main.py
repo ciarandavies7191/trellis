@@ -12,11 +12,13 @@ Commands:
                   [--anthropic-api-key KEY] [--anthropic-model NAME]
                   [--ollama-host URL] [--ollama-model NAME]
                   [--extract-model NAME]
+                  [--env-file PATH]
 
 Examples (PowerShell):
   trellis validate .\pipelines\example.yaml
   trellis run .\pipelines\example.yaml --inputs '{"param":"value"}' --timeout 30 --concurrency 5 --json
   trellis run .\pipelines\example.yaml --llm-provider openai --openai-api-key $env:OPENAI_API_KEY --openai-model gpt-4o
+  trellis run .\pipelines\example.yaml --env-file .env
 """
 
 from __future__ import annotations
@@ -30,12 +32,14 @@ import dataclasses
 import logging
 
 import typer
+from dotenv import load_dotenv  # type: ignore
 
 from trellis.models.pipeline import Pipeline
 from trellis.execution.orchestrator import Orchestrator
 from trellis.execution.dag import ExecutionOptions
+from trellis.validation.graph import pipeline_execution_waves
 
-app = typer.Typer(help="Trellis CLI — validate and run pipelines")
+app = typer.Typer(help="Trellis CLI — validate and run pipelines", no_args_is_help=True)
 
 
 def _configure_logging() -> None:
@@ -77,15 +81,60 @@ def _json_sanitize(value: Any) -> Any:
         return repr(value)
 
 
+def _load_env_file(env_file: Optional[Path]) -> None:
+    """Load environment variables from a .env file.
+
+    Precedence: existing environment variables are preserved; .env only fills missing keys.
+    If env_file is None, load from "./.env" when present.
+    """
+    try:
+        if env_file is not None:
+            if env_file.exists():
+                load_dotenv(dotenv_path=env_file, override=False)
+                logging.getLogger(__name__).debug("Loaded environment from %s", str(env_file))
+            else:
+                logging.getLogger(__name__).warning("--env-file %s not found — skipping.", str(env_file))
+        else:
+            default_path = Path.cwd() / ".env"
+            if default_path.exists():
+                load_dotenv(dotenv_path=default_path, override=False)
+                logging.getLogger(__name__).debug("Loaded environment from %s", str(default_path))
+    except Exception as exc:  # noqa: BLE001
+        logging.getLogger(__name__).warning("Failed to load .env: %s", exc)
+
+
 @app.command()
 def validate(
     path: Path = typer.Argument(..., exists=True, readable=True, help="Path to pipeline YAML"),
+    env_file: Optional[Path] = typer.Option(
+        None,
+        "--env-file",
+        exists=False,
+        help="Path to a .env file to load (default: ./.env if present)",
+    ),
 ) -> None:
-    """Validate a pipeline YAML file."""
+    """Validate a pipeline YAML file and print basic stats."""
     _configure_logging()
+    _load_env_file(env_file)
     try:
-        _ = _load_pipeline(path)
+        pipeline = _load_pipeline(path)
+        # Build execution waves (validates acyclicity)
+        waves = pipeline_execution_waves(pipeline)
+        stats = {
+            "id": pipeline.id,
+            "title": pipeline.goal,
+            "tasks": len(pipeline.tasks),
+            "tools": sorted({t.tool for t in pipeline.tasks}),
+            "inputs_count": len(pipeline.inputs or {}),
+            "store_keys": pipeline.store_keys(),
+            "waves": len(waves),
+            "wave_sizes": [len(w) for w in waves],
+            "fan_out_tasks": sum(1 for t in pipeline.tasks if t.parallel_over is not None),
+            "total_retries": sum(int(getattr(t, "retry", 0) or 0) for t in pipeline.tasks),
+        }
         typer.secho("Pipeline is valid.", fg=typer.colors.GREEN)
+        typer.secho("Stats:", fg=typer.colors.GREEN)
+        typer.echo(json.dumps(stats, ensure_ascii=False, indent=2))
     except Exception as exc:  # noqa: BLE001
         typer.secho(f"Validation failed: {exc}", fg=typer.colors.RED)
         raise typer.Exit(code=1)
@@ -175,9 +224,16 @@ def run(
         "--extract-model",
         help="Default model for extract_text (EXTRACT_TEXT_MODEL; litellm model string)",
     ),
+    env_file: Optional[Path] = typer.Option(
+        None,
+        "--env-file",
+        exists=False,
+        help="Path to a .env file to load (default: ./.env if present)",
+    ),
 ) -> None:
     """Run a pipeline YAML with options."""
     _configure_logging()
+    _load_env_file(env_file)
     logging.getLogger(__name__).debug(
         "CLI run invoked: path=%s, timeout=%s, concurrency=%s, jitter=%.2f, json=%s",
         str(path), timeout, concurrency, jitter, output_json,
