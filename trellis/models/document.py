@@ -89,6 +89,41 @@ class Page:
     sheet_name:  str | None          = None
     metadata:    dict[str, Any]      = field(default_factory=dict)
 
+    # ------------------------------ Helpers ------------------------------ #
+    def native_char_count(self) -> int:
+        """Return count of native (non-OCR) characters if provided by loader."""
+        try:
+            return int((self.metadata or {}).get("native_char_count", 0))
+        except Exception:
+            return 0
+
+    def image_coverage(self) -> float | None:
+        """Return cumulative image area coverage ratio [0..1] if provided."""
+        val = (self.metadata or {}).get("image_coverage")
+        try:
+            if val is None:
+                return None
+            f = float(val)
+            if f < 0.0:
+                return 0.0
+            if f > 1.0:
+                return 1.0
+            return f
+        except Exception:
+            return None
+
+    def size(self) -> tuple[float, float] | None:
+        """Return (width, height) if provided by loader metadata."""
+        md = self.metadata or {}
+        w = md.get("width") or md.get("page_width")
+        h = md.get("height") or md.get("page_height")
+        try:
+            if isinstance(w, (int, float)) and isinstance(h, (int, float)):
+                return float(w), float(h)
+        except Exception:
+            return None
+        return None
+
 
 # ---------------------------------------------------------------------------
 # DocumentHandle

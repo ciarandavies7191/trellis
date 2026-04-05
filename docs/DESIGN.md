@@ -60,10 +60,14 @@ trellis/
 │   ├── registry.py                  # AsyncToolRegistry, discovery, build_default_registry
 │   └── impls/                       # Built-in tool implementations
 │       ├── document.py              # load_document → DocumentHandle/PageList
-│       ├── extract.py               # extract_text (litellm OCR/selector) + extract_table (stub)
-│       ├── llm.py                   # llm_job (provider-agnostic)
+│       ├── extract.py               # extract_text (OCR/selector via litellm), extract_table (stub), extract_chart (stub)
+│       ├── llm.py                   # llm_job (provider-agnostic: openai|ollama|anthropic)
 │       ├── mock.py                  # mock tool (dev/testing)
-│       └── store.py                 # store (echo; persistence handled by executor)
+│       ├── store.py                 # store (echo; persistence handled by executor)
+│       ├── search.py                # search_web
+│       ├── select.py                # select (prompt or explicit pages; model override)
+│       ├── export.py                # export artifact (md/pdf/csv/xlsx/json)
+│       └── fetch.py                 # fetch_data
 │
 ├── trellis_api/                     # FastAPI server (thin REST layer)
 │   ├── __init__.py
@@ -244,19 +248,29 @@ All core models use Pydantic v2; document models use dataclasses for efficiency 
 
 ### 9.3 Built-in Tools (`trellis.tools.impls`)
 - `document.load_document`: emits `DocumentHandle` (or list) from path/URL; PDFs parsed via PyPDF2; images emit `Page` with `image_bytes` for OCR
-- `extract.extract_text`: LLM-enhanced extraction; OCR via litellm vision models when needed; optional selector; returns a dataclass with `__str__` → combined text
+- `extract.extract_text`: LLM-enhanced extraction; OCR via litellm vision models when needed; optional selector; returns a dataclass with `__str__` → combined text; default model from `EXTRACT_TEXT_MODEL` (fallback `openai/gpt-4o`)
 - `extract.extract_table`: stub implementation (extensible)
-- `llm.llm_job`: provider-agnostic LLM calls
+- `extract.extract_chart`: stub implementation to extract chart data (guided by classification; not production-grade)
+- `llm.llm_job`: provider-agnostic LLM calls (providers selectable via `TRELLIS_LLM_PROVIDER`; model overrides supported per-call)
+- `search.search_web`: web search, returns snippets and URLs
+- `select.select`: filter documents by NL prompt or explicit `pages`; model override supported via `SELECT_MODEL` (falls back to `EXTRACT_TEXT_MODEL`)
+- `export.export`: produce file artifacts (markdown/pdf/csv/xlsx/json)
+- `fetch.fetch_data`: retrieve structured data from external sources
 - `store.store`: echo tool; persistence handled by executor’s blackboard integration
 - `mock.mock`: test helper tool
+
+Note: `classify_page` is a reserved DSL tool name but is not implemented/registered by default. Implement a `BaseTool` under `tools/impls/` and register it to use in pipelines.
 
 ---
 
 ## 10. CLI & API
 
-- CLI (`trellis_cli/main.py`): `trellis validate PATH`; `trellis run PATH [--inputs JSON] [--session JSON] [--timeout SECONDS] [--concurrency N] [--jitter FRACTION] [--json]`
+- CLI (`trellis_cli/main.py`): `trellis validate PATH`; `trellis run PATH [--inputs JSON] [--session JSON] [--timeout SECONDS] [--concurrency N] [--jitter FRACTION] [--json] [--llm-provider NAME] [--llm-model NAME] [--openai-api-key KEY] [--openai-model NAME] [--anthropic-api-key KEY] [--anthropic-model NAME] [--ollama-host URL] [--ollama-model NAME] [--extract-model NAME]`
+  - Per-run overrides export environment vars for built-in tools (e.g., `EXTRACT_TEXT_MODEL`, `SELECT_MODEL`).
 - API (`trellis_api/main.py`): FastAPI app with routers for pipelines/plans
   - Sync: `POST /pipelines/run`
+  - Validation: `POST /pipelines/validate`, `POST /plans/validate`
+  - Tool discovery: `GET /pipelines/tools` (names + metadata from registered tools)
   - Async (queue fallback):
     - `POST /pipelines/run_async` (returns `run_id`)
     - `GET /pipelines/runs/{run_id}` (status/result/events)
@@ -315,11 +329,14 @@ from trellis.tools.registry import AsyncToolRegistry, build_default_registry
 
 **Core dependencies** (installed via `pyproject.toml`):
 - `pydantic>=2.0` — Data validation and models
+- `pyyaml>=6.0` — YAML parsing
 - `fastapi>=0.104` — REST API framework
 - `uvicorn>=0.24` — ASGI server
-- `pyyaml>=6.0` — YAML parsing
 - `typer` — CLI framework
 - `rich` — CLI formatting
+- `litellm>=1.0.0` — LLM and vision OCR backend used by `extract_text`/`select`
+- `PyPDF2>=3.0.0` — PDF parsing fallback
+- `pymupdf>=1.24.0` — Rich PDF page metadata (image coverage, native char counts)
 
 **Dev dependencies**:
 - `pytest>=7.0` — Testing framework

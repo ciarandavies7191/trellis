@@ -43,6 +43,9 @@ KNOWN_TOOLS: frozenset[str] = frozenset(
         "tracker_2",
         "tracker_3",
         "tracker_4",
+        # New tools
+        "classify_page",
+        "extract_chart",
     }
 )
 

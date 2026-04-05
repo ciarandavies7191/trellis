@@ -5,12 +5,18 @@ pipeline:
     - id: ingest_image
       tool: load_document
       inputs:
-        path: "https://ocr.space/Content/Images/receipt-ocr-original.jpg"
+        path: "./examples/data/Small-Foundation-Annual-Report-2019.pdf"
+
+    - id: select_pages
+      tool: select
+      inputs:
+        document: "{{ingest_image.output}}"
+        prompt: "pages 2, 3, and 4"
 
     - id: ocr_image
       tool: extract_text
       inputs:
-        document: "{{ingest_image.output}}"
+        document: "{{select_pages.output}}"
         # Optional: override litellm model for OCR/selector, e.g. "openai/gpt-4o"
         model: "openai/gpt-4o"
 
@@ -19,7 +25,7 @@ pipeline:
       inputs:
         prompt: |
           You are a helpful assistant. Summarize the extracted text in 3 concise bullet points.
-          If the text is very short, still produce a brief, accurate summary.
+          If the text is very short, still produce a brief, accurate summary or failing that, just return the text as is.
 
           Extracted text:
           {{ocr_image.output}}

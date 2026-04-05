@@ -23,5 +23,5 @@ __all__ = [
     "ExtractTextTool",
     "SearchWebTool",
     "StoreTool",
-    "ExportTool",
+    "ExportTool"
 ]

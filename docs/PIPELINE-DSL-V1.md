@@ -690,9 +690,13 @@ task runs as soon as its upstream task completes.
 | `search_web` | Web search, returns snippets and URLs | no |
 | `store` | Persist a value to the session blackboard | yes* |
 | `export` | Produce a file artifact (md, pdf, csv, xlsx, json) | yes |
+| `extract_chart` | Extract chart data from documents (stub) | no |
+| `classify_page` | Page classification to guide extraction (reserved) | no |
 
 *`store` is logically terminal but may appear mid-pipeline if persistence is needed
 before further processing steps.
+
+> Note: `extract_chart` is provided as a stub under tools/impls/extract.py. `classify_page` is reserved in the DSL but not registered by default — implement and register a `BaseTool` to use it.
 
 ---
 

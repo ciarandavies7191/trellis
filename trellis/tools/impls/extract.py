@@ -25,11 +25,19 @@ logger = logging.getLogger(__name__)
 
 #: litellm model string used for both OCR and selector calls unless overridden.
 DEFAULT_MODEL: str = os.getenv(
-    "EXTRACT_TEXT_MODEL", "anthropic/claude-3-5-sonnet-20241022"
+    "EXTRACT_TEXT_MODEL", "openai/gpt-4o"
+)
+
+#: Native-char threshold below which we prefer OCR on raster-heavy pages.
+EXTRACT_MIN_NATIVE_CHARS: int = int(os.getenv("EXTRACT_MIN_NATIVE_CHARS", "80"))
+
+#: Page image coverage threshold [0..1] above which we prefer OCR.
+EXTRACT_IMAGE_COVERAGE_THRESHOLD: float = float(
+    os.getenv("EXTRACT_IMAGE_COVERAGE_THRESHOLD", "0.25")
 )
 
 #: Pages with fewer selectable chars than this are candidates for OCR
-#: (only when image_bytes is also present).
+#: (legacy fallback only when coverage metric is unavailable).
 OCR_CHAR_THRESHOLD: int = int(os.getenv("EXTRACT_TEXT_OCR_THRESHOLD", "150"))
 
 #: Max tokens for OCR transcription per page.
@@ -216,15 +224,43 @@ def _apply_selector(full_text: str, selector: str, backend: LLMBackend) -> str:
 
 
 def _extract_page(page: Page, source: str, backend: LLMBackend) -> PageResult:
-    needs_ocr = (
-        len(page.text.strip()) < OCR_CHAR_THRESHOLD
-        and page.image_bytes is not None
+    # Prefer OCR when coverage is high or native char count is low.
+    try:
+        coverage = page.metadata.get("image_coverage")
+    except Exception:
+        coverage = None
+    try:
+        native_chars = page.metadata.get("native_char_count", len(page.text or ""))
+    except Exception:
+        native_chars = len(page.text or "")
+
+    prefer_ocr = (
+        (coverage is not None and coverage >= EXTRACT_IMAGE_COVERAGE_THRESHOLD)
+        or (native_chars < EXTRACT_MIN_NATIVE_CHARS)
     )
 
-    if needs_ocr:
+    # Legacy fallback when coverage isn't available at all.
+    legacy_low_text = len((page.text or "").strip()) < OCR_CHAR_THRESHOLD
+
+    needs_ocr = prefer_ocr or (legacy_low_text and page.image_bytes is not None)
+
+    if needs_ocr and page.image_bytes is None:
+        # Cannot OCR without a raster — fall back with a notice.
         logger.info(
-            "OCR triggered: source=%r  page=%d  selectable_chars=%d",
-            source, page.number, len(page.text.strip()),
+            "OCR preferred for page=%d (coverage=%s, native_chars=%d) but no image bytes available — falling back to text.",
+            getattr(page, "number", -1),
+            f"{coverage:.2f}" if isinstance(coverage, (int, float)) else "None",
+            native_chars,
+        )
+        text = page.text or ""
+        ocr_applied = False
+    elif needs_ocr:
+        logger.info(
+            "OCR selected: source=%r  page=%d  coverage=%s  native_chars=%d",
+            source,
+            getattr(page, "number", -1),
+            f"{coverage:.2f}" if isinstance(coverage, (int, float)) else "None",
+            native_chars,
         )
         text = _ocr_page(page, backend)
         ocr_applied = True
@@ -412,11 +448,12 @@ class ExtractTableTool(BaseTool):
     def __init__(self, name: str = "extract_table") -> None:
         super().__init__(name, "Extract structured tables from documents (stub)")
 
-    def execute(self, document: Any, selector: str | None = None, **kwargs: Any) -> dict[str, Any]:
+    def execute(self, document: Any, selector: str | None = None, classification: Any | None = None, **kwargs: Any) -> dict[str, Any]:
         return {
             "status": "success",
             "document": str(document)[:200],
             "selector": selector,
+            "classification": type(classification).__name__ if classification is not None else None,
             "tables": [],
         }
 
@@ -424,7 +461,30 @@ class ExtractTableTool(BaseTool):
         return {
             "document": ToolInput(name="document", description="Document handle or text", required=True),
             "selector": ToolInput(name="selector", description="Optional hint or region", required=False, default=None),
+            "classification": ToolInput(name="classification", description="PageClassification or list to guide backend", required=False, default=None),
         }
 
     def get_output(self) -> ToolOutput:
         return ToolOutput(name="tables", description="List of extracted tables", type_="array")
+
+
+class ExtractChartTool(BaseTool):
+    def __init__(self, name: str = "extract_chart") -> None:
+        super().__init__(name, "Extract chart data from documents (stub)")
+
+    def execute(self, document: Any, classification: Any | None = None, **kwargs: Any) -> dict[str, Any]:
+        return {
+            "status": "success",
+            "document": str(document)[:200],
+            "classification": type(classification).__name__ if classification is not None else None,
+            "charts": [],
+        }
+
+    def get_inputs(self) -> dict[str, ToolInput]:
+        return {
+            "document": ToolInput(name="document", description="Document handle or text", required=True),
+            "classification": ToolInput(name="classification", description="PageClassification or list to guide backend", required=False, default=None),
+        }
+
+    def get_output(self) -> ToolOutput:
+        return ToolOutput(name="charts", description="List of extracted charts", type_="array")

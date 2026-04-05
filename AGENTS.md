@@ -25,8 +25,12 @@ Data flow: Natural language goal → Plan (task sequence) → Pipeline (executab
 - **Linting**: `black .; isort .; mypy trellis/; ruff .` (line length 100, profile black)
 - **Building**: `python -m build` (setuptools backend)
 - **API Server**: `python -m trellis_api.main` (runs on localhost:8000)
-- **CLI Usage**: `trellis validate path/to/pipeline.yaml; trellis run path/to/pipeline.yaml [--inputs JSON] [--session JSON] [--timeout SECONDS] [--concurrency N] [--jitter FRACTION] [--json]`
+- **CLI Usage**: `trellis validate path/to/pipeline.yaml; trellis run path/to/pipeline.yaml [--inputs JSON] [--session JSON] [--timeout SECONDS] [--concurrency N] [--jitter FRACTION] [--json] [--llm-provider NAME] [--llm-model NAME] [--openai-api-key KEY] [--openai-model NAME] [--anthropic-api-key KEY] [--anthropic-model NAME] [--ollama-host URL] [--ollama-model NAME] [--extract-model NAME]`
   - PowerShell example: `trellis run .\examples\pipelines\single_mock.yaml --inputs '{"param":"value"}' --timeout 30 --concurrency 5 --json`
+  - PowerShell (OpenAI): `trellis run .\examples\pipelines\pdf_summarize.yaml --llm-provider openai --openai-api-key $env:OPENAI_API_KEY --openai-model gpt-4o`
+  - PowerShell (Ollama): `trellis run .\examples\pipelines\pdf_summarize.yaml --llm-provider ollama --ollama-host http://localhost:11434 --ollama-model llama3`
+  - PowerShell (Anthropic): `trellis run .\examples\pipelines\pdf_summarize.yaml --llm-provider anthropic --anthropic-api-key $env:ANTHROPIC_API_KEY --anthropic-model claude-3-haiku-20240307`
+  - Note: These flags set per-run environment overrides for built-in tools. `extract_text` and `select` default to `EXTRACT_TEXT_MODEL`/`SELECT_MODEL` (fallback `openai/gpt-4o`).
 - **API: Async queued runs (fallback queue)**
   - Submit: `POST /pipelines/run_async` with `{ pipeline, inputs?, session?, options?, tenant_id?, collect_events? }` → `{ run_id, status: queued }`
   - Status: `GET /pipelines/runs/{run_id}` → `{ status, result?, error?, events? }`
@@ -45,10 +49,10 @@ Data flow: Natural language goal → Plan (task sequence) → Pipeline (executab
 ## Integration Points
 
 - **External Tools**: Provide `BaseTool` implementations under `tools/impls/` (e.g., `fetch.py`, `document.py`, `llm.py`, `extract.py`, `store.py`, `search.py`, `export.py`, `mock.py`). Names should match DSL expectations (see `KNOWN_TOOLS` in `models/pipeline.py`). Auto-registered by the async registry when using `build_default_registry()`.
-- **API Endpoints**: Add routers in `trellis_api/routers/` (e.g., `pipelines.py`). Synchronous runs: `POST /pipelines/run`. Queued runs: `POST /pipelines/run_async`, poll `GET /pipelines/runs/{id}`, cancel via `POST /pipelines/runs/{id}/cancel`.
+- **API Endpoints**: Add routers in `trellis_api/routers/` (e.g., `pipelines.py`). Synchronous runs: `POST /pipelines/run`. Queued runs: `POST /pipelines/run_async`, poll `GET /pipelines/runs/{id}`, cancel via `POST /pipelines/runs/{id}/cancel`. Pipeline validation: `POST /pipelines/validate`. Tool discovery: `GET /pipelines/tools` lists registered tools with metadata. Plan validation: `POST /plans/validate`.
 - **Execution Backends**: Local executor is default. Prefect adapter (`execution/prefect_adapter.py`) will provide a pluggable backend; background queue (`execution/run_queue.py`) is the fallback for dev/local.
 - **MCP Protocol**: Expose tools to clients via `trellis_mcp/server.py`
-- **Dependencies**: Core uses pydantic, pyyaml; API uses fastapi/uvicorn; CLI uses typer/rich; Python >= 3.12
+- **Dependencies**: Core uses pydantic, pyyaml; API uses fastapi/uvicorn; CLI uses typer/rich; built-in document/LLM tools use litellm, PyPDF2, and PyMuPDF; Python >= 3.12
 
 ### Tool Registry (as of DSL v1.3)
 
@@ -64,10 +68,14 @@ Data flow: Natural language goal → Plan (task sequence) → Pipeline (executab
 | store          | Persist a value to the session blackboard (see note above)   | yes*      |
 | export         | Produce a file artifact (md, pdf, csv, xlsx, json)           | yes       |
 | mock           | Test helper tool (dev/testing only)                          | no        |
+| extract_chart  | Extract chart data from documents (stub)                     | no        |
+| classify_page  | Page classification to guide extraction (reserved)           | no        |
 
 *`store` is logically terminal but may appear mid-pipeline if persistence is needed before further processing steps.
 
 - Tracker/fake tools (e.g., `tracker`, `failing_mock`, `flaky_tool`, `reliable_tool`, `permanent_failure`, `tracker_1`, `tracker_2`, `tracker_3`, `tracker_4`) are for testing and should not be used in production pipelines.
+
+> Note: `extract_chart` is provided as a stub implementation in `tools/impls/extract.py`. `classify_page` is part of the DSL tool names but is not registered by default — implement and register a `BaseTool` to use it in pipelines.
 
 ### Await Barrier
 
