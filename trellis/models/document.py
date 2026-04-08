@@ -1,19 +1,23 @@
 """
 pipeline_runtime.models.document
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Shared document representation used by load_document, select, extract_table,
-and extract_text tools.
+Shared document representation used by ingest_document, select,
+extract_from_texts, and extract_from_tables tools.
 
 A DocumentHandle is the opaque value that flows between document-oriented
 tasks in the DSL.  It carries:
 
-  - raw bytes or decoded text for each page / sheet
+  - decoded text for each page / sheet (fully resolved after ingest_document)
   - detected format and source metadata
-  - an optional flag indicating the document required (or should require) OCR
+  - optional image_bytes for pages that were rasterised (available for
+    visual table extraction by extract_from_tables)
   - provenance: which pages / sheets are present in this handle (a `select`
-    call produces a reduced handle covering only the matched subset)
+    call produces a reduced PageList covering only the matched subset)
 
-PageList is the specialized form emitted by `select` — it holds a subset of
+After ingest_document runs, all pages have their .text field populated
+(native text or OCR result). Downstream tools do not need to handle OCR.
+
+PageList is the specialised form emitted by `select` — it holds a subset of
 pages from a parent handle so downstream tools know the exact provenance.
 """
 

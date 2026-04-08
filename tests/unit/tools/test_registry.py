@@ -11,7 +11,7 @@ async def test_discovery_explicit_names():
     reg.discover_impls()
 
     # Implementations should be registered by their implementation names only
-    expected = {"llm_job", "fetch_data", "load_document", "mock"}
+    expected = {"llm_job", "fetch_data", "ingest_document", "mock"}
     registered = set(reg.registered_tools())
     assert expected.issubset(registered)
 

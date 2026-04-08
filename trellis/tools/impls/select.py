@@ -1,4 +1,16 @@
-"""'select' tool — narrows document content based on a prompt or explicit pages."""
+"""'select' tool — retrieval step that filters document pages to a relevant subset.
+
+This tool is a pure retrieval mechanism.  It assumes all pages already have
+clean text (i.e. the document was ingested via ingest_document, which handles
+OCR).  It does not perform OCR or extract structured data — those are the
+responsibilities of ingest_document and extract_from_texts/extract_from_tables
+respectively.
+
+Selection modes (in priority order):
+1. Explicit page numbers — if the caller passes a ``pages`` list.
+2. NL prompt — uses LLM to identify relevant page numbers from a page inventory.
+3. Passthrough — if neither is provided, all pages are returned as a PageList.
+"""
 
 from __future__ import annotations
 
@@ -7,7 +19,10 @@ import os
 import re
 from typing import Any, Dict, List
 
-import litellm  # type: ignore
+try:
+    import litellm  # type: ignore
+except ImportError:  # pragma: no cover
+    litellm = None  # type: ignore
 
 from ..base import BaseTool, ToolInput, ToolOutput
 from trellis.models.document import (
@@ -62,6 +77,8 @@ def _build_inventory(handle: DocumentHandle | PageList, max_chars_per_page: int 
 
 
 def _select_pages_via_llm(prompt: str, handle: DocumentHandle | PageList, model: str) -> List[int]:
+    if litellm is None:  # pragma: no cover
+        raise RuntimeError("litellm is not installed. pip install litellm")
     system = (
         "You are a precise page selector. Given a list of pages with short snippets, "
         "return a JSON array with the 1-based page numbers that are relevant. Output only the array."
@@ -116,7 +133,11 @@ def _select_handle(document: DocumentHandle | PageList, prompt: str | None, page
 
 
 class SelectTool(BaseTool):
-    """Select relevant subset of a document by NL prompt or explicit page list."""
+    """Retrieval tool: filter a document to relevant pages by NL prompt or explicit page numbers.
+
+    Assumes page text is already populated (run ingest_document first).
+    Uses LLM to identify relevant page numbers from a page inventory.
+    """
 
     def __init__(self, name: str = "select") -> None:
         super().__init__(name, "Filter a document to relevant pages/sections/sheets")

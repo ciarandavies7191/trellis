@@ -1,33 +1,35 @@
 pipeline:
   id: image_ocr_summarize
-  goal: "Load an image from URL, run OCR to extract text, then summarize key points"
+  goal: "Ingest a PDF (including OCR for scanned pages), select relevant pages, extract text, then summarize"
   tasks:
-    - id: ingest_image
-      tool: load_document
+    - id: ingest_doc
+      tool: ingest_document
       inputs:
         path: "./examples/data/Small-Foundation-Annual-Report-2019.pdf"
+        # OCR is applied automatically to any scanned pages during ingest
 
     - id: select_pages
       tool: select
       inputs:
-        document: "{{ingest_image.output}}"
+        document: "{{ingest_doc.output}}"
         prompt: "pages 2, 3, and 4"
 
-    - id: ocr_image
-      tool: extract_text
+    - id: extract_content
+      tool: extract_from_texts
       inputs:
         document: "{{select_pages.output}}"
-        # Optional: override litellm model for OCR/selector, e.g. "openai/gpt-4o"
+        prompt: "Extract the key programme areas, financial highlights, and any notable figures or outcomes"
+        # Optional: override litellm model, e.g. "openai/gpt-4o"
         model: "openai/gpt-4o"
 
-    - id: summarize_ocr
+    - id: summarize_content
       tool: llm_job
       inputs:
         prompt: |
-          You are a helpful assistant. Summarize the extracted text in 3 concise bullet points.
-          If the text is very short, still produce a brief, accurate summary or failing that, just return the text as is.
+          You are a helpful assistant. Summarize the extracted content in 3 concise bullet points.
+          If the content is very short, still produce a brief, accurate summary.
 
-          Extracted text:
-          {{ocr_image.output}}
+          Extracted content:
+          {{extract_content.output}}
         temperature: 0.3
         max_tokens: 200

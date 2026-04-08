@@ -30,7 +30,7 @@ Data flow: Natural language goal → Plan (task sequence) → Pipeline (executab
   - PowerShell (OpenAI): `trellis run .\examples\pipelines\pdf_summarize.yaml --llm-provider openai --openai-api-key $env:OPENAI_API_KEY --openai-model gpt-4o`
   - PowerShell (Ollama): `trellis run .\examples\pipelines\pdf_summarize.yaml --llm-provider ollama --ollama-host http://localhost:11434 --ollama-model llama3`
   - PowerShell (Anthropic): `trellis run .\examples\pipelines\pdf_summarize.yaml --llm-provider anthropic --anthropic-api-key $env:ANTHROPIC_API_KEY --anthropic-model claude-3-haiku-20240307`
-  - Note: These flags set per-run environment overrides for built-in tools. `extract_text` and `select` default to `EXTRACT_TEXT_MODEL`/`SELECT_MODEL` (fallback `openai/gpt-4o`).
+  - Note: These flags set per-run environment overrides for built-in tools. `ingest_document` uses `INGEST_OCR_MODEL` for OCR. `extract_from_texts`/`extract_from_tables` use `EXTRACT_MODEL`. `select` uses `SELECT_MODEL` (all fall back to `openai/gpt-4o`).
 - **API: Async queued runs (fallback queue)**
   - Submit: `POST /pipelines/run_async` with `{ pipeline, inputs?, session?, options?, tenant_id?, collect_events? }` → `{ run_id, status: queued }`
   - Status: `GET /pipelines/runs/{run_id}` → `{ status, result?, error?, events? }`
@@ -54,22 +54,24 @@ Data flow: Natural language goal → Plan (task sequence) → Pipeline (executab
 - **MCP Protocol**: Expose tools to clients via `trellis_mcp/server.py`
 - **Dependencies**: Core uses pydantic, pyyaml; API uses fastapi/uvicorn; CLI uses typer/rich; built-in document/LLM tools use litellm, PyPDF2, and PyMuPDF; Python >= 3.12
 
-### Tool Registry (as of DSL v1.3)
+### Tool Registry (as of DSL v1.4)
 
-| Tool           | Purpose                                                      | Terminal? |
-|----------------|--------------------------------------------------------------|-----------|
-| load_document  | Load files or URLs into working memory                       | no        |
-| select         | Filter document to relevant pages/sections/sheets            | no        |
-| extract_table  | Deterministic table extraction from documents                | no        |
-| extract_text   | Plain text extraction from documents                         | no        |
-| llm_job        | LLM reasoning, extraction, synthesis, generation             | no        |
-| fetch_data     | Retrieve structured data from external sources               | no        |
-| search_web     | Web search, returns snippets and URLs                        | no        |
-| store          | Persist a value to the session blackboard (see note above)   | yes*      |
-| export         | Produce a file artifact (md, pdf, csv, xlsx, json)           | yes       |
-| mock           | Test helper tool (dev/testing only)                          | no        |
-| extract_chart  | Extract chart data from documents (stub)                     | no        |
-| classify_page  | Page classification to guide extraction (reserved)           | no        |
+Document processing pipeline: `ingest_document → select → extract_from_texts / extract_from_tables`
+
+| Tool                | Purpose                                                                  | Terminal? |
+|---------------------|--------------------------------------------------------------------------|-----------|
+| ingest_document     | Load files/URLs and fully resolve (incl. eager OCR) into DocumentHandle  | no        |
+| select              | Retrieval: filter document to relevant pages by NL prompt or page numbers | no        |
+| extract_from_texts  | Structured field extraction from page text → JSON dict                   | no        |
+| extract_from_tables | Structured table extraction → list of {headers, rows, source_page}       | no        |
+| llm_job             | LLM reasoning, extraction, synthesis, generation                         | no        |
+| fetch_data          | Retrieve structured data from external sources                            | no        |
+| search_web          | Web search, returns snippets and URLs                                     | no        |
+| store               | Persist a value to the session blackboard (see note above)                | yes*      |
+| export              | Produce a file artifact (md, pdf, csv, xlsx, json)                        | yes       |
+| mock                | Test helper tool (dev/testing only)                                       | no        |
+| extract_chart       | Extract chart data from documents (stub)                                  | no        |
+| classify_page       | Page classification to guide extraction (reserved)                        | no        |
 
 *`store` is logically terminal but may appear mid-pipeline if persistence is needed before further processing steps.
 

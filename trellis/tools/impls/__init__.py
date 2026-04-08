@@ -6,9 +6,9 @@ All BaseTool subclasses here are auto-discovered by AsyncToolRegistry.discover_i
 from .mock import MockTool
 from .llm import LLMTool
 from .fetch import FetchTool
-from .document import DocumentTool
+from .document import IngestDocumentTool
 from .select import SelectTool
-from .extract import ExtractTableTool, ExtractTextTool
+from .extract import ExtractFromTablesTool, ExtractFromTextsTool
 from .search import SearchWebTool
 from .store import StoreTool
 from .export import ExportTool
@@ -17,11 +17,11 @@ __all__ = [
     "MockTool",
     "LLMTool",
     "FetchTool",
-    "DocumentTool",
+    "IngestDocumentTool",
     "SelectTool",
-    "ExtractTableTool",
-    "ExtractTextTool",
+    "ExtractFromTablesTool",
+    "ExtractFromTextsTool",
     "SearchWebTool",
     "StoreTool",
-    "ExportTool"
+    "ExportTool",
 ]

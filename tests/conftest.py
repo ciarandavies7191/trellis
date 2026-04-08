@@ -239,7 +239,7 @@ pipeline:
 
 @pytest.fixture
 def document_pipeline_yaml() -> str:
-    """Pipeline exercising load_document → select → extract_table → llm_job → export."""
+    """Pipeline exercising ingest_document → select → extract_from_tables → llm_job → export."""
     return """
 pipeline:
   id: document_pipeline
@@ -248,7 +248,7 @@ pipeline:
     report_path: "/data/annual_report.pdf"
   tasks:
     - id: ingest_report
-      tool: load_document
+      tool: ingest_document
       inputs:
         path: "{{pipeline.inputs.report_path}}"
     - id: select_financial_pages
@@ -257,15 +257,15 @@ pipeline:
         document: "{{ingest_report.output}}"
         prompt: "Pages containing financial tables, balance sheets, or annual projections"
     - id: extract_tables
-      tool: extract_table
+      tool: extract_from_tables
       inputs:
         document: "{{select_financial_pages.output}}"
         selector: "income statement"
     - id: extract_notes
-      tool: extract_text
+      tool: extract_from_texts
       inputs:
         document: "{{ingest_report.output}}"
-        selector: "notes to financial statements"
+        prompt: "Extract the notes to financial statements"
     - id: reconcile
       tool: llm_job
       inputs:
