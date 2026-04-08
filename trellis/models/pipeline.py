@@ -24,10 +24,11 @@ _TEMPLATE_RE = re.compile(r"\{\{([^}]+)\}\}")
 #: Valid tool names as defined in DSL v1.3 Tool Registry.
 KNOWN_TOOLS: frozenset[str] = frozenset(
     {
-        "load_document",
+        "ingest_document",
         "select",
-        "extract_table",
-        "extract_text",
+        "extract_from_texts",
+        "extract_from_tables",
+        "extract_chart",
         "llm_job",
         "fetch_data",
         "search_web",
@@ -43,9 +44,7 @@ KNOWN_TOOLS: frozenset[str] = frozenset(
         "tracker_2",
         "tracker_3",
         "tracker_4",
-        # New tools
         "classify_page",
-        "extract_chart",
     }
 )
 

@@ -1,13 +1,25 @@
+"""extract_from_texts and extract_from_tables tools.
+
+These tools assume the document has already been fully ingested by
+ingest_document (all pages have clean .text — OCR already applied).
+They do NOT perform OCR; they perform structured extraction from text content.
+"""
+
 from __future__ import annotations
 
 import base64
+import json
 import logging
 import os
+import re
 import textwrap
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Protocol, runtime_checkable
 
-import litellm  # type: ignore
+try:
+    import litellm  # type: ignore
+except ImportError:  # pragma: no cover
+    litellm = None  # type: ignore
 
 from trellis.models.document import (
     DocumentHandle,
@@ -23,47 +35,22 @@ logger = logging.getLogger(__name__)
 # Configuration
 # ---------------------------------------------------------------------------
 
-#: litellm model string used for both OCR and selector calls unless overridden.
-DEFAULT_MODEL: str = os.getenv(
+#: litellm model for structured extraction calls.
+DEFAULT_MODEL: str = os.getenv("EXTRACT_MODEL") or os.getenv(
     "EXTRACT_TEXT_MODEL", "openai/gpt-4o"
 )
 
-#: Native-char threshold below which we prefer OCR on raster-heavy pages.
-EXTRACT_MIN_NATIVE_CHARS: int = int(os.getenv("EXTRACT_MIN_NATIVE_CHARS", "80"))
-
-#: Page image coverage threshold [0..1] above which we prefer OCR.
-EXTRACT_IMAGE_COVERAGE_THRESHOLD: float = float(
-    os.getenv("EXTRACT_IMAGE_COVERAGE_THRESHOLD", "0.25")
-)
-
-#: Pages with fewer selectable chars than this are candidates for OCR
-#: (legacy fallback only when coverage metric is unavailable).
-OCR_CHAR_THRESHOLD: int = int(os.getenv("EXTRACT_TEXT_OCR_THRESHOLD", "150"))
-
-#: Max tokens for OCR transcription per page.
-OCR_MAX_TOKENS: int = 2048
-
-#: Max tokens for selector resolution.
-SELECTOR_MAX_TOKENS: int = 4096
-
+#: Max tokens for extraction responses.
+EXTRACT_MAX_TOKENS: int = 4096
 
 # ---------------------------------------------------------------------------
-# LLMBackend protocol
+# LLMBackend protocol (seam for testing)
 # ---------------------------------------------------------------------------
 
 
 @runtime_checkable
 class LLMBackend(Protocol):
-    """
-    Minimal protocol for an LLM completion callable.
-
-    Accepts an OpenAI-compatible messages list and keyword arguments, returns
-    the response as a plain string.  This is the only seam between the tool
-    and any underlying LLM provider.
-
-    The default implementation wraps ``litellm.completion()``.
-    Inject a custom backend in tests or to swap providers at call-time.
-    """
+    """Minimal protocol for an LLM completion callable."""
 
     def __call__(
         self,
@@ -74,19 +61,11 @@ class LLMBackend(Protocol):
     ) -> str: ...
 
 
-# ---------------------------------------------------------------------------
-# Default litellm backend factory
-# ---------------------------------------------------------------------------
-
-
 def make_litellm_backend(model: str = DEFAULT_MODEL) -> LLMBackend:
-    """
-    Return an LLMBackend that routes through ``litellm.completion()``.
-    """
-    if litellm is None:  # fail fast only when actually used
-        raise RuntimeError(
-            "litellm is not installed. Install with: pip install litellm"
-        )
+    """Return an LLMBackend that routes through litellm.completion()."""
+    if litellm is None:  # pragma: no cover
+        raise RuntimeError("litellm is not installed. Install with: pip install litellm")
+
     def _backend(
         messages: list[dict[str, Any]],
         *,
@@ -105,211 +84,76 @@ def make_litellm_backend(model: str = DEFAULT_MODEL) -> LLMBackend:
 
 
 # ---------------------------------------------------------------------------
-# Result model
+# Result dataclasses
 # ---------------------------------------------------------------------------
 
 
 @dataclass
-class PageResult:
-    """
-    Extracted text for a single page, with provenance.
-    """
-    page_number: int
-    text:        str
-    ocr_applied: bool
-    source:      str
-    sheet_name:  str | None = None
+class TextExtractionResult:
+    """Output of the extract_from_texts tool."""
 
-
-@dataclass
-class ExtractTextResult:
-    """
-    Full output of the extract_text tool.
-    """
-    text:           str
-    pages:          list[PageResult]
-    sources:        list[str]
-    selector:       str | None = None
-    ocr_page_count: int        = 0
-    model:          str        = DEFAULT_MODEL
+    extracted: dict[str, Any]  # LLM-extracted fields as structured JSON
+    source_pages: list[int]    # 1-based page numbers processed
+    sources: list[str]         # unique source document paths
+    prompt: str                # the extraction prompt used
+    model: str = DEFAULT_MODEL
 
     def __str__(self) -> str:
-        return self.text
+        return json.dumps(self.extracted, ensure_ascii=False, indent=2)
 
 
-# ---------------------------------------------------------------------------
-# OCR  —  multimodal transcription via vision model
-# ---------------------------------------------------------------------------
+@dataclass
+class TableResult:
+    """A single extracted table."""
 
-_OCR_SYSTEM = textwrap.dedent("""\
-    You are a precise document transcription engine.
-    You will be shown an image of a document page.
-    Transcribe ALL text exactly as it appears — preserve paragraph breaks,
-    list structure, table layouts (use plain-text ASCII alignment), and
-    section headings.  Do not add commentary, summaries, or markdown fencing.
-    Output only the transcribed text.
-""").strip()
+    headers: list[str]
+    rows: list[dict[str, Any]]  # [{column_name: value, ...}, ...]
+    source_page: int
+    sheet_name: str | None = None
+    selector: str | None = None
 
 
-def _ocr_page(page: Page, backend: LLMBackend) -> str:
-    if page.image_bytes is None:
-        raise ValueError(f"Page {page.number} has no image bytes — cannot OCR.")
+@dataclass
+class TableExtractionResult:
+    """Output of the extract_from_tables tool."""
 
-    b64 = base64.standard_b64encode(page.image_bytes).decode("ascii")
-    data_url = f"data:{page.image_mime};base64,{b64}"
+    tables: list[TableResult]
+    source_pages: list[int]
+    sources: list[str]
+    model: str = DEFAULT_MODEL
 
-    logger.debug(
-        "OCR: page=%d  mime=%s  bytes=%d",
-        page.number, page.image_mime, len(page.image_bytes),
-    )
-
-    messages: list[dict[str, Any]] = [
-        {"role": "system", "content": _OCR_SYSTEM},
-        {
-            "role": "user",
-            "content": [
+    def __str__(self) -> str:
+        return json.dumps(
+            [
                 {
-                    "type": "image_url",
-                    "image_url": {"url": data_url},
-                },
-                {
-                    "type": "text",
-                    "text": "Transcribe all text on this page.",
-                },
+                    "headers": t.headers,
+                    "rows": t.rows,
+                    "source_page": t.source_page,
+                    "sheet_name": t.sheet_name,
+                    "selector": t.selector,
+                }
+                for t in self.tables
             ],
-        },
-    ]
-
-    return backend(messages, max_tokens=OCR_MAX_TOKENS).strip()
-
-
-# ---------------------------------------------------------------------------
-# Selector resolution
-# ---------------------------------------------------------------------------
-
-_SELECTOR_SYSTEM = textwrap.dedent("""\
-    You are a document section extractor.
-    Given the full text of a document and a region selector, return only the
-    portion of the text that matches the selector.  Preserve the original
-    wording exactly — do not paraphrase, summarise, or add commentary.
-    If the selector matches nothing, reply with exactly: [NO MATCH]
-""").strip()
-
-
-def _apply_selector(full_text: str, selector: str, backend: LLMBackend) -> str:
-    messages: list[dict[str, Any]] = [
-        {"role": "system", "content": _SELECTOR_SYSTEM},
-        {
-            "role": "user",
-            "content": (
-                f"Document text:\n\n{full_text}\n\n"
-                f"---\n\nSelector: {selector}\n\n"
-                "Extract and return only the section matching the selector."
-            ),
-        },
-    ]
-
-    result = backend(messages, max_tokens=SELECTOR_MAX_TOKENS).strip()
-
-    if result == "[NO MATCH]":
-        logger.warning("Selector %r matched nothing — returning full text.", selector)
-        return full_text
-
-    return result
-
-
-# ---------------------------------------------------------------------------
-# Per-page extraction
-# ---------------------------------------------------------------------------
-
-
-def _extract_page(page: Page, source: str, backend: LLMBackend) -> PageResult:
-    # Prefer OCR when coverage is high or native char count is low.
-    try:
-        coverage = page.metadata.get("image_coverage")
-    except Exception:
-        coverage = None
-    try:
-        native_chars = page.metadata.get("native_char_count", len(page.text or ""))
-    except Exception:
-        native_chars = len(page.text or "")
-
-    prefer_ocr = (
-        (coverage is not None and coverage >= EXTRACT_IMAGE_COVERAGE_THRESHOLD)
-        or (native_chars < EXTRACT_MIN_NATIVE_CHARS)
-    )
-
-    # Legacy fallback when coverage isn't available at all.
-    legacy_low_text = len((page.text or "").strip()) < OCR_CHAR_THRESHOLD
-
-    needs_ocr = prefer_ocr or (legacy_low_text and page.image_bytes is not None)
-
-    if needs_ocr and page.image_bytes is None:
-        # Cannot OCR without a raster — fall back with a notice.
-        logger.info(
-            "OCR preferred for page=%d (coverage=%s, native_chars=%d) but no image bytes available — falling back to text.",
-            getattr(page, "number", -1),
-            f"{coverage:.2f}" if isinstance(coverage, (int, float)) else "None",
-            native_chars,
+            ensure_ascii=False,
+            indent=2,
         )
-        text = page.text or ""
-        ocr_applied = False
-    elif needs_ocr:
-        logger.info(
-            "OCR selected: source=%r  page=%d  coverage=%s  native_chars=%d",
-            source,
-            getattr(page, "number", -1),
-            f"{coverage:.2f}" if isinstance(coverage, (int, float)) else "None",
-            native_chars,
-        )
-        text = _ocr_page(page, backend)
-        ocr_applied = True
-    else:
-        text = page.text
-        ocr_applied = False
-
-    return PageResult(
-        page_number=page.number,
-        text=text,
-        ocr_applied=ocr_applied,
-        source=source,
-        sheet_name=page.sheet_name,
-    )
 
 
 # ---------------------------------------------------------------------------
-# Handle extraction
-# ---------------------------------------------------------------------------
-
-
-def _extract_handle(
-    handle: DocumentHandle | PageList,
-    backend: LLMBackend,
-) -> list[PageResult]:
-    return [_extract_page(p, handle.source, backend) for p in handle.pages]
-
-
-# ---------------------------------------------------------------------------
-# Polymorphic input normalisation
+# Input normalisation
 # ---------------------------------------------------------------------------
 
 
 def _normalise_input(document: DocumentInput) -> list[DocumentHandle | PageList]:
-    """
-    Coerce any accepted input form into a flat list of handle-like objects.
-    """
     if isinstance(document, (DocumentHandle, PageList)):
         return [document]
-
     if isinstance(document, list):
         result: list[DocumentHandle | PageList] = []
         for item in document:
             result.extend(_normalise_input(item))
         return result
-
     if isinstance(document, str):
         from trellis.models.document import DocFormat
-
         page = Page(number=1, text=document, is_scanned=False)
         handle = DocumentHandle(
             source="<inline>",
@@ -318,80 +162,241 @@ def _normalise_input(document: DocumentInput) -> list[DocumentHandle | PageList]
             page_count=1,
         )
         return [handle]
-
     raise TypeError(
-        f"extract_text: unsupported document type {type(document).__name__!r}. "
+        f"Unsupported document type {type(document).__name__!r}. "
         "Expected DocumentHandle, PageList, list[DocumentHandle], or str."
     )
 
 
-# ---------------------------------------------------------------------------
-# Public tool entry point
-# ---------------------------------------------------------------------------
+def _pages_text(handle: DocumentHandle | PageList) -> tuple[str, list[int]]:
+    """Concatenate page text from a handle; return (text, page_numbers)."""
+    parts: list[str] = []
+    numbers: list[int] = []
+    for p in handle.pages:
+        if p.text:
+            parts.append(f"[Page {p.number}]\n{p.text}")
+            numbers.append(p.number)
+    return "\n\n".join(parts), numbers
 
 
-def extract_text(
+# ---------------------------------------------------------------------------
+# extract_from_texts — structured field extraction from text content
+# ---------------------------------------------------------------------------
+
+_EXTRACT_TEXTS_SYSTEM = textwrap.dedent("""\
+    You are a precise document extraction engine.
+    Given document text and an extraction prompt, extract the requested
+    information and return it as a JSON object.
+    Use field names that reflect what was asked for.
+    If a value cannot be found, set it to null.
+    Output only the JSON object — no markdown fencing, no commentary.
+""").strip()
+
+
+def extract_from_texts(
+    document: DocumentInput,
+    prompt: str,
+    *,
+    model: str = DEFAULT_MODEL,
+    backend: LLMBackend | None = None,
+) -> TextExtractionResult:
+    """Extract specific fields from document text using a prompt.
+
+    Args:
+        document: A DocumentHandle, PageList, list thereof, or raw string.
+                  Pages must already have clean text (run ingest_document first).
+        prompt: What to extract, e.g. "extract the grand total and invoice date".
+        model: litellm model string override.
+        backend: Optional LLMBackend (for testing).
+
+    Returns:
+        TextExtractionResult with extracted dict, source pages, and sources.
+    """
+    llm = backend if backend is not None else make_litellm_backend(model)
+    handles = _normalise_input(document)
+
+    all_text_parts: list[str] = []
+    all_page_numbers: list[int] = []
+    unique_sources: list[str] = []
+
+    for handle in handles:
+        text, page_nums = _pages_text(handle)
+        if text:
+            all_text_parts.append(text)
+        all_page_numbers.extend(page_nums)
+        if handle.source not in unique_sources:
+            unique_sources.append(handle.source)
+
+    combined_text = "\n\n" + ("─" * 60) + "\n\n".join(all_text_parts)
+
+    messages: list[dict[str, Any]] = [
+        {"role": "system", "content": _EXTRACT_TEXTS_SYSTEM},
+        {
+            "role": "user",
+            "content": (
+                f"Document text:\n\n{combined_text}\n\n"
+                f"---\n\nExtraction request: {prompt}"
+            ),
+        },
+    ]
+
+    raw = llm(messages, max_tokens=EXTRACT_MAX_TOKENS).strip()
+
+    # Strip markdown fencing if model added it anyway
+    if raw.startswith("```"):
+        raw = re.sub(r"^```[a-z]*\n?", "", raw)
+        raw = re.sub(r"\n?```$", "", raw)
+
+    try:
+        extracted = json.loads(raw)
+    except json.JSONDecodeError:
+        # If JSON parsing fails, wrap raw response to preserve the info
+        logger.warning("extract_from_texts: could not parse JSON response; wrapping as raw string")
+        extracted = {"result": raw}
+
+    return TextExtractionResult(
+        extracted=extracted,
+        source_pages=sorted(set(all_page_numbers)),
+        sources=unique_sources,
+        prompt=prompt,
+        model=model,
+    )
+
+
+# ---------------------------------------------------------------------------
+# extract_from_tables — structured table extraction
+# ---------------------------------------------------------------------------
+
+_EXTRACT_TABLES_SYSTEM = textwrap.dedent("""\
+    You are a precise table extraction engine.
+    Given document text (and optionally an image), identify all tables present.
+    For each table return a JSON object with:
+      - "headers": list of column header strings
+      - "rows": list of objects mapping each header to its cell value
+      - "source_page": the 1-based page number the table appeared on (integer)
+      - "sheet_name": sheet name if applicable, otherwise null
+    Return a JSON array of these objects — even if there is only one table.
+    If no tables are found, return an empty array [].
+    Output only the JSON array — no markdown fencing, no commentary.
+""").strip()
+
+_EXTRACT_TABLES_SYSTEM_WITH_SELECTOR = textwrap.dedent("""\
+    You are a precise table extraction engine.
+    Given document text (and optionally an image), identify the table matching
+    the provided selector.
+    Return a JSON array containing a single JSON object with:
+      - "headers": list of column header strings
+      - "rows": list of objects mapping each header to its cell value
+      - "source_page": the 1-based page number the table appeared on (integer)
+      - "sheet_name": sheet name if applicable, otherwise null
+    If no matching table is found, return an empty array [].
+    Output only the JSON array — no markdown fencing, no commentary.
+""").strip()
+
+
+def _extract_tables_from_page(
+    page: Page,
+    source: str,
+    selector: str | None,
+    backend: LLMBackend,
+) -> list[TableResult]:
+    """Extract tables from a single page using LLM."""
+    system = _EXTRACT_TABLES_SYSTEM_WITH_SELECTOR if selector else _EXTRACT_TABLES_SYSTEM
+
+    content: list[dict[str, Any]] = []
+
+    # Include image if available (for image-based tables)
+    if page.image_bytes:
+        b64 = base64.standard_b64encode(page.image_bytes).decode("ascii")
+        data_url = f"data:{page.image_mime};base64,{b64}"
+        content.append({"type": "image_url", "image_url": {"url": data_url}})
+
+    user_text = f"[Page {page.number}]"
+    if page.sheet_name:
+        user_text += f" [Sheet: {page.sheet_name}]"
+    if page.text:
+        user_text += f"\n\n{page.text}"
+    if selector:
+        user_text += f"\n\n---\n\nExtract the table: {selector}"
+    else:
+        user_text += "\n\n---\n\nExtract all tables from this page."
+
+    content.append({"type": "text", "text": user_text})
+
+    messages: list[dict[str, Any]] = [
+        {"role": "system", "content": system},
+        {"role": "user", "content": content if page.image_bytes else user_text},
+    ]
+
+    raw = backend(messages, max_tokens=EXTRACT_MAX_TOKENS).strip()
+
+    # Strip markdown fencing
+    if raw.startswith("```"):
+        raw = re.sub(r"^```[a-z]*\n?", "", raw)
+        raw = re.sub(r"\n?```$", "", raw)
+
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        logger.warning("extract_from_tables: could not parse JSON for page %d", page.number)
+        return []
+
+    if not isinstance(data, list):
+        return []
+
+    results: list[TableResult] = []
+    for item in data:
+        if not isinstance(item, dict):
+            continue
+        results.append(TableResult(
+            headers=item.get("headers", []),
+            rows=item.get("rows", []),
+            source_page=item.get("source_page", page.number),
+            sheet_name=item.get("sheet_name") or page.sheet_name,
+            selector=selector,
+        ))
+    return results
+
+
+def extract_from_tables(
     document: DocumentInput,
     selector: str | None = None,
     *,
     model: str = DEFAULT_MODEL,
     backend: LLMBackend | None = None,
-) -> ExtractTextResult:
-    """
-    Extract plain text from a document handle, page list, or raw string.
+) -> TableExtractionResult:
+    """Extract structured table data from document pages.
+
+    Args:
+        document: A DocumentHandle, PageList, list thereof, or raw string.
+                  Pages must already have clean text (run ingest_document first).
+        selector: Optional hint to target a specific table (e.g. "income statement").
+        model: litellm model string override.
+        backend: Optional LLMBackend (for testing).
+
+    Returns:
+        TableExtractionResult with structured table objects, source pages, and sources.
     """
     llm = backend if backend is not None else make_litellm_backend(model)
-
     handles = _normalise_input(document)
 
-    # 1) Extract text for all pages
-    all_page_results: list[PageResult] = []
+    all_tables: list[TableResult] = []
+    all_page_numbers: list[int] = []
+    unique_sources: list[str] = []
+
     for handle in handles:
-        all_page_results.extend(_extract_handle(handle, llm))
+        if handle.source not in unique_sources:
+            unique_sources.append(handle.source)
+        for page in handle.pages:
+            tables = _extract_tables_from_page(page, handle.source, selector, llm)
+            all_tables.extend(tables)
+            if page.number not in all_page_numbers:
+                all_page_numbers.append(page.number)
 
-    # 2) Assemble full text with source separators when multiple docs
-    if len(handles) > 1:
-        sections: list[str] = []
-        current_source: str | None = None
-        current_lines: list[str] = []
-
-        for pr in all_page_results:
-            if pr.source != current_source:
-                if current_lines:
-                    sections.append("\n\n".join(current_lines))
-                current_lines = []
-                current_source = pr.source
-
-            header = f"[Page {pr.page_number}"
-            if pr.sheet_name:
-                header += f" / Sheet: {pr.sheet_name}"
-            header += f"  |  source: {pr.source}]"
-            current_lines.append(f"{header}\n{pr.text}")
-
-        if current_lines:
-            sections.append("\n\n".join(current_lines))
-
-        separator = "\n\n" + ("─" * 60) + "\n\n"
-        full_text = separator.join(sections)
-    else:
-        full_text = "\n\n".join(pr.text for pr in all_page_results if pr.text)
-
-    # 3) Apply selector if provided
-    final_text = full_text
-    if selector and full_text.strip():
-        logger.info("Applying selector: %r", selector)
-        final_text = _apply_selector(full_text, selector, llm)
-
-    # 4) Build result
-    unique_sources = list(dict.fromkeys(pr.source for pr in all_page_results))
-    ocr_count = sum(1 for pr in all_page_results if pr.ocr_applied)
-
-    return ExtractTextResult(
-        text=final_text,
-        pages=all_page_results,
+    return TableExtractionResult(
+        tables=all_tables,
+        source_pages=sorted(set(all_page_numbers)),
         sources=unique_sources,
-        selector=selector,
-        ocr_page_count=ocr_count,
         model=model,
     )
 
@@ -401,14 +406,60 @@ def extract_text(
 # ---------------------------------------------------------------------------
 
 
-class ExtractTextTool(BaseTool):
-    def __init__(self, name: str = "extract_text") -> None:
-        super().__init__(name, "Extract plain text from documents (LLM OCR capable)")
+class ExtractFromTextsTool(BaseTool):
+    """Extract specific fields from document text as structured JSON."""
 
-    def execute(self, document: Any, selector: str | None = None, **kwargs: Any) -> Any:
+    def __init__(self, name: str = "extract_from_texts") -> None:
+        super().__init__(name, "Extract specific fields from document text as structured JSON")
+
+    def execute(self, document: Any, prompt: str, **kwargs: Any) -> TextExtractionResult:
         model = kwargs.get("model", DEFAULT_MODEL)
         backend = kwargs.get("backend")
-        return extract_text(
+        return extract_from_texts(
+            document=document,
+            prompt=prompt,
+            model=model,
+            backend=backend,
+        )
+
+    def get_inputs(self) -> dict[str, ToolInput]:
+        return {
+            "document": ToolInput(
+                name="document",
+                description="Document handle, page list, list thereof, or raw string (text must already be extracted)",
+                required=True,
+            ),
+            "prompt": ToolInput(
+                name="prompt",
+                description='What to extract, e.g. "extract the grand total and invoice date"',
+                required=True,
+            ),
+            "model": ToolInput(
+                name="model",
+                description="litellm model string override",
+                required=False,
+                default=DEFAULT_MODEL,
+            ),
+        }
+
+    def get_output(self) -> ToolOutput:
+        return ToolOutput(
+            name="extracted",
+            description="Structured JSON dict of extracted fields",
+            type_="object",
+        )
+
+
+class ExtractFromTablesTool(BaseTool):
+    """Extract structured row/column/cell data from tables in a document."""
+
+    def __init__(self, name: str = "extract_from_tables") -> None:
+        super().__init__(name, "Extract structured table data (rows/columns/cells) from document pages")
+
+    def execute(self, document: Any, selector: str | None = None, **kwargs: Any) -> TableExtractionResult:
+        model = kwargs.get("model", DEFAULT_MODEL)
+        backend = kwargs.get("backend")
+        return extract_from_tables(
             document=document,
             selector=selector,
             model=model,
@@ -419,12 +470,12 @@ class ExtractTextTool(BaseTool):
         return {
             "document": ToolInput(
                 name="document",
-                description="Document handle, page list, list, or raw string",
+                description="Document handle, page list, list thereof, or raw string",
                 required=True,
             ),
             "selector": ToolInput(
                 name="selector",
-                description="Optional natural-language region selector",
+                description='Optional hint to target a specific table, e.g. "income statement"',
                 required=False,
                 default=None,
             ),
@@ -438,34 +489,10 @@ class ExtractTextTool(BaseTool):
 
     def get_output(self) -> ToolOutput:
         return ToolOutput(
-            name="text",
-            description="Extracted text (stringable result)",
-            type_="string",
+            name="tables",
+            description="List of extracted tables with headers and rows",
+            type_="array",
         )
-
-
-class ExtractTableTool(BaseTool):
-    def __init__(self, name: str = "extract_table") -> None:
-        super().__init__(name, "Extract structured tables from documents (stub)")
-
-    def execute(self, document: Any, selector: str | None = None, classification: Any | None = None, **kwargs: Any) -> dict[str, Any]:
-        return {
-            "status": "success",
-            "document": str(document)[:200],
-            "selector": selector,
-            "classification": type(classification).__name__ if classification is not None else None,
-            "tables": [],
-        }
-
-    def get_inputs(self) -> dict[str, ToolInput]:
-        return {
-            "document": ToolInput(name="document", description="Document handle or text", required=True),
-            "selector": ToolInput(name="selector", description="Optional hint or region", required=False, default=None),
-            "classification": ToolInput(name="classification", description="PageClassification or list to guide backend", required=False, default=None),
-        }
-
-    def get_output(self) -> ToolOutput:
-        return ToolOutput(name="tables", description="List of extracted tables", type_="array")
 
 
 class ExtractChartTool(BaseTool):

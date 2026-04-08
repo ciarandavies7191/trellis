@@ -3,22 +3,23 @@ pipeline:
   goal: "Load a PDF from URL and summarize key points"
   tasks:
     - id: ingest_pdf
-      tool: load_document
+      tool: ingest_document
       inputs:
         path: "https://www.princexml.com/samples/newsletter/drylab.pdf"
 
-    - id: extract_text
-      tool: extract_text
+    - id: extract_content
+      tool: extract_from_texts
       inputs:
         document: "{{ingest_pdf.output}}"
+        prompt: "Extract the main topics, key announcements, and any notable metrics or figures mentioned"
 
     - id: summarize_pdf
       tool: llm_job
       inputs:
         prompt: |
-          Summarize the following newsletter PDF in 5 concise bullet points for a busy executive.
+          Summarize the following extracted content in 5 concise bullet points for a busy executive.
           Focus on key announcements, product updates, and any notable metrics.
 
-          {{extract_text.output.text}}
+          {{extract_content.output}}
         temperature: 0.3
         max_tokens: 256

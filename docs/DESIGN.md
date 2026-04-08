@@ -59,13 +59,13 @@ trellis/
 │   ├── base.py                      # BaseTool, ToolInput, ToolOutput
 │   ├── registry.py                  # AsyncToolRegistry, discovery, build_default_registry
 │   └── impls/                       # Built-in tool implementations
-│       ├── document.py              # load_document → DocumentHandle/PageList
-│       ├── extract.py               # extract_text (OCR/selector via litellm), extract_table (stub), extract_chart (stub)
+│       ├── document.py              # ingest_document → DocumentHandle (load + eager OCR)
+│       ├── extract.py               # extract_from_texts (structured field extraction via litellm), extract_from_tables (row/col/cell JSON), extract_chart (stub)
 │       ├── llm.py                   # llm_job (provider-agnostic: openai|ollama|anthropic)
 │       ├── mock.py                  # mock tool (dev/testing)
 │       ├── store.py                 # store (echo; persistence handled by executor)
 │       ├── search.py                # search_web
-│       ├── select.py                # select (prompt or explicit pages; model override)
+│       ├── select.py                # select (retrieval: NL prompt or explicit pages; model override)
 │       ├── export.py                # export artifact (md/pdf/csv/xlsx/json)
 │       └── fetch.py                 # fetch_data
 │
@@ -247,13 +247,13 @@ All core models use Pydantic v2; document models use dataclasses for efficiency 
 - `registered_tools()`, `invoke(name, inputs)`
 
 ### 9.3 Built-in Tools (`trellis.tools.impls`)
-- `document.load_document`: emits `DocumentHandle` (or list) from path/URL; PDFs parsed via PyPDF2; images emit `Page` with `image_bytes` for OCR
-- `extract.extract_text`: LLM-enhanced extraction; OCR via litellm vision models when needed; optional selector; returns a dataclass with `__str__` → combined text; default model from `EXTRACT_TEXT_MODEL` (fallback `openai/gpt-4o`)
-- `extract.extract_table`: stub implementation (extensible)
-- `extract.extract_chart`: stub implementation to extract chart data (guided by classification; not production-grade)
+- `document.ingest_document`: loads document from path/URL; runs OCR **eagerly** on scanned pages (via litellm vision model); all pages have `.text` populated before emitting; default OCR model from `INGEST_OCR_MODEL` (fallback `openai/gpt-4o`)
+- `extract.extract_from_texts`: structured field extraction from page text; prompt-driven; returns `TextExtractionResult` with `extracted: dict[str, Any]`; default model from `EXTRACT_MODEL` (fallback `openai/gpt-4o`)
+- `extract.extract_from_tables`: structured table extraction; returns `TableExtractionResult` with list of `TableResult` (headers, rows, source_page); optional `selector` to target a specific table
+- `extract.extract_chart`: stub implementation to extract chart data (not production-grade)
 - `llm.llm_job`: provider-agnostic LLM calls (providers selectable via `TRELLIS_LLM_PROVIDER`; model overrides supported per-call)
 - `search.search_web`: web search, returns snippets and URLs
-- `select.select`: filter documents by NL prompt or explicit `pages`; model override supported via `SELECT_MODEL` (falls back to `EXTRACT_TEXT_MODEL`)
+- `select.select`: retrieval — filter document to relevant pages by NL prompt or explicit page numbers; model override via `SELECT_MODEL` (falls back to `EXTRACT_MODEL`)
 - `export.export`: produce file artifacts (markdown/pdf/csv/xlsx/json)
 - `fetch.fetch_data`: retrieve structured data from external sources
 - `store.store`: echo tool; persistence handled by executor’s blackboard integration
@@ -334,7 +334,7 @@ from trellis.tools.registry import AsyncToolRegistry, build_default_registry
 - `uvicorn>=0.24` — ASGI server
 - `typer` — CLI framework
 - `rich` — CLI formatting
-- `litellm>=1.0.0` — LLM and vision OCR backend used by `extract_text`/`select`
+- `litellm>=1.0.0` — LLM and vision OCR backend used by `ingest_document`, `extract_from_texts`, `extract_from_tables`, and `select`
 - `PyPDF2>=3.0.0` — PDF parsing fallback
 - `pymupdf>=1.24.0` — Rich PDF page metadata (image coverage, native char counts)
 

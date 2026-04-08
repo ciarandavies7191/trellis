@@ -1,21 +1,156 @@
-"""Document processing tool emitting DocumentHandle dataclass values."""
+"""ingest_document tool — loads a document and fully resolves it including OCR.
+
+After this tool runs, all pages in the returned DocumentHandle have their
+`.text` field populated (native text for digital PDFs, OCR result for scanned
+pages and images).  Downstream tools (select, extract_from_texts,
+extract_from_tables) never need to consider OCR.
+"""
 
 from __future__ import annotations
 
+import base64
 import io
 import json
+import logging
 import os
 import pathlib
+import textwrap
 import urllib.error
 import urllib.parse
 import urllib.request
 from typing import Any, Dict, List, Optional, Union
 
+try:
+    import litellm  # type: ignore
+except ImportError:  # pragma: no cover
+    litellm = None  # type: ignore
+
+try:
+    import PyPDF2  # type: ignore
+except ImportError:  # pragma: no cover
+    PyPDF2 = None  # type: ignore
+
+try:
+    import fitz  # PyMuPDF  # type: ignore
+except ImportError:  # pragma: no cover
+    fitz = None  # type: ignore
+
 from ..base import BaseTool, ToolInput, ToolOutput
 from trellis.models.document import DocumentHandle, Page, DocFormat
 
-import PyPDF2  # type: ignore
-import fitz  # PyMuPDF  # type: ignore
+logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------------------------
+
+#: Image-coverage ratio at or above which a PDF page is rasterised for OCR.
+RASTERIZE_COVERAGE_THRESHOLD: float = float(
+    os.getenv("PYMUPDF_RASTERIZE_COVERAGE_THRESHOLD", "0.25")
+)
+
+#: DPI used when rasterising PDF pages to PNG for OCR.
+RASTERIZE_DPI: int = int(os.getenv("PYMUPDF_RASTERIZE_DPI", "150"))
+
+#: litellm model string used for OCR.
+INGEST_OCR_MODEL: str = os.getenv("INGEST_OCR_MODEL") or os.getenv(
+    "EXTRACT_TEXT_MODEL", "openai/gpt-4o"
+)
+
+#: Native-char threshold below which we prefer OCR on raster-heavy pages.
+OCR_MIN_NATIVE_CHARS: int = int(os.getenv("EXTRACT_MIN_NATIVE_CHARS", "80"))
+
+#: Page image-coverage threshold [0..1] above which we prefer OCR.
+OCR_IMAGE_COVERAGE_THRESHOLD: float = float(
+    os.getenv("EXTRACT_IMAGE_COVERAGE_THRESHOLD", "0.25")
+)
+
+#: Max tokens for OCR transcription per page.
+OCR_MAX_TOKENS: int = 2048
+
+# ---------------------------------------------------------------------------
+# OCR — multimodal transcription via vision model
+# ---------------------------------------------------------------------------
+
+_OCR_SYSTEM = textwrap.dedent("""\
+    You are a precise document transcription engine.
+    You will be shown an image of a document page.
+    Transcribe ALL text exactly as it appears — preserve paragraph breaks,
+    list structure, table layouts (use plain-text ASCII alignment), and
+    section headings.  Do not add commentary, summaries, or markdown fencing.
+    Output only the transcribed text.
+""").strip()
+
+
+def _should_ocr_page(page: Page) -> bool:
+    """Return True if this page should be OCR'd rather than using native text."""
+    try:
+        coverage = page.metadata.get("image_coverage")
+    except Exception:
+        coverage = None
+    try:
+        native_chars = page.metadata.get("native_char_count", len(page.text or ""))
+    except Exception:
+        native_chars = len(page.text or "")
+
+    if coverage is not None:
+        return coverage >= OCR_IMAGE_COVERAGE_THRESHOLD or native_chars < OCR_MIN_NATIVE_CHARS
+    # Fallback when coverage metric is unavailable
+    return len((page.text or "").strip()) < 150 and page.image_bytes is not None
+
+
+def _ocr_page(page: Page, model: str) -> str:
+    """Send page image to vision LLM and return transcribed text."""
+    if litellm is None:  # pragma: no cover
+        raise RuntimeError("litellm is not installed. pip install litellm")
+    if page.image_bytes is None:
+        raise ValueError(f"Page {page.number} has no image bytes — cannot OCR.")
+
+    b64 = base64.standard_b64encode(page.image_bytes).decode("ascii")
+    data_url = f"data:{page.image_mime};base64,{b64}"
+
+    logger.debug(
+        "OCR: page=%d  mime=%s  bytes=%d",
+        page.number, page.image_mime, len(page.image_bytes),
+    )
+
+    messages: list[dict[str, Any]] = [
+        {"role": "system", "content": _OCR_SYSTEM},
+        {
+            "role": "user",
+            "content": [
+                {"type": "image_url", "image_url": {"url": data_url}},
+                {"type": "text", "text": "Transcribe all text on this page."},
+            ],
+        },
+    ]
+
+    response = litellm.completion(
+        model=model,
+        messages=messages,
+        max_tokens=OCR_MAX_TOKENS,
+    )
+    return (response.choices[0].message.content or "").strip()
+
+
+def _apply_ocr_to_pages(pages: List[Page], model: str) -> List[Page]:
+    """Run OCR on any page that needs it; return the updated page list in-place."""
+    for page in pages:
+        if _should_ocr_page(page) and page.image_bytes is not None:
+            logger.info(
+                "ingest_document: OCR page=%d  coverage=%s  native_chars=%d",
+                page.number,
+                page.metadata.get("image_coverage", "N/A"),
+                page.metadata.get("native_char_count", len(page.text or "")),
+            )
+            page.text = _ocr_page(page, model)
+            page.is_scanned = True
+    return pages
+
+
+# ---------------------------------------------------------------------------
+# Format detection
+# ---------------------------------------------------------------------------
 
 
 def _is_url(value: str) -> bool:
@@ -67,28 +202,19 @@ def _read_text(data: bytes, max_chars: int = 50000) -> str:
         return ""
 
 
-#: Image-coverage ratio at or above which a PDF page is rasterised for OCR.
-RASTERIZE_COVERAGE_THRESHOLD: float = float(
-    os.getenv("PYMUPDF_RASTERIZE_COVERAGE_THRESHOLD", "0.25")
-)
-
-#: DPI used when rasterising PDF pages to PNG for OCR.
-RASTERIZE_DPI: int = int(os.getenv("PYMUPDF_RASTERIZE_DPI", "150"))
+# ---------------------------------------------------------------------------
+# PDF page extraction (PyMuPDF)
+# ---------------------------------------------------------------------------
 
 
 def _pymupdf_pages(data: bytes) -> List[Page]:
     """Parse PDF bytes with PyMuPDF to populate rich per-page metadata.
 
-    Provides:
-      - width/height (points)
-      - native_char_count (from page.get_text("dict"))
-      - image_regions (list of image bbox tuples)
-      - image_coverage (sum(image areas)/page area)
-      - image_coverage_pct (image_coverage * 100, rounded to 2dp)
-      - text (concatenated text from blocks for quick preview)
+    Provides per-page: width/height, native_char_count, image_regions,
+    image_coverage, image_coverage_pct, and text from native text blocks.
 
-    Pages whose image_coverage meets RASTERIZE_COVERAGE_THRESHOLD are also
-    rasterised and stored in image_bytes so extract_text can OCR them.
+    Pages whose image_coverage meets RASTERIZE_COVERAGE_THRESHOLD are
+    rasterised and stored in image_bytes so OCR can run at ingest time.
     """
     if fitz is None:  # pragma: no cover - optional dep not installed
         raise RuntimeError("PyMuPDF (fitz) not installed. pip install pymupdf")
@@ -98,7 +224,7 @@ def _pymupdf_pages(data: bytes) -> List[Page]:
     try:
         for i in range(doc.page_count):
             p = doc.load_page(i)
-            rect = p.rect  # fitz.Rect
+            rect = p.rect
             width, height = float(rect.width), float(rect.height)
 
             # Text metrics
@@ -109,8 +235,7 @@ def _pymupdf_pages(data: bytes) -> List[Page]:
             for b in blocks:
                 if b.get("type") == 0:  # text block
                     for line in b.get("lines", []) or []:
-                        spans = line.get("spans", []) or []
-                        for sp in spans:
+                        for sp in line.get("spans", []) or []:
                             s = sp.get("text", "") or ""
                             native_chars += len(s)
                             if s:
@@ -136,7 +261,7 @@ def _pymupdf_pages(data: bytes) -> List[Page]:
             )
             coverage = max(0.0, min(1.0, img_area_sum / page_area)) if img_bboxes else 0.0
 
-            # Rasterise pages that are image-heavy so downstream OCR has bytes.
+            # Rasterise image-heavy pages so OCR has bytes at ingest time.
             image_bytes: Optional[bytes] = None
             is_scanned = False
             if coverage >= RASTERIZE_COVERAGE_THRESHOLD:
@@ -173,6 +298,11 @@ def _pymupdf_pages(data: bytes) -> List[Page]:
     return pages
 
 
+# ---------------------------------------------------------------------------
+# Handle construction
+# ---------------------------------------------------------------------------
+
+
 def _handle_from_bytes(
     source: str,
     data: bytes,
@@ -185,7 +315,6 @@ def _handle_from_bytes(
     page_count: int = 1
 
     if fmt == DocFormat.PDF:
-        # Prefer PyMuPDF if available for rich metadata; fallback to PyPDF2
         if fitz is not None:
             try:
                 pages = _pymupdf_pages(data)
@@ -226,8 +355,8 @@ def _handle_from_bytes(
         pages = [Page(number=1, text=text, is_scanned=False)]
         page_count = 1
 
-    handle = DocumentHandle(
-        source=source if not is_url else source,
+    return DocumentHandle(
+        source=source,
         format=fmt,
         pages=pages,
         page_count=page_count,
@@ -235,7 +364,6 @@ def _handle_from_bytes(
         source_url=source if is_url else None,
         metadata={},
     )
-    return handle
 
 
 def _load_local(path: str) -> DocumentHandle:
@@ -254,28 +382,44 @@ def _load_url(url: str) -> DocumentHandle:
     return _handle_from_bytes(url, data, fmt, is_url=True, content_type=content_type)
 
 
-class DocumentTool(BaseTool):
-    """Tool for loading documents from paths or URLs into working memory."""
+# ---------------------------------------------------------------------------
+# Public tool
+# ---------------------------------------------------------------------------
 
-    def __init__(self, name: str = "load_document"):
-        super().__init__(name, "Load files or URLs and emit DocumentHandle values")
 
-    def execute(self, path: Union[str, List[str], DocumentHandle] | Dict[str, Any], **kwargs) -> DocumentHandle | List[DocumentHandle]:
+class IngestDocumentTool(BaseTool):
+    """Load and fully ingest a document, including eager OCR for scanned pages.
+
+    After execution, every page in the returned DocumentHandle has its `.text`
+    field populated — either from native PDF text or from OCR applied at ingest
+    time.  Downstream tools (select, extract_from_texts, extract_from_tables)
+    can always treat `.text` as ready to use.
+    """
+
+    def __init__(self, name: str = "ingest_document"):
+        super().__init__(name, "Load a document and fully resolve it (including OCR) into a DocumentHandle")
+
+    def execute(
+        self,
+        path: Union[str, List[str], DocumentHandle] | Dict[str, Any],
+        model: str = INGEST_OCR_MODEL,
+        **kwargs: Any,
+    ) -> DocumentHandle | List[DocumentHandle]:
         """
-        Load a document or list of documents.
+        Ingest a document or list of documents.
 
         Args:
-            path: A file path/URL string, a list of paths/URLs, or an existing DocumentHandle
-                   (legacy dict handles are no longer emitted; if provided they are not supported).
+            path: A file path/URL string, a list of paths/URLs, or an existing
+                  DocumentHandle (passed through as-is; OCR already applied).
+            model: litellm model string for OCR (default: INGEST_OCR_MODEL env var).
 
         Returns:
-            A DocumentHandle or a list[DocumentHandle].
+            A DocumentHandle or list[DocumentHandle] with all pages fully resolved.
         """
-        # Pass-through existing handle
+        # Pass-through existing handle (assume already ingested)
         if isinstance(path, DocumentHandle):
             return path
 
-        # Normalize to list of str paths/URLs
         items: List[str]
         if isinstance(path, list):
             items = [str(p) for p in path]
@@ -286,13 +430,17 @@ class DocumentTool(BaseTool):
         for item in items:
             try:
                 if _is_url(item):
-                    handles.append(_load_url(item))
+                    handle = _load_url(item)
                 else:
-                    handles.append(_load_local(item))
-            except (urllib.error.HTTPError, urllib.error.URLError) as e:  # pragma: no cover - network
+                    handle = _load_local(item)
+            except (urllib.error.HTTPError, urllib.error.URLError) as e:  # pragma: no cover
                 raise RuntimeError(f"Failed to fetch {item}: {e}") from e
             except Exception as exc:
                 raise RuntimeError(f"Failed to load {item}: {exc}") from exc
+
+            # Eagerly run OCR on any scanned/image-heavy pages
+            _apply_ocr_to_pages(handle.pages, model)
+            handles.append(handle)
 
         return handles[0] if len(handles) == 1 else handles
 
@@ -300,14 +448,20 @@ class DocumentTool(BaseTool):
         return {
             "path": ToolInput(
                 name="path",
-                description="Path/URL string, list of paths/URLs, or existing handle",
+                description="Path/URL string, list of paths/URLs, or existing DocumentHandle",
                 required=True,
+            ),
+            "model": ToolInput(
+                name="model",
+                description="litellm model string override for OCR",
+                required=False,
+                default=INGEST_OCR_MODEL,
             ),
         }
 
     def get_output(self) -> ToolOutput:
         return ToolOutput(
             name="document",
-            description="DocumentHandle or list[DocumentHandle] with pages and metadata",
+            description="DocumentHandle or list[DocumentHandle] with all pages fully resolved",
             type_="object",
         )

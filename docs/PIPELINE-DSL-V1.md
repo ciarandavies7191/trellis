@@ -323,35 +323,55 @@ over lists in most cases. The tool decides how to handle what it receives.
 
 ## Tool Registry
 
-### `load_document`
+### Document Processing Pipeline
 
-Loads one or more documents into working memory.
+The four document tools form a clear, ordered pipeline:
 
-Accepts a file path, a URL, or a list of either. Handles PDF, XLSX, CSV, DOCX, and
-plain text automatically. For scanned or image-based PDFs, OCR is applied
-transparently — the pipeline author does not need to handle this explicitly.
+```
+ingest_document → select → extract_from_texts
+                         → extract_from_tables
+```
+
+Each tool has a single, unambiguous responsibility. A tool never needs to consider
+what a prior tool should have done.
+
+---
+
+### `ingest_document`
+
+Loads one or more documents and fully resolves them — including OCR for scanned pages.
+
+Accepts a file path, a URL, or a list of either. Handles PDF, XLSX, CSV, DOCX, plain
+text, and images automatically. For scanned or image-based PDFs, OCR is applied
+**eagerly at ingest time** — every page in the returned handle has its text field
+populated. Downstream tools (`select`, `extract_from_texts`, `extract_from_tables`)
+never need to consider OCR.
 
 ```yaml
 - id: ingest_report
-  tool: load_document
+  tool: ingest_document
   inputs:
     path: "{{pipeline.inputs.report_path}}"
 ```
 
-**Emits:** A document handle or list of handles, each carrying raw content, detected
-format, page structure, and metadata (filename, page count, source URL if applicable).
+**Emits:** A `DocumentHandle` or list of handles. Every page has `.text` populated
+(native PDF text, or OCR result for scanned pages). Image bytes are retained for
+visual table extraction.
 
 ---
 
 ### `select`
 
-Filters a document down to a relevant subset of pages, sections, or sheets using a
-natural language selection prompt.
+Retrieval tool: filters a document down to a relevant subset of pages using a natural
+language prompt or explicit page numbers.
 
-Analogous to RAG retrieval but operating on document structure rather than embedding
-chunks. Accepts a document handle, a list of pages, a multi-sheet workbook, or a list
-of documents. Run `select` before extraction or `llm_job` tasks when working with large
-documents to avoid context pollution and reduce cost.
+Pure retrieval — no extraction, no OCR. Assumes the document was already ingested via
+`ingest_document`. Analogous to RAG retrieval but operating on document page structure.
+Use `select` before extraction tasks on large documents to prune context and reduce cost.
+
+Selection modes (in priority order):
+1. **Explicit pages** — `pages: [2, 3, 4]` selects exact 1-based page numbers.
+2. **NL prompt** — LLM identifies relevant page numbers from a page inventory.
 
 ```yaml
 - id: select_financial_pages
@@ -361,51 +381,58 @@ documents to avoid context pollution and reduce cost.
     prompt: "Pages containing financial tables, balance sheets, or annual projections"
 ```
 
-**Emits:** A reduced document handle or page/sheet list with provenance (original page
-numbers, sheet names, source document).
+**Emits:** A `PageList` — a reduced view with provenance (original page numbers, sheet
+names, source document).
 
 ---
 
-### `extract_table`
+### `extract_from_texts`
 
-Extracts structured tabular data from a document handle, page list, or raw text.
+Structured extraction from document text. Given a selection of pages and an extraction
+prompt, returns a structured JSON object with the requested fields.
 
-Uses deterministic parsing where possible (PDF table detection, XLSX sheet parsing).
-Falls back to LLM-assisted extraction for ambiguous layouts. Accepts an optional
-selector hint to target tables by name or region.
+No OCR is performed — assumes text is already available (i.e. `ingest_document` ran
+first). Prompt-driven: the caller describes what to extract; the tool returns a dict.
+
+Use for: narrative content, specific field values, dates, totals, named entities.
+Complements `extract_from_tables` — use this for prose and field values, that for
+structured row/column data.
 
 ```yaml
-- id: extract_tables
-  tool: extract_table
+- id: extract_totals
+  tool: extract_from_texts
+  inputs:
+    document: "{{select_financial_pages.output}}"
+    prompt: "Extract the grand total, net profit, and report date"
+```
+
+**Emits:** A JSON dict with the extracted fields, e.g.
+`{"grand_total": "£2.4M", "net_profit": "£0.8M", "report_date": "2024-03-31"}`.
+
+---
+
+### `extract_from_tables`
+
+Structured table extraction from document pages. Identifies tables and returns them as
+structured row/column/cell objects.
+
+No OCR is performed — assumes text (and image bytes for visual tables) are already
+available from `ingest_document`. Optional `selector` targets a specific table by name
+or description.
+
+Use for: financial statements, data tables, comparison matrices — anywhere the
+row/column structure matters. Complements `extract_from_texts`.
+
+```yaml
+- id: extract_income_statement
+  tool: extract_from_tables
   inputs:
     document: "{{select_financial_pages.output}}"
     selector: "income statement"    # optional
 ```
 
-**Emits:** One or more tables with named columns, row data, and source provenance.
-
----
-
-### `extract_text`
-
-Extracts plain text from a document handle or a specific region within one.
-
-This tool is polymorphic and may choose the optimal extraction strategy internally:
-- If the input contains embedded images or appears to be a scanned PDF/image-based PDF, it may run OCR automatically.
-- If the input contains extractable text (e.g., digital PDFs, text layers), it will return text directly without OCR.
-
-Useful for narrative sections, footnotes, management commentary, or non‑tabular content. Complements `extract_table` —
-use this for prose, use `extract_table` for structured data.
-
-```yaml
-- id: extract_notes
-  tool: extract_text
-  inputs:
-    document: "{{ingest_report.output}}"
-    selector: "notes to financial statements"
-```
-
-**Emits:** A text string or list of strings with source provenance.
+**Emits:** A list of table objects, each with `headers`, `rows` (list of dicts mapping
+column name to cell value), `source_page`, and optional `sheet_name`.
 
 ---
 
@@ -655,7 +682,7 @@ task runs as soon as its upstream task completes.
 7. **Parallelism is automatic.** Tasks with satisfied inputs run concurrently. No
    explicit parallel blocks needed in most cases.
 8. **Scope before processing.** Use `select` to reduce document scope before passing to
-   `extract_table`, `extract_text`, or `llm_job`.
+   `extract_from_tables`, `extract_from_texts`, or `llm_job`.
 9. **Persistence is explicit.** Nothing writes to the session blackboard unless a
    `store` task is present. `store` keys must match the sub-pipeline's `stores`
    declaration in the plan.
@@ -681,10 +708,10 @@ task runs as soon as its upstream task completes.
 
 | Tool | Purpose | Terminal? |
 |---|---|---|
-| `load_document` | Load files or URLs into working memory | no |
-| `select` | Filter document to relevant pages/sections/sheets | no |
-| `extract_table` | Deterministic table extraction from documents | no |
-| `extract_text` | Plain text extraction from documents | no |
+| `ingest_document` | Load files/URLs and fully resolve (incl. OCR) into a DocumentHandle | no |
+| `select` | Retrieval: filter document to relevant pages by NL prompt or page numbers | no |
+| `extract_from_texts` | Structured extraction of specific fields from page text | no |
+| `extract_from_tables` | Structured extraction of row/column/cell table data | no |
 | `llm_job` | LLM reasoning, extraction, synthesis, generation | no |
 | `fetch_data` | Retrieve structured data from external sources | no |
 | `search_web` | Web search, returns snippets and URLs | no |
@@ -708,6 +735,7 @@ before further processing steps.
 | 1.1 | Added `pipeline.inputs` block; polymorphic tool philosophy |
 | 1.2 | Added full tool registry: `select`, `extract_text`, `search_web`, `store`, `export` |
 | 1.3 | Added two-level Planner/Generator architecture; Plan document schema; task tokens `[PLAN]` / `[PIPELINE]`; session `reads`/`stores` contract; complexity budget guidance |
+| 1.4 | Renamed and clarified document tools: `load_document` → `ingest_document` (eager OCR); `extract_text` → `extract_from_texts` (structured JSON output); `extract_table` → `extract_from_tables` (row/col/cell JSON); `select` role clarified as pure retrieval |
 
 ---
 
