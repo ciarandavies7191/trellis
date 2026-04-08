@@ -19,10 +19,10 @@ def _configure_logging() -> None:
     if logging.getLogger().handlers:
         return
     logging.basicConfig(
-        level=logging.DEBUG,
+        level=logging.INFO,
         format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
     )
-    logging.getLogger("trellis").setLevel(logging.DEBUG)
+    logging.getLogger("trellis").setLevel(logging.INFO)
 
 
 _configure_logging()
@@ -47,4 +47,4 @@ if __name__ == "__main__":
     port = int(os.environ.get("TRELLIS_API_PORT", "8000"))
 
     # Note: reload=True requires an import string; for IDE runs we keep it False.
-    uvicorn.run(app, host=host, port=port, log_level="debug")
+    uvicorn.run(app, host=host, port=port, log_level="info")

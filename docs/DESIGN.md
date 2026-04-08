@@ -1,6 +1,6 @@
 # Trellis — Design Reference
 
-**DSL Version:** Pipeline DSL v1.3  
+**DSL Version:** Pipeline DSL v1.4  
 **Runtime Package:** `trellis`  
 **Status:** Active development  
 **Audience:** IDE coding agents, contributors
@@ -9,7 +9,7 @@
 
 ## 1. Purpose
 
-Trellis is a runtime execution engine and fine-tuning pipeline for **Pipeline DSL v1.3** — a YAML-based declarative language for expressing deterministic agentic workflows as directed acyclic graphs (DAGs).
+Trellis is a runtime execution engine and fine-tuning pipeline for **Pipeline DSL v1.4** — a YAML-based declarative language for expressing deterministic agentic workflows as directed acyclic graphs (DAGs).
 
 The system has two primary goals:
 
@@ -217,6 +217,12 @@ All core models use Pydantic v2; document models use dataclasses for efficiency 
 - `PageList` dataclass: reduced view produced by `select` (subset of pages with provenance)
 - `DocumentInput` type alias: `DocumentHandle | PageList | list[DocumentHandle] | str`
 
+Common input document types handled end-to-end:
+- Raw web content: pass raw text as a string (auto-wrapped into a TEXT handle by `select`/`extract_from_texts`)
+- Structured API content (e.g., LSEG, EDGAR): retrieve via `fetch_data`; persist via `store` and reference with `{{session.*}}`
+- PDFs: digital-text, image-only, or mixed; logos/photos/scanned pages are rasterised and OCR'd at ingest; page images retained in `Page.image_bytes`
+- Excel: multi-sheet workbooks; `Page.sheet_name` preserved; `extract_from_tables` may return multiple tables per sheet (with `sheet_name` in results)
+
 ---
 
 ## 7. Exceptions
@@ -247,15 +253,15 @@ All core models use Pydantic v2; document models use dataclasses for efficiency 
 - `registered_tools()`, `invoke(name, inputs)`
 
 ### 9.3 Built-in Tools (`trellis.tools.impls`)
-- `document.ingest_document`: loads document from path/URL; runs OCR **eagerly** on scanned pages (via litellm vision model); all pages have `.text` populated before emitting; default OCR model from `INGEST_OCR_MODEL` (fallback `openai/gpt-4o`)
-- `extract.extract_from_texts`: structured field extraction from page text; prompt-driven; returns `TextExtractionResult` with `extracted: dict[str, Any]`; default model from `EXTRACT_MODEL` (fallback `openai/gpt-4o`)
-- `extract.extract_from_tables`: structured table extraction; returns `TableExtractionResult` with list of `TableResult` (headers, rows, source_page); optional `selector` to target a specific table
+- `document.ingest_document`: loads document from path/URL; runs OCR **eagerly** on scanned pages (via litellm vision model); all pages have `.text` populated before emitting; default OCR model from `INGEST_OCR_MODEL` (fallback `openai/gpt-4o`). Handles PDFs with selectable text, image-only, or mixed pages; retains logos/photos/scans in `Page.image_bytes`; supports XLSX workbooks (multi-sheet) with `Page.sheet_name`.
+- `extract.extract_from_texts`: structured field extraction from page text; prompt-driven; returns `TextExtractionResult` with `extracted: dict[str, Any]`; default model from `EXTRACT_MODEL` (fallback `openai/gpt-4o`). Accepts `DocumentHandle`, `PageList`, lists thereof, or raw string content (e.g., scraped web text).
+- `extract.extract_from_tables`: structured table extraction; returns `TableExtractionResult` with list of `TableResult` (headers, rows, source_page); optional `selector` to target a specific table; may return multiple tables per sheet and includes `sheet_name` in results.
 - `extract.extract_chart`: stub implementation to extract chart data (not production-grade)
 - `llm.llm_job`: provider-agnostic LLM calls (providers selectable via `TRELLIS_LLM_PROVIDER`; model overrides supported per-call)
 - `search.search_web`: web search, returns snippets and URLs
-- `select.select`: retrieval — filter document to relevant pages by NL prompt or explicit page numbers; model override via `SELECT_MODEL` (falls back to `EXTRACT_MODEL`)
+- `select.select`: retrieval — filter document to relevant pages by NL prompt or explicit page numbers; operates over PDF pages and XLSX sheets; preserves `Page.sheet_name` where applicable; model override via `SELECT_MODEL` (falls back to `EXTRACT_MODEL`).
 - `export.export`: produce file artifacts (markdown/pdf/csv/xlsx/json)
-- `fetch.fetch_data`: retrieve structured data from external sources
+- `fetch.fetch_data`: retrieve structured data from external sources (e.g., LSEG, EDGAR)
 - `store.store`: echo tool; persistence handled by executor’s blackboard integration
 - `mock.mock`: test helper tool
 

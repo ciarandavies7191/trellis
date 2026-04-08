@@ -94,6 +94,9 @@ class Page:
     metadata:    dict[str, Any]      = field(default_factory=dict)
 
     # ------------------------------ Helpers ------------------------------ #
+    def __str__(self) -> str:
+        return self.text
+
     def native_char_count(self) -> int:
         """Return count of native (non-OCR) characters if provided by loader."""
         try:
@@ -228,6 +231,9 @@ class PageList:
     @property
     def filename(self) -> str:
         return Path(self.parent_source).name
+
+    def __str__(self) -> str:
+        return self.full_text()
 
     def page_numbers(self) -> list[int]:
         return [p.number for p in self.pages]

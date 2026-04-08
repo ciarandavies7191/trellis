@@ -175,6 +175,57 @@ class TestResolveInterpolation:
         result = resolve("Goal: {{pipeline.goal}}", ctx)
         assert "Assess credit risk" in result
 
+    def test_page_item_text_embedded_in_prompt(self) -> None:
+        """{{item.text}} in an embedded template resolves to the page text."""
+        from trellis.models.document import Page
+        page = Page(number=1, text="Important financial update.")
+        ctx = ResolutionContext(item=page)
+        result = resolve("Summarize: {{item.text}}", ctx)
+        assert result == "Summarize: Important financial update."
+
+    def test_page_item_whole_value_returns_page(self) -> None:
+        """{{item}} as a whole-value expression returns the Page object directly."""
+        from trellis.models.document import Page
+        page = Page(number=1, text="Some text.")
+        ctx = ResolutionContext(item=page)
+        result = resolve("{{item}}", ctx)
+        assert result is page
+
+    def test_page_item_embedded_uses_str(self) -> None:
+        """{{item}} in an embedded template calls Page.__str__, giving page.text."""
+        from trellis.models.document import Page
+        page = Page(number=2, text="Quarterly earnings beat expectations.")
+        ctx = ResolutionContext(item=page)
+        result = resolve("Summary: {{item}}", ctx)
+        assert result == "Summary: Quarterly earnings beat expectations."
+
+    def test_page_list_item_embedded_uses_full_text(self) -> None:
+        """{{item}} in an embedded template on a PageList gives full_text()."""
+        from trellis.models.document import Page, PageList, DocFormat
+        pl = PageList(
+            parent_source="doc.pdf",
+            parent_format=DocFormat.PDF,
+            pages=[Page(number=1, text="Page one."), Page(number=2, text="Page two.")],
+        )
+        ctx = ResolutionContext(item=pl)
+        result = resolve("Content: {{item}}", ctx)
+        assert "Page one." in result
+        assert "Page two." in result
+
+    def test_embedded_complex_object_without_str_raises(self) -> None:
+        """A non-primitive object without __str__ in an embedded template raises ResolutionError."""
+        from dataclasses import dataclass
+
+        @dataclass
+        class _Opaque:
+            value: int
+
+        ctx = ResolutionContext(
+            task_outputs={"t": _Opaque(value=42)},
+        )
+        with pytest.raises(ResolutionError, match="__str__\\.* cannot be safely interpolated|cannot be safely interpolated"):
+            resolve("Result: {{t.output}}", ctx)
+
 
 # ---------------------------------------------------------------------------
 # resolve() — field path traversal

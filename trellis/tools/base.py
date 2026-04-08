@@ -1,8 +1,8 @@
 """Base tool protocol and interfaces."""
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional
-from dataclasses import dataclass
+from typing import Any, Dict, Optional, Tuple, Type
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -13,6 +13,9 @@ class ToolInput:
     description: str
     required: bool = True
     default: Optional[Any] = None
+    #: If set, the value passed at runtime must be an instance of one of these
+    #: types. ``None`` means any type is accepted. Used by ``validate_inputs``.
+    accepted_types: Optional[Tuple[Type, ...]] = field(default=None, compare=False)
 
 
 @dataclass
@@ -59,26 +62,38 @@ class BaseTool(ABC):
         """Get tool output specification."""
         return ToolOutput(name="output", description="Tool output")
 
-    def validate_inputs(self, inputs: Dict[str, Any]) -> bool:
+    def validate_inputs(self, inputs: Dict[str, Any]) -> None:
         """
-        Validate tool inputs.
+        Validate tool inputs against the declared schema.
+
+        Checks that all required inputs are present and that every supplied
+        value whose spec declares ``accepted_types`` is an instance of one of
+        those types.
 
         Args:
-            inputs: Input parameters
+            inputs: Input parameters to validate.
 
-        Returns:
-            True if valid, False otherwise
+        Raises:
+            ValueError: if a required input is missing or a value has the wrong type.
         """
-        required_inputs = {
-            name: spec for name, spec in self.get_inputs().items()
-            if spec.required
-        }
+        spec_map = self.get_inputs()
 
-        for req_input in required_inputs:
-            if req_input not in inputs:
-                return False
+        for name, spec in spec_map.items():
+            if spec.required and name not in inputs:
+                raise ValueError(
+                    f"Tool {self.name!r}: required input {name!r} is missing."
+                )
 
-        return True
+        for name, value in inputs.items():
+            spec = spec_map.get(name)
+            if spec is None or spec.accepted_types is None:
+                continue
+            if not isinstance(value, spec.accepted_types):
+                type_names = " | ".join(t.__name__ for t in spec.accepted_types)
+                raise TypeError(
+                    f"Tool {self.name!r}: input {name!r} must be {type_names}, "
+                    f"got {type(value).__name__!r}."
+                )
 
 
 class ToolRegistry:

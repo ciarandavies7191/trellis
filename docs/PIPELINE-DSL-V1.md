@@ -1,8 +1,8 @@
-# Pipeline DSL v1.3 — Reference Specification
+# Pipeline DSL v1.4 — Reference Specification
 
 ## Overview
 
-Pipeline DSL v1.3 is a declarative, YAML-based language for describing agentic
+Pipeline DSL v1.4 is a declarative, YAML-based language for describing agentic
 execution workflows as directed acyclic graphs (DAGs). It is designed to be:
 
 - **Generatable by a single fine-tuned small language model** operating in two modes:
@@ -739,7 +739,7 @@ before further processing steps.
 
 ---
 
-**DSL Version:** 1.3
+**DSL Version:** 1.4
 **Status:** Draft
 **Intended consumers:** Fine-tuned small language model (Planner + Generator modes),
 DAG runtime executor (consumer)

@@ -11,7 +11,10 @@
       "Bash(\"D:/projects/trellis/.venv/Scripts/python.exe\" -m ensurepip)",
       "Bash(\"D:/projects/trellis/.venv/Scripts/python.exe\" -m pip install pytest)",
       "Bash(\"D:/projects/trellis/.venv/Scripts/python.exe\" -m pip install pytest pydantic pyyaml -q)",
-      "Bash(\"D:/projects/trellis/.venv/Scripts/python.exe\" -m pytest tests/unit/validation/test_graph.py -v)"
+      "Bash(\"D:/projects/trellis/.venv/Scripts/python.exe\" -m pytest tests/unit/validation/test_graph.py -v)",
+      "Bash(python -m pytest tests/ -x -q --tb=short)",
+      "Bash(python -m pytest tests/unit/execution/test_template.py -x -q)",
+      "Bash(python -m pytest tests/unit/ -q)"
     ]
   }
 }

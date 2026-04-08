@@ -42,7 +42,17 @@ def _normalise_input(document: Any) -> List[DocumentHandle | PageList]:
     if isinstance(document, (DocumentHandle, PageList)):
         return [document]
     if isinstance(document, list):
-        return [d for d in document if isinstance(d, (DocumentHandle, PageList))]
+        result: List[DocumentHandle | PageList] = []
+        for i, d in enumerate(document):
+            if isinstance(d, (DocumentHandle, PageList)):
+                result.append(d)
+            else:
+                raise TypeError(
+                    f"select: unsupported item type {type(d).__name__!r} at index {i} in document list. "
+                    "Expected DocumentHandle or PageList. "
+                    "If you passed a mixed list, ensure upstream tasks return homogeneous outputs."
+                )
+        return result
     if isinstance(document, str):
         # Inline text as single-page handle
         page = Page(number=1, text=document, is_scanned=False)
@@ -152,7 +162,7 @@ class SelectTool(BaseTool):
 
     def get_inputs(self) -> Dict[str, ToolInput]:
         return {
-            "document": ToolInput(name="document", description="Document or list of documents", required=True),
+            "document": ToolInput(name="document", description="DocumentHandle, PageList, list thereof, or inline str", required=True, accepted_types=(DocumentHandle, PageList, list, str)),
             "prompt": ToolInput(name="prompt", description="Selection prompt (NL)", required=False, default=None),
             "pages": ToolInput(name="pages", description="Explicit page numbers to select (1-based)", required=False, default=None),
             "model": ToolInput(name="model", description="litellm model override", required=False, default=DEFAULT_SELECT_MODEL),

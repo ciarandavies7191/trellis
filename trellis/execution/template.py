@@ -225,7 +225,18 @@ def resolve(value: Any, ctx: ResolutionContext) -> Any:
             return _resolve_expr(whole.group(1).strip(), ctx)
 
         def _replace(m: re.Match) -> str:
-            return str(_resolve_expr(m.group(1).strip(), ctx))
+            expr = m.group(1).strip()
+            resolved = _resolve_expr(expr, ctx)
+            if not isinstance(resolved, (str, int, float, bool, type(None))):
+                if type(resolved).__str__ is object.__str__:
+                    raise ResolutionError(
+                        f"Expression {{{{{expr}}}}} resolved to "
+                        f"{type(resolved).__name__!r} in an embedded template. "
+                        f"Objects without a string representation cannot be safely "
+                        f"interpolated — access a specific text field instead "
+                        f"(e.g. {{{{item.text}}}})."
+                    )
+            return str(resolved)
 
         return _TEMPLATE_RE.sub(_replace, value)
 

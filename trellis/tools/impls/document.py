@@ -19,21 +19,9 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from typing import Any, Dict, List, Optional, Union
+import litellm  # type: ignore
+import fitz  # PyMuPDF  # type: ignore
 
-try:
-    import litellm  # type: ignore
-except ImportError:  # pragma: no cover
-    litellm = None  # type: ignore
-
-try:
-    import PyPDF2  # type: ignore
-except ImportError:  # pragma: no cover
-    PyPDF2 = None  # type: ignore
-
-try:
-    import fitz  # PyMuPDF  # type: ignore
-except ImportError:  # pragma: no cover
-    fitz = None  # type: ignore
 
 from ..base import BaseTool, ToolInput, ToolOutput
 from trellis.models.document import DocumentHandle, Page, DocFormat
@@ -49,7 +37,7 @@ RASTERIZE_COVERAGE_THRESHOLD: float = float(
     os.getenv("PYMUPDF_RASTERIZE_COVERAGE_THRESHOLD", "0.25")
 )
 
-#: DPI used when rasterising PDF pages to PNG for OCR.
+#: DPI used when rasterizing PDF pages to PNG for OCR.
 RASTERIZE_DPI: int = int(os.getenv("PYMUPDF_RASTERIZE_DPI", "150"))
 
 #: litellm model string used for OCR.
@@ -101,8 +89,6 @@ def _should_ocr_page(page: Page) -> bool:
 
 def _ocr_page(page: Page, model: str) -> str:
     """Send page image to vision LLM and return transcribed text."""
-    if litellm is None:  # pragma: no cover
-        raise RuntimeError("litellm is not installed. pip install litellm")
     if page.image_bytes is None:
         raise ValueError(f"Page {page.number} has no image bytes — cannot OCR.")
 
@@ -420,14 +406,20 @@ class IngestDocumentTool(BaseTool):
         if isinstance(path, DocumentHandle):
             return path
 
-        items: List[str]
-        if isinstance(path, list):
-            items = [str(p) for p in path]
-        else:
-            items = [str(path)]
+        path_list: List[Any] = path if isinstance(path, list) else [path]
 
         handles: List[DocumentHandle] = []
-        for item in items:
+        for i, p in enumerate(path_list):
+            # Already-ingested handles pass through without re-processing.
+            if isinstance(p, DocumentHandle):
+                handles.append(p)
+                continue
+            if not isinstance(p, str):
+                raise TypeError(
+                    f"ingest_document: unsupported item type {type(p).__name__!r} "
+                    f"at index {i}. Expected a file path/URL string or DocumentHandle."
+                )
+            item = p
             try:
                 if _is_url(item):
                     handle = _load_url(item)

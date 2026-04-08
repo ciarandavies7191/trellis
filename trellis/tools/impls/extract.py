@@ -500,6 +500,11 @@ class ExtractChartTool(BaseTool):
         super().__init__(name, "Extract chart data from documents (stub)")
 
     def execute(self, document: Any, classification: Any | None = None, **kwargs: Any) -> dict[str, Any]:
+        if not isinstance(document, (DocumentHandle, PageList, str)):
+            raise TypeError(
+                f"extract_chart: 'document' must be a DocumentHandle, PageList, or str, "
+                f"got {type(document).__name__!r}."
+            )
         return {
             "status": "success",
             "document": str(document)[:200],

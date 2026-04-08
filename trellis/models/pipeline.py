@@ -160,6 +160,32 @@ class Task(BaseModel):
     def coerce_await_none_to_list(cls, v: Any) -> list:
         return v if v is not None else []
 
+    @model_validator(mode="after")
+    def item_ref_requires_parallel_over(self) -> "Task":
+        """{{item}} in inputs is only valid when parallel_over is set."""
+        refs = extract_template_refs(self.inputs)
+        uses_item = any(r.strip().split(".")[0] == "item" for r in refs)
+        if uses_item and self.parallel_over is None:
+            raise ValueError(
+                f"Task {self.id!r} references {{{{item}}}} in inputs but has no `parallel_over`. "
+                "`{{item}}` is only bound during fan-out execution."
+            )
+        return self
+
+    @model_validator(mode="after")
+    def parallel_over_requires_item_ref(self) -> "Task":
+        """A task with parallel_over must reference {{item}} somewhere in its inputs."""
+        if self.parallel_over is None:
+            return self
+        refs = extract_template_refs(self.inputs)
+        uses_item = any(r.strip().split(".")[0] == "item" for r in refs)
+        if not uses_item:
+            raise ValueError(
+                f"Task {self.id!r} declares `parallel_over` but never references {{{{item}}}} "
+                "in its inputs — the fan-out binding is unused."
+            )
+        return self
+
     # ------------------------------------------------------------------
     # Derived helpers (used by the executor and validator)
     # ------------------------------------------------------------------
@@ -303,11 +329,19 @@ class Pipeline(BaseModel):
         return {t.id: t for t in self.tasks}
 
     def store_keys(self) -> list[str]:
-        """Return all blackboard keys written by `store` tasks in this pipeline."""
+        """Return all literal blackboard keys written by `store` tasks in this pipeline.
+
+        Keys that are themselves template strings (e.g. ``{{pipeline.inputs.key}}``)
+        are excluded — they can only be resolved at runtime and must not be compared
+        against the static contract declared in the plan.
+        """
         return [
             t.inputs["key"]
             for t in self.tasks
-            if t.tool == "store" and "key" in t.inputs
+            if t.tool == "store"
+            and "key" in t.inputs
+            and isinstance(t.inputs["key"], str)
+            and not _TEMPLATE_RE.search(t.inputs["key"])
         ]
 
     # ------------------------------------------------------------------

@@ -42,7 +42,7 @@ async def test_orchestrator_cancellation_stops_before_next_wave():
         goal="goal",
         tasks=[
             Task(id="root", tool="mock", inputs={"sleep": 0}),
-            Task(id="fan", tool="mock", parallel_over="{{root.output}}", inputs={}),
+            Task(id="fan", tool="mock", parallel_over="{{root.output}}", inputs={"x": "{{item}}"}),
         ],
     )
 
