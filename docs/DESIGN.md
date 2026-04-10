@@ -38,7 +38,14 @@ trellis/
 │   ├── __init__.py
 │   ├── pipeline.py                  # Pipeline, Task, KNOWN_TOOLS, template ref utils
 │   ├── plan.py                      # Plan, SubPipeline
-│   └── document.py                  # DocFormat, Page, DocumentHandle, PageList
+│   ├── document.py                  # DocFormat, Page, DocumentHandle, PageList
+│   └── handles.py                   # SchemaHandle, FieldDefinition, PeriodDescriptor, FIELD_NOT_FOUND
+│
+├── registry/                        # Named-object registries (deploy-time registration)
+│   ├── __init__.py                  # Exports SchemaRegistry, FunctionRegistry, RegisteredFunction
+│   ├── schema.py                    # SchemaRegistry — name → SchemaHandle lookup
+│   ├── functions.py                 # FunctionRegistry, RegisteredFunction — name → callable lookup
+│   └── finance_functions.py         # Built-in finance functions + build_finance_registry()
 │
 ├── validation/
 │   ├── __init__.py
@@ -60,13 +67,16 @@ trellis/
 │   ├── registry.py                  # AsyncToolRegistry, discovery, build_default_registry
 │   └── impls/                       # Built-in tool implementations
 │       ├── document.py              # ingest_document → DocumentHandle (load + eager OCR)
-│       ├── extract.py               # extract_from_texts (structured field extraction via litellm), extract_from_tables (row/col/cell JSON), extract_chart (stub)
+│       ├── extract.py               # extract_from_texts, extract_from_tables, extract_chart (stub)
+│       ├── extract_fields.py        # extract_fields — schema-bound field extraction
+│       ├── load_schema.py           # load_schema — produce SchemaHandle from any source
+│       ├── compute.py               # compute — dispatch to FunctionRegistry
 │       ├── llm.py                   # llm_job (provider-agnostic: openai|ollama|anthropic)
 │       ├── mock.py                  # mock tool (dev/testing)
 │       ├── store.py                 # store (echo; persistence handled by executor)
 │       ├── search.py                # search_web
 │       ├── select.py                # select (retrieval: NL prompt or explicit pages; model override)
-│       ├── export.py                # export artifact (md/pdf/csv/xlsx/json)
+│       ├── export.py                # export artifact (md/pdf/csv/xlsx/json); schema-aware in v1.4
 │       └── fetch.py                 # fetch_data
 │
 ├── trellis_api/                     # FastAPI server (thin REST layer)
@@ -196,6 +206,7 @@ All core models use Pydantic v2; document models use dataclasses for efficiency 
 - Implicit dependencies from `{{task_id.output}}` in `inputs`/`parallel_over`
 - Optional `await` (escape hatch) as `await_`
 - `retry`, `parallel_over` supported
+- `compute` tasks validated at parse time to declare a `function` input key
 
 ### 6.2 Pipeline (`trellis.models.pipeline`)
 - `id`, `goal`, `inputs`, `tasks`
@@ -222,6 +233,24 @@ Common input document types handled end-to-end:
 - Structured API content (e.g., LSEG, EDGAR): retrieve via `fetch_data`; persist via `store` and reference with `{{session.*}}`
 - PDFs: digital-text, image-only, or mixed; logos/photos/scanned pages are rasterised and OCR'd at ingest; page images retained in `Page.image_bytes`
 - Excel: multi-sheet workbooks; `Page.sheet_name` preserved; `extract_from_tables` may return multiple tables per sheet (with `sheet_name` in results)
+
+### 6.7 Handle Types (`trellis.models.handles`)
+
+Typed objects that flow through the pipeline as task outputs, alongside documents.
+
+- **`FieldDefinition`** (frozen dataclass): a single field in a schema — `name`, `type_hint`, `required`, `description`.
+- **`SchemaHandle`** (dataclass): a first-class schema object — `fields: list[FieldDefinition]`, `source: str`, `raw: Any`, `task_id`. Produced by `load_schema`, consumed by `extract_fields` and `export`. Key methods: `field_names()`, `required_field_names()`, `to_extraction_context()`.
+- **`PeriodDescriptor`** (frozen dataclass): a resolved filing period — `label`, `period_end`, `period_type`, `is_annual`. Produced by the `fiscal_period_logic` compute function.
+- **`FIELD_NOT_FOUND`**: sentinel string `"__not_found__"` emitted by `extract_fields` when a field cannot be located.
+
+### 6.8 Registry (`trellis.registry`)
+
+Two operator-facing registries for deploy-time name registration.
+
+- **`SchemaRegistry`**: maps string names to `SchemaHandle` instances. Used by `load_schema` to resolve registered schema names. Methods: `register(name, schema)`, `get(name)`, `names()`.
+- **`FunctionRegistry`**: maps string names to `RegisteredFunction` instances. Used by `compute` to dispatch calls. Methods: `register(entry)`, `get(name)`, `names()`, `invoke(name, **inputs)` (async, handles both sync and async callables transparently).
+- **`RegisteredFunction`**: `name`, `fn`, `input_schema`, `output_schema`, `description`.
+- **Built-in finance functions** (`trellis.registry.finance_functions`): `fiscal_period_logic`, `ticker_lookup`, `financial_scale_normalize`, `period_label`, `fiscal_year_end`. Created via `build_finance_registry()` at startup.
 
 ---
 
@@ -254,13 +283,16 @@ Common input document types handled end-to-end:
 
 ### 9.3 Built-in Tools (`trellis.tools.impls`)
 - `document.ingest_document`: loads document from path/URL; runs OCR **eagerly** on scanned pages (via litellm vision model); all pages have `.text` populated before emitting; default OCR model from `INGEST_OCR_MODEL` (fallback `openai/gpt-4o`). Handles PDFs with selectable text, image-only, or mixed pages; retains logos/photos/scans in `Page.image_bytes`; supports XLSX workbooks (multi-sheet) with `Page.sheet_name`.
-- `extract.extract_from_texts`: structured field extraction from page text; prompt-driven; returns `TextExtractionResult` with `extracted: dict[str, Any]`; default model from `EXTRACT_MODEL` (fallback `openai/gpt-4o`). Accepts `DocumentHandle`, `PageList`, lists thereof, or raw string content (e.g., scraped web text).
+- `load_schema.load_schema`: produces a `SchemaHandle` from a registered name, `DocumentHandle`, dict, list, or existing handle. Source resolution: registry name → `DocumentHandle` (columns/headers extracted) → dict/list → passthrough. Optional `hint` guides derivation from unstructured documents.
+- `extract.extract_from_texts`: structured field extraction from page text; prompt-driven; returns `TextExtractionResult` with `extracted: dict[str, Any]`; default model from `EXTRACT_MODEL` (fallback `openai/gpt-4o`). Accepts `DocumentHandle`, `PageList`, lists thereof, or raw string content.
 - `extract.extract_from_tables`: structured table extraction; returns `TableExtractionResult` with list of `TableResult` (headers, rows, source_page); optional `selector` to target a specific table; may return multiple tables per sheet and includes `sheet_name` in results.
+- `extract_fields.extract_fields`: schema-bound field extraction — iterates over `SchemaHandle.fields`, extracts each, emits `FIELD_NOT_FOUND` sentinel for missing values. Accepts an optional `rules` `DocumentHandle` for per-field extraction instructions. Pluggable LLM client; stubs to `__not_found__` without one.
 - `extract.extract_chart`: stub implementation to extract chart data (not production-grade)
+- `compute.compute`: dispatches to `FunctionRegistry.invoke(function, **kwargs)`; handles both sync and async registered functions. Requires `function_registry` at construction time.
 - `llm.llm_job`: provider-agnostic LLM calls (providers selectable via `TRELLIS_LLM_PROVIDER`; model overrides supported per-call)
 - `search.search_web`: web search, returns snippets and URLs
 - `select.select`: retrieval — filter document to relevant pages by NL prompt or explicit page numbers; operates over PDF pages and XLSX sheets; preserves `Page.sheet_name` where applicable; model override via `SELECT_MODEL` (falls back to `EXTRACT_MODEL`).
-- `export.export`: produce file artifacts (markdown/pdf/csv/xlsx/json)
+- `export.export`: produce file artifacts (markdown/pdf/csv/xlsx/json); optional `schema: SchemaHandle` input validates conformance before writing (missing required fields → `ContractError`; extra fields dropped or raise in `strict=True` mode); populate mode engaged when `schema.raw` is non-None and format matches.
 - `fetch.fetch_data`: retrieve structured data from external sources (e.g., LSEG, EDGAR)
 - `store.store`: echo tool; persistence handled by executor’s blackboard integration
 - `mock.mock`: test helper tool
@@ -292,6 +324,13 @@ Note: `classify_page` is a reserved DSL tool name but is not implemented/registe
 from trellis.models.pipeline import Pipeline, Task, KNOWN_TOOLS, extract_template_refs
 from trellis.models.plan import Plan, SubPipeline
 from trellis.models.document import DocFormat, Page, DocumentHandle, PageList
+from trellis.models.handles import (
+    FieldDefinition, SchemaHandle, PeriodDescriptor, FIELD_NOT_FOUND
+)
+
+# Registries
+from trellis.registry import SchemaRegistry, FunctionRegistry, RegisteredFunction
+from trellis.registry.finance_functions import build_finance_registry, default_finance_registry
 
 # Validation
 from trellis.validation.graph import pipeline_execution_waves, plan_execution_waves, find_cycle
@@ -307,6 +346,7 @@ from trellis.execution.run_queue import InMemoryRunManager
 # Tools
 from trellis.tools.base import BaseTool
 from trellis.tools.registry import AsyncToolRegistry, build_default_registry
+from trellis.tools.impls import LoadSchemaTool, ExtractFieldsTool, ComputeTool
 ```
 
 ---
@@ -321,6 +361,7 @@ from trellis.tools.registry import AsyncToolRegistry, build_default_registry
 6. `Task.id` and `Pipeline.id` always satisfy snake_case constraints.
 7. Contract invariants: declared stores are written exactly once; `{{session.*}}` and `{{pipeline.inputs.*}}` references resolve to declared keys.
 8. Tenant invariants: persisted blackboard reads/writes are isolated by `tenant_id`.
+9. Every `compute` task declares a `function` input key (validated at parse time by `Pipeline.compute_tasks_have_function`). Registry membership is validated at execution time.
 
 ---
 

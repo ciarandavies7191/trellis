@@ -306,6 +306,54 @@ available session keys to prevent hallucinated references.
 
 ---
 
+## First-Class Handle Types
+
+The runtime passes typed handle objects between tasks as task outputs. These flow
+through the DAG identically to any other value — `{{task_id.output}}` resolves to the
+handle at execution time.
+
+### `DocumentHandle`
+
+Produced by `ingest_document`. Carries a list of `Page` objects, each with `.text`
+populated (native or OCR'd), optional `.image_bytes`, and `.sheet_name` for XLSX pages.
+Consumed by `select`, `extract_from_texts`, `extract_from_tables`, `extract_fields`,
+and `load_schema`.
+
+### `SchemaHandle`
+
+Produced by `load_schema` (or by an `llm_job` that infers structure). Carries an
+ordered list of `FieldDefinition` objects, source provenance, and an optional `raw`
+field retaining the original template bytes for populate-mode `export`.
+
+```
+SchemaHandle
+  .fields:  list[FieldDefinition]   # name, type_hint, required, description
+  .source:  str                     # provenance ("credit_memo_v2", "template.xlsx", …)
+  .raw:     Any                     # original source bytes/dict; used for populate-mode export
+```
+
+**Key invariant:** the schema is always explicit in the pipeline graph. Field definitions
+are never embedded invisibly in a prompt string.
+
+`SchemaHandle` is to structured output what `DocumentHandle` is to document content. It
+flows through the pipeline as a standard task output and is consumed by `extract_fields`
+and `export`.
+
+### `PeriodDescriptor`
+
+Produced by the `fiscal_period_logic` compute function. Carries a human-readable
+period label, ISO period-end date, period type, and `is_annual` flag.
+
+```
+PeriodDescriptor
+  .label:       str   # "Q1 2025", "FY 2024"
+  .period_end:  str   # "2025-03-31"
+  .period_type: str   # "annual" | "ytd_current" | "ytd_prior"
+  .is_annual:   bool
+```
+
+---
+
 ## Tool Design Philosophy
 
 All tools are **polymorphic on their inputs**. A tool interprets what it receives
@@ -319,17 +367,30 @@ contextually and does its best to fulfil the request:
 The pipeline author does not need to wrap inputs, add type hints, or explicitly loop
 over lists in most cases. The tool decides how to handle what it receives.
 
+**Deterministic computation belongs in `compute`, not `llm_job`.** Any rule fully
+expressible in code (date arithmetic, ticker resolution, period labelling, currency
+normalization) should use a registered `compute` function. Reserve `llm_job` for tasks
+that genuinely require language model judgment.
+
 ---
 
 ## Tool Registry
 
 ### Document Processing Pipeline
 
-The four document tools form a clear, ordered pipeline:
+The document tools form a clear, ordered pipeline for unstructured content:
 
 ```
 ingest_document → select → extract_from_texts
-                         → extract_from_tables
+                          → extract_from_tables
+```
+
+For schema-guided extraction of known fields, add `load_schema` and `extract_fields`:
+
+```
+ingest_document ──────────────────────────► select → extract_from_texts / extract_from_tables
+load_schema (template) → SchemaHandle ──► extract_fields (schema + rules)
+                                                    └──► export (schema, format: xlsx)
 ```
 
 Each tool has a single, unambiguous responsibility. A tool never needs to consider
@@ -357,6 +418,43 @@ never need to consider OCR.
 **Emits:** A `DocumentHandle` or list of handles. Every page has `.text` populated
 (native PDF text, or OCR result for scanned pages). Image bytes are retained for
 visual table extraction.
+
+---
+
+### `load_schema`
+
+Produces a `SchemaHandle` from any schema source. Parallel to `ingest_document` for
+document content — the schema is loaded once and flows through the pipeline as data.
+
+Source resolution order:
+1. Registered name → returned directly from `SchemaRegistry`
+2. Existing `SchemaHandle` → returned as-is (pass-through)
+3. `DocumentHandle` → schema derived from document structure (column headers for
+   XLSX/CSV, top-level keys for JSON/YAML, `hint`-driven LLM pass for unstructured)
+4. `dict` or `list` → field definitions parsed inline
+5. File path or URL → loaded then treated as (3)
+
+```yaml
+# Derive schema from a loaded Excel template
+- id: load_output_schema
+  tool: load_schema
+  inputs:
+    source: "{{ingest_template.output}}"
+    hint: "Column headers in the first sheet define the field names"
+
+# Load a registered schema by name
+- id: load_credit_schema
+  tool: load_schema
+  inputs:
+    source: credit_memo_v2
+```
+
+| Input | Required | Description |
+|---|---|---|
+| `source` | yes | File path, URL, registered name, `DocumentHandle`, dict, or existing `SchemaHandle` |
+| `hint` | no | Natural language hint guiding derivation when source is a `DocumentHandle` or ambiguous file |
+
+**Emits:** A `SchemaHandle`. **Terminal?** No.
 
 ---
 
@@ -396,7 +494,8 @@ first). Prompt-driven: the caller describes what to extract; the tool returns a 
 
 Use for: narrative content, specific field values, dates, totals, named entities.
 Complements `extract_from_tables` — use this for prose and field values, that for
-structured row/column data.
+structured row/column data. For extraction against a known field contract, prefer
+`extract_fields`.
 
 ```yaml
 - id: extract_totals
@@ -436,6 +535,38 @@ column name to cell value), `source_page`, and optional `sheet_name`.
 
 ---
 
+### `extract_fields`
+
+Schema-bound field extraction from a document. Extracts values for every field declared
+in a `SchemaHandle`. Use this instead of `extract_from_texts` when you have a known
+field contract — the schema is explicit, the output is bounded to declared fields, and
+missing values are surfaced as a sentinel rather than hallucinated.
+
+Fields that cannot be located in the source document are emitted as the sentinel string
+`"__not_found__"` — a warning, not a hard error. A follow-on `llm_job` can review and
+resolve not-found fields before `export`.
+
+```yaml
+- id: extract_financials
+  tool: extract_fields
+  inputs:
+    document: "{{select_statements.output}}"
+    schema: "{{load_output_schema.output}}"
+    rules: "{{ingest_spreading_manual.output}}"   # optional
+```
+
+| Input | Required | Description |
+|---|---|---|
+| `document` | yes | `DocumentHandle`, page list, or text string to extract from |
+| `schema` | yes | `SchemaHandle` declaring which fields to extract |
+| `rules` | no | `DocumentHandle` containing extraction rules (e.g. a spreading manual). Per-field instructions are injected into the extraction context |
+| `selector` | no | Natural language hint to scope extraction to a region of the document |
+
+**Emits:** `{field_name: extracted_value | "__not_found__"}` — only fields declared in
+the schema are present. No hallucinated fields. **Terminal?** No.
+
+---
+
 ### `llm_job`
 
 Delegates a reasoning, extraction, classification, transformation, or generation task
@@ -456,6 +587,9 @@ chained `llm_job` tasks over a single large prompt.
 
 `llm_job` is the primary workhorse of the DSL. Conditionals, validation, classification,
 and multi-source synthesis all belong here, not in the pipeline structure.
+
+Use `compute` instead of `llm_job` for any computation that is fully expressible in
+code (date arithmetic, ticker resolution, period labelling, currency normalization).
 
 **Emits:** Text or structured data as directed by the prompt.
 
@@ -500,6 +634,68 @@ search queries inside `llm_job` prompts — explicit retrieval improves auditabi
 
 ---
 
+### `compute`
+
+Invokes a named deterministic function from the `FunctionRegistry`. This is the single
+DSL surface for all computations that are fully expressible in code — date arithmetic,
+ticker resolution, fiscal period logic, currency normalization. It does not accept code
+strings; the function definition lives in the operator's registry.
+
+The trust boundary mirrors `fetch_data`'s `source` registry: the model references
+registered function names; it cannot define or inject implementations.
+
+```yaml
+# Resolve fiscal periods for a given date
+- id: resolve_periods
+  tool: compute
+  inputs:
+    function: fiscal_period_logic
+    as_of_date: "{{pipeline.inputs.as_of_period}}"
+    company: "{{pipeline.inputs.company}}"
+
+# Resolve ticker symbol
+- id: resolve_ticker
+  tool: compute
+  inputs:
+    function: ticker_lookup
+    company: "{{pipeline.inputs.company}}"
+
+# Normalize currency and scale
+- id: normalize_scale
+  tool: compute
+  inputs:
+    function: financial_scale_normalize
+    value: "{{extract_financials.output.total_revenue}}"
+    source_currency: "{{extract_financials.output.currency}}"
+    target_currency: USD
+    target_scale: millions
+```
+
+| Input | Required | Description |
+|---|---|---|
+| `function` | yes | Registered function name. Runtime rejects unknown names |
+| (others) | varies | Additional key-value inputs forwarded to the function implementation |
+
+**Validation:** A `compute` task must declare a `function` input key. This is checked
+at parse time. Registry membership is validated at execution time (consistent with how
+`fetch_data` handles its `source`).
+
+**Emits:** Whatever the registered function returns. **Terminal?** No.
+
+#### Built-in Finance Functions
+
+These functions are registered at startup in the default `FunctionRegistry`:
+
+| Function | Inputs | Output | Description |
+|---|---|---|---|
+| `fiscal_period_logic` | `as_of_date: str`, `company: str` | `list[PeriodDescriptor]` | Returns 1 or 3 period descriptors depending on whether `as_of_date` is a fiscal year-end |
+| `ticker_lookup` | `company: str` | `str` | Resolves a company name to its primary exchange ticker |
+| `financial_scale_normalize` | `value`, `source_currency`, `target_currency`, `target_scale` | `float` | Converts a financial value between currency and scale units |
+| `period_label` | `date: str`, `period_type: str` | `str` | Produces a standardised period label (e.g. `"Q1 2025"`, `"FY 2024"`) |
+| `fiscal_year_end` | `company: str` | `str` | Returns the fiscal year-end as `"MM-DD"` for a given company |
+
+---
+
 ### `store`
 
 Persists a value to the session blackboard under a named key.
@@ -529,16 +725,43 @@ Produces a final output artifact in a specified format.
 `export` is a terminal tool and should always be a leaf node with no downstream
 dependents. Supported formats: `markdown`, `pdf`, `csv`, `xlsx`, `json`.
 
+**Schema-aware mode (v1.4):** When an optional `schema` input is provided, `export`
+validates the content against the schema before writing. Missing required fields raise a
+`ContractError`. Extra fields are dropped with a warning (set `strict: true` to raise
+instead).
+
+**Populate mode:** When `schema.raw` is present and the output format matches the
+raw source type (e.g. both XLSX), `export` operates in *populate* mode — values are
+written into the original template file rather than generating a new file from scratch.
+
 ```yaml
+# Basic export (unchanged from v1.3)
 - id: produce_report
   tool: export
   inputs:
     content: "{{final_summary.output}}"
     format: markdown
     filename: "q3_analysis_report"
+
+# Schema-validated export with populate mode
+- id: produce_output
+  tool: export
+  inputs:
+    data: "{{extract_financials.output}}"
+    schema: "{{load_output_schema.output}}"
+    format: xlsx
+    filename: "q1_2025_spreading"
 ```
 
-**Emits:** A file handle or download reference for the produced artifact.
+| Input | Required | Description |
+|---|---|---|
+| `content` / `data` | no | Content to export (`data` takes precedence when both supplied) |
+| `format` | no | `markdown`, `json`, `csv`, `xlsx`, `pdf`. Default: `markdown` |
+| `filename` | no | Base filename without extension |
+| `schema` | no | `SchemaHandle`. When present, validates conformance and enables populate mode |
+| `strict` | no | When `true`, extra fields raise `ContractError` instead of being dropped. Default: `false` |
+
+**Emits:** A file handle or download reference for the produced artifact. **Terminal?** Yes.
 
 ---
 
@@ -563,6 +786,27 @@ results individually.
 
 The output of a `parallel_over` task is always a list, one element per input item.
 
+**Runtime-resolved fan-out:** When the list to fan over is produced by a preceding task
+(e.g. `compute` returning a list of `PeriodDescriptor`s), `parallel_over` resolves at
+execution time. This is the standard pattern for dynamic fan-out:
+
+```yaml
+- id: resolve_periods
+  tool: compute
+  inputs:
+    function: fiscal_period_logic
+    as_of_date: "{{pipeline.inputs.as_of_date}}"
+    company: "{{pipeline.inputs.company}}"
+
+- id: fetch_per_period
+  tool: fetch_data
+  parallel_over: "{{resolve_periods.output}}"
+  inputs:
+    source: sec_edgar
+    period: "{{item}}"
+    company: "{{pipeline.inputs.company}}"
+```
+
 ---
 
 ## Explicit Barrier with `await`
@@ -583,7 +827,102 @@ revisiting.
 
 ---
 
-## Full Example
+## Canonical Archetype: Financial Spreading
+
+The financial spreading archetype is the reference pattern for schema-guided document
+extraction. It uses `compute` (fiscal period resolution), `load_schema` (template
+schema derivation), `extract_fields` (schema-bound extraction), and `export` (populate
+mode).
+
+Canonical graph shape:
+
+```
+compute (fiscal_period_logic)
+    └──► fetch_data (sec_edgar, parallel_over periods)
+              └──► ingest_document (template)
+              └──► ingest_document (spreading manual)
+              └──► load_schema (from template DocumentHandle)
+                        └──► select (financial statement pages)
+                                  └──► extract_fields (schema + rules)
+                                            └──► export (schema, format: xlsx)
+                                            └──► export (format: markdown)
+```
+
+Example pipeline fragment:
+
+```yaml
+pipeline:
+  id: financial_spreading
+  goal: "Extract financial statement data into a standardised spreading template"
+  inputs:
+    company: Apple
+    as_of_date: "2024-09-30"
+    report_path: "{{pipeline.inputs.report_path}}"
+    template_path: "{{pipeline.inputs.template_path}}"
+    manual_path: "{{pipeline.inputs.manual_path}}"
+
+  tasks:
+
+    - id: resolve_periods
+      tool: compute
+      inputs:
+        function: fiscal_period_logic
+        as_of_date: "{{pipeline.inputs.as_of_date}}"
+        company: "{{pipeline.inputs.company}}"
+
+    - id: ingest_report
+      tool: ingest_document
+      inputs:
+        path: "{{pipeline.inputs.report_path}}"
+
+    - id: ingest_template
+      tool: ingest_document
+      inputs:
+        path: "{{pipeline.inputs.template_path}}"
+
+    - id: ingest_manual
+      tool: ingest_document
+      inputs:
+        path: "{{pipeline.inputs.manual_path}}"
+
+    - id: load_output_schema
+      tool: load_schema
+      inputs:
+        source: "{{ingest_template.output}}"
+        hint: "Column headers in the first sheet define the field names"
+
+    - id: select_statements
+      tool: select
+      inputs:
+        document: "{{ingest_report.output}}"
+        prompt: "Pages containing income statement, balance sheet, or cash flow statement"
+
+    - id: extract_financials
+      tool: extract_fields
+      inputs:
+        document: "{{select_statements.output}}"
+        schema: "{{load_output_schema.output}}"
+        rules: "{{ingest_manual.output}}"
+
+    - id: produce_xlsx
+      tool: export
+      inputs:
+        data: "{{extract_financials.output}}"
+        schema: "{{load_output_schema.output}}"
+        format: xlsx
+        filename: "spreading_output"
+
+    - id: produce_markdown
+      tool: export
+      inputs:
+        data: "{{extract_financials.output}}"
+        format: markdown
+        filename: "spreading_output"
+```
+
+---
+
+## Full Example — Data Acquisition
 
 The `data_acquisition` sub-pipeline from the Gulf disruption assessment plan,
 showing session blackboard persistence via `store`.
@@ -675,18 +1014,23 @@ task runs as soon as its upstream task completes.
    pipelines, and from `reads`/`stores` relationships between sub-pipelines.
 4. **Logic lives in `llm_job`.** Conditionals, validation, and decisions belong in
    natural language prompts, not DSL constructs.
-5. **Tools are polymorphic.** Tools interpret inputs contextually. No type coercion or
+5. **Deterministic computation lives in `compute`.** Any rule fully expressible in code
+   belongs in a registered function, not an `llm_job` prompt. This makes computation
+   auditable, testable, and cheaper to run.
+6. **Schema is explicit.** Field definitions are declared as a `SchemaHandle` in the
+   pipeline graph, never embedded invisibly in a prompt string.
+7. **Tools are polymorphic.** Tools interpret inputs contextually. No type coercion or
    format hints required.
-6. **Flat by default.** A linear list of tasks with reference wiring is the normal
+8. **Flat by default.** A linear list of tasks with reference wiring is the normal
    form. Avoid nesting.
-7. **Parallelism is automatic.** Tasks with satisfied inputs run concurrently. No
+9. **Parallelism is automatic.** Tasks with satisfied inputs run concurrently. No
    explicit parallel blocks needed in most cases.
-8. **Scope before processing.** Use `select` to reduce document scope before passing to
-   `extract_from_tables`, `extract_from_texts`, or `llm_job`.
-9. **Persistence is explicit.** Nothing writes to the session blackboard unless a
-   `store` task is present. `store` keys must match the sub-pipeline's `stores`
-   declaration in the plan.
-10. **Session references are declared.** `{{session.key}}` references must correspond
+10. **Scope before processing.** Use `select` to reduce document scope before passing to
+    `extract_from_tables`, `extract_from_texts`, `extract_fields`, or `llm_job`.
+11. **Persistence is explicit.** Nothing writes to the session blackboard unless a
+    `store` task is present. `store` keys must match the sub-pipeline's `stores`
+    declaration in the plan.
+12. **Session references are declared.** `{{session.key}}` references must correspond
     to keys listed in the sub-pipeline's `reads`. Undeclared reads are invalid.
 
 ---
@@ -701,6 +1045,7 @@ task runs as soon as its upstream task completes.
 | Variable assignment | Outputs referenced directly via templates |
 | Type constraints on inputs | Tools interpret inputs polymorphically |
 | Implicit blackboard writes | All persistence is via explicit `store` tasks |
+| Inline function definitions | All compute logic lives in the `FunctionRegistry`; the DSL only names functions |
 
 ---
 
@@ -708,22 +1053,26 @@ task runs as soon as its upstream task completes.
 
 | Tool | Purpose | Terminal? |
 |---|---|---|
-| `ingest_document` | Load files/URLs and fully resolve (incl. OCR) into a DocumentHandle | no |
+| `ingest_document` | Load files/URLs and fully resolve (incl. OCR) into a `DocumentHandle` | no |
+| `load_schema` | Load or derive a `SchemaHandle` from a file, URL, `DocumentHandle`, or registry name | no |
 | `select` | Retrieval: filter document to relevant pages by NL prompt or page numbers | no |
-| `extract_from_texts` | Structured extraction of specific fields from page text | no |
+| `extract_from_texts` | Structured extraction of specific fields from page text (prompt-driven) | no |
 | `extract_from_tables` | Structured extraction of row/column/cell table data | no |
+| `extract_fields` | Schema-bound field extraction from a document (emits `"__not_found__"` for missing fields) | no |
 | `llm_job` | LLM reasoning, extraction, synthesis, generation | no |
 | `fetch_data` | Retrieve structured data from external sources | no |
 | `search_web` | Web search, returns snippets and URLs | no |
+| `compute` | Invoke a named deterministic function from the `FunctionRegistry` | no |
 | `store` | Persist a value to the session blackboard | yes* |
-| `export` | Produce a file artifact (md, pdf, csv, xlsx, json) | yes |
+| `export` | Produce a file artifact (md, pdf, csv, xlsx, json); schema-aware in v1.4 | yes |
 | `extract_chart` | Extract chart data from documents (stub) | no |
 | `classify_page` | Page classification to guide extraction (reserved) | no |
 
 *`store` is logically terminal but may appear mid-pipeline if persistence is needed
 before further processing steps.
 
-> Note: `extract_chart` is provided as a stub under tools/impls/extract.py. `classify_page` is reserved in the DSL but not registered by default — implement and register a `BaseTool` to use it.
+> Note: `extract_chart` is a stub. `classify_page` is reserved in the DSL but not
+> registered by default — implement and register a `BaseTool` to use it.
 
 ---
 
@@ -735,11 +1084,12 @@ before further processing steps.
 | 1.1 | Added `pipeline.inputs` block; polymorphic tool philosophy |
 | 1.2 | Added full tool registry: `select`, `extract_text`, `search_web`, `store`, `export` |
 | 1.3 | Added two-level Planner/Generator architecture; Plan document schema; task tokens `[PLAN]` / `[PIPELINE]`; session `reads`/`stores` contract; complexity budget guidance |
-| 1.4 | Renamed and clarified document tools: `load_document` → `ingest_document` (eager OCR); `extract_text` → `extract_from_texts` (structured JSON output); `extract_table` → `extract_from_tables` (row/col/cell JSON); `select` role clarified as pure retrieval |
+| 1.4 (doc rename) | Renamed and clarified document tools: `load_document` → `ingest_document` (eager OCR); `extract_text` → `extract_from_texts`; `extract_table` → `extract_from_tables`; `select` role clarified as pure retrieval |
+| 1.4 (this revision) | **Schema as first-class object:** `SchemaHandle`, `FieldDefinition`, `PeriodDescriptor` handle types; `load_schema` tool; `extract_fields` tool; schema-aware `export` with conformance validation and populate mode. **Deterministic compute:** `compute` tool; `FunctionRegistry`; built-in finance functions (`fiscal_period_logic`, `ticker_lookup`, `financial_scale_normalize`, `period_label`, `fiscal_year_end`). **New design principles** (5, 6). **Financial spreading archetype.** Runtime-resolved fan-out pattern. All changes additive — no v1.3 pipelines require modification. |
 
 ---
 
-**DSL Version:** 1.4
-**Status:** Draft
+**DSL Version:** 1.4  
+**Status:** Active  
 **Intended consumers:** Fine-tuned small language model (Planner + Generator modes),
 DAG runtime executor (consumer)

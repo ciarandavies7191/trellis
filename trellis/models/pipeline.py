@@ -1,5 +1,5 @@
 """
-Models for the Pipeline DSL v1.3 Pipeline document.
+Models for the Pipeline DSL v1.4 Pipeline document.
 
 A Pipeline is the executable unit — a DAG of tasks produced by the model in
 [PIPELINE] mode. Each sub-pipeline entry in a Plan produces one Pipeline
@@ -21,17 +21,20 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 #: Matches any {{...}} expression anywhere in a string value.
 _TEMPLATE_RE = re.compile(r"\{\{([^}]+)\}\}")
 
-#: Valid tool names as defined in DSL v1.3 Tool Registry.
+#: Valid tool names as defined in DSL v1.4 Tool Registry.
 KNOWN_TOOLS: frozenset[str] = frozenset(
     {
         "ingest_document",
+        "load_schema",        # NEW in v1.4
         "select",
         "extract_from_texts",
         "extract_from_tables",
         "extract_chart",
+        "extract_fields",     # NEW in v1.4
         "llm_job",
         "fetch_data",
         "search_web",
+        "compute",            # NEW in v1.4
         "store",
         "export",
         "mock",
@@ -204,7 +207,7 @@ class Task(BaseModel):
         """
         Parse template refs and return the set of task IDs this task depends on.
 
-        Recognises:
+        Recognizes:
           - {{task_id.output}}          → task_id
           - {{task_id.output.field}}    → task_id
           - {{pipeline.inputs.*}}       → (pipeline input, no task dependency)
@@ -297,6 +300,16 @@ class Pipeline(BaseModel):
             if unknown:
                 raise ValueError(
                     f"Task {task.id!r} awaits unknown task ids: {unknown}"
+                )
+        return self
+
+    @model_validator(mode="after")
+    def compute_tasks_have_function(self) -> Pipeline:
+        """Every `compute` task must declare a `function` input key."""
+        for task in self.tasks:
+            if task.tool == "compute" and "function" not in task.inputs:
+                raise ValueError(
+                    f"Task {task.id!r}: tool 'compute' requires a 'function' input key."
                 )
         return self
 

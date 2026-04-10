@@ -12,6 +12,9 @@ from .extract import ExtractFromTablesTool, ExtractFromTextsTool
 from .search import SearchWebTool
 from .store import StoreTool
 from .export import ExportTool
+from .load_schema import LoadSchemaTool
+from .extract_fields import ExtractFieldsTool
+from .compute import ComputeTool
 
 __all__ = [
     "MockTool",
@@ -24,4 +27,7 @@ __all__ = [
     "SearchWebTool",
     "StoreTool",
     "ExportTool",
+    "LoadSchemaTool",
+    "ExtractFieldsTool",
+    "ComputeTool",
 ]
