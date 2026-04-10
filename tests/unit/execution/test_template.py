@@ -265,6 +265,77 @@ class TestFieldPathTraversal:
 # ---------------------------------------------------------------------------
 
 
+class TestFirstLastAccessors:
+
+    def test_first_on_list_task_output(self, ctx: ResolutionContext) -> None:
+        result = resolve("{{fetch_list.output.first}}", ctx)
+        assert result == "item_a"
+
+    def test_last_on_list_task_output(self, ctx: ResolutionContext) -> None:
+        result = resolve("{{fetch_list.output.last}}", ctx)
+        assert result == "item_c"
+
+    def test_first_on_nested_list(self, ctx: ResolutionContext) -> None:
+        result = resolve("{{fetch_financials.output.companies.first}}", ctx)
+        assert result == "Google"
+
+    def test_last_on_nested_list(self, ctx: ResolutionContext) -> None:
+        result = resolve("{{fetch_financials.output.companies.last}}", ctx)
+        assert result == "Apple"
+
+    def test_first_embedded_in_string(self, ctx: ResolutionContext) -> None:
+        result = resolve("Lead item: {{fetch_list.output.first}}", ctx)
+        assert result == "Lead item: item_a"
+
+    def test_last_embedded_in_string(self, ctx: ResolutionContext) -> None:
+        result = resolve("Last item: {{fetch_list.output.last}}", ctx)
+        assert result == "Last item: item_c"
+
+    def test_first_whole_value_preserves_type(self) -> None:
+        ctx = ResolutionContext(task_outputs={"t": [{"k": 1}, {"k": 2}]})
+        result = resolve("{{t.output.first}}", ctx)
+        assert result == {"k": 1}
+
+    def test_last_whole_value_preserves_type(self) -> None:
+        ctx = ResolutionContext(task_outputs={"t": [{"k": 1}, {"k": 2}]})
+        result = resolve("{{t.output.last}}", ctx)
+        assert result == {"k": 2}
+
+    def test_first_then_field_access(self, ctx: ResolutionContext) -> None:
+        result = resolve("{{fetch_financials.output.metadata.source}}", ctx)
+        assert result == "sec_edgar"
+
+    def test_first_on_pipeline_inputs_list(self, ctx: ResolutionContext) -> None:
+        result = resolve("{{pipeline.inputs.companies.first}}", ctx)
+        assert result == "Google"
+
+    def test_last_on_pipeline_inputs_list(self, ctx: ResolutionContext) -> None:
+        result = resolve("{{pipeline.inputs.companies.last}}", ctx)
+        assert result == "Microsoft"
+
+    def test_first_on_empty_list_raises(self) -> None:
+        ctx = ResolutionContext(task_outputs={"t": []})
+        with pytest.raises(ResolutionError, match="empty"):
+            resolve("{{t.output.first}}", ctx)
+
+    def test_last_on_empty_list_raises(self) -> None:
+        ctx = ResolutionContext(task_outputs={"t": []})
+        with pytest.raises(ResolutionError, match="empty"):
+            resolve("{{t.output.last}}", ctx)
+
+    def test_first_on_non_list_falls_through_to_attr(self) -> None:
+        """If the value is not a list, 'first' resolves as an attribute name."""
+        ctx = ResolutionContext(task_outputs={"t": {"first": "explicit_key"}})
+        result = resolve("{{t.output.first}}", ctx)
+        assert result == "explicit_key"
+
+    def test_dict_key_first_takes_priority_over_list_accessor(self) -> None:
+        """Dict key 'first' takes precedence over the list accessor."""
+        ctx = ResolutionContext(task_outputs={"t": {"first": 99}})
+        result = resolve("{{t.output.first}}", ctx)
+        assert result == 99
+
+
 class TestResolveContainers:
 
     def test_list_of_templates_resolved(self, ctx: ResolutionContext) -> None:

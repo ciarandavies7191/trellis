@@ -8,24 +8,25 @@ pipeline:
   tasks:
     - id: search_presentations
       tool: search_web
+      parallel_over: "{{pipeline.inputs.years}}"
       inputs:
         query:
-          - "Texas Instruments investor day presentation 2023 site:ti.com OR filetype:pdf"
-          - "Texas Instruments investor day presentation 2024 site:ti.com OR filetype:pdf"
+          - "{{pipeline.inputs.company}} investor day presentation {{item}} site:ti.com OR filetype:pdf"
         top_n: 5
 
     - id: summarize_results
       tool: llm_job
       inputs:
-        search_results: "{{search_presentations.output}}"
         prompt: >
-          Review these web search results about Texas Instruments investor day
+          Review these web search results about {{pipeline.inputs.company}} investor day
           presentations. Extract and list the URLs of any official presentation
           documents (PDFs, webcasts, slide decks). Note the year and title for each.
+
+          Results by year:
+          {{search_presentations.output}}
 
     - id: store_findings
       tool: store
       inputs:
         key: ti_investor_presentations
         value: "{{summarize_results.output}}"
-

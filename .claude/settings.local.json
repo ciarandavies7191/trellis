@@ -14,7 +14,8 @@
       "Bash(\"D:/projects/trellis/.venv/Scripts/python.exe\" -m pytest tests/unit/validation/test_graph.py -v)",
       "Bash(python -m pytest tests/ -x -q --tb=short)",
       "Bash(python -m pytest tests/unit/execution/test_template.py -x -q)",
-      "Bash(python -m pytest tests/unit/ -q)"
+      "Bash(python -m pytest tests/unit/ -q)",
+      "Bash(grep:*)"
     ]
   }
 }

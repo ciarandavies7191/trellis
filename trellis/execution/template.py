@@ -16,10 +16,19 @@ Template forms supported
 ------------------------
     {{task_id.output}}              full output of a completed task
     {{task_id.output.field}}        named field within a task's output
+    {{task_id.output.list.first}}   first element of a list in a task's output
+    {{task_id.output.list.last}}    last element of a list in a task's output
     {{pipeline.inputs.key}}         a named pipeline input parameter
     {{pipeline.goal}}               the pipeline goal string
     {{session.key}}                 a value from the session blackboard
     {{item}}                        current element in a parallel_over loop
+
+Special path segments
+---------------------
+    .first    — shorthand for [0] on any list; raises ResolutionError if empty
+    .last     — shorthand for [-1] on any list; raises ResolutionError if empty
+    Dict key lookup takes priority, so a dict with a key named "first" or "last"
+    will be accessed by key, not treated as a list accessor.
 
 Resolution rules
 ----------------
@@ -98,8 +107,13 @@ def _walk_path(value: Any, path: list[str], full_expr: str) -> Any:
     """
     Traverse a sequence of field names into a resolved value.
 
-    Tries dict-key lookup first, then attribute access. Raises ResolutionError
-    if any segment cannot be resolved.
+    Resolution order per segment:
+      1. Dict-key lookup (preserves existing semantics for dicts with any key name).
+      2. ``first`` / ``last`` on a list or tuple — shorthand for [0] / [-1].
+      3. Attribute access.
+
+    Raises ResolutionError if any segment cannot be resolved or if ``first`` /
+    ``last`` is used on an empty sequence.
     """
     for segment in path:
         if isinstance(value, dict):
@@ -109,6 +123,13 @@ def _walk_path(value: Any, path: list[str], full_expr: str) -> Any:
                     f"in dict with keys {sorted(str(k) for k in value.keys())}."
                 )
             value = value[segment]
+        elif segment in ("first", "last") and isinstance(value, (list, tuple)):
+            if not value:
+                raise ResolutionError(
+                    f"Cannot resolve {full_expr!r}: "
+                    f"'.{segment}' accessed on an empty list."
+                )
+            value = value[0] if segment == "first" else value[-1]
         elif hasattr(value, segment):
             value = getattr(value, segment)
         else:

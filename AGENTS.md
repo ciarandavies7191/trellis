@@ -32,6 +32,7 @@ Data flow: Natural language goal → Plan (task sequence) → Pipeline (executab
   - PowerShell (Anthropic): `trellis run .\examples\pipelines\pdf_summarize.yaml --llm-provider anthropic --anthropic-api-key $env:ANTHROPIC_API_KEY --anthropic-model claude-3-haiku-20240307`
   - PowerShell (.env): `trellis run .\examples\pipelines\pdf_summarize.yaml --env-file .env`
   - Note: These flags set per-run environment overrides for built-in tools. `ingest_document` uses `INGEST_OCR_MODEL` for OCR (falls back to `EXTRACT_TEXT_MODEL`). `extract_from_texts`/`extract_from_tables` use `EXTRACT_MODEL` or `EXTRACT_TEXT_MODEL`. `select` uses `SELECT_MODEL` (falls back to `EXTRACT_TEXT_MODEL`). The `--llm-model` and `--extract-model` flags set `EXTRACT_TEXT_MODEL`.
+  - For `llm_job`, the default model is read from `TRELLIS_LLM_MODEL` (see `tools/impls/llm.py`). To affect `llm_job` globally without per-task overrides, set `TRELLIS_LLM_MODEL` (the `--llm-model` CLI flag does not change this unless you also export that env var).
 - **API: Async queued runs (fallback queue)**
   - Submit: `POST /pipelines/run_async` with `{ pipeline, inputs?, session?, options?, tenant_id?, collect_events? }` → `{ run_id, status: queued }`
   - Status: `GET /pipelines/runs/{run_id}` → `{ status, result?, error?, events? }`
@@ -85,6 +86,8 @@ Document processing pipeline: `ingest_document → select → extract_from_texts
   - Structured API content (e.g., LSEG, EDGAR): use `fetch_data`; persist with `store` for cross-pipeline reuse via `{{session.*}}`
   - PDFs: digital-text, image-only, or mixed; `ingest_document` eagerly OCRs image-heavy pages; images/logos/photos are retained in `Page.image_bytes` for downstream table extraction
   - Excel: multi-sheet workbooks; `Page.sheet_name` is preserved; `extract_from_tables` can return multiple tables per sheet and includes `sheet_name` in results
+
+> Note: `search_web` defaults to DuckDuckGo HTML; set `SERPAPI_API_KEY` to enable Google via SerpAPI (`provider: serpapi`). See `examples/pipelines/web_search_investor_day.yaml` for a concrete raw web content pipeline using `search_web → llm_job → store`.
 
 ### Await Barrier
 
