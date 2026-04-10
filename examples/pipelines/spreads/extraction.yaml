@@ -1,0 +1,42 @@
+# ─────────────────────────────────────────────
+# PIPELINE 3: extraction
+# ─────────────────────────────────────────────
+pipeline:
+  id: extraction
+  goal: >
+    Derive the output field schema from the spreading template, then for each
+    SEC filing select the relevant financial statement pages and extract values
+    for all schema fields, guided by the spreading manual.
+
+  tasks:
+
+    - id: load_output_schema
+      tool: load_schema
+      inputs:
+        source: "{{session.template_document}}"
+        hint: >
+          The column headers in the first sheet define the field names.
+          Each header is a field the extraction must populate.
+
+    - id: select_pages
+      tool: select
+      parallel_over: "{{session.filings}}"
+      inputs:
+        document: "{{item}}"
+        prompt: >
+          Pages containing the income statement, balance sheet, or
+          cash flow statement. Exclude cover pages, notes, and exhibits.
+
+    - id: extract_fields
+      tool: extract_fields
+      parallel_over: "{{select_pages.output}}"
+      inputs:
+        document: "{{item}}"
+        schema: "{{load_output_schema.output}}"
+        rules: "{{session.manual_document}}"
+
+    - id: store_extracted_fields
+      tool: store
+      inputs:
+        key: extracted_fields
+        value: "{{extract_fields.output}}"

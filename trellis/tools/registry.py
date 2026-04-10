@@ -179,6 +179,12 @@ class ToolRegistryManager:
 
 def build_default_registry() -> AsyncToolRegistry:
     """Create an AsyncToolRegistry with discovered implementations (no aliases)."""
+    from trellis.registry.finance_functions import build_finance_registry
+    from trellis.tools.impls.compute import ComputeTool
+
     reg = AsyncToolRegistry()
     reg.discover_impls()
+    # discover_impls() instantiates ComputeTool with function_registry=None.
+    # Re-register it with the built-in finance FunctionRegistry.
+    reg.register_tool(ComputeTool(function_registry=build_finance_registry()))
     return reg

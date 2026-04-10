@@ -1,0 +1,50 @@
+# ─────────────────────────────────────────────
+# PIPELINE 4: output_generation
+# ─────────────────────────────────────────────
+pipeline:
+  id: output_generation
+  goal: >
+    Populate the spreading template with extracted financial values for all
+    periods and produce an Excel output file and a Markdown summary report.
+  inputs:
+    company: Google
+    as_of_period: "2025-03-31"
+
+  tasks:
+
+    - id: load_output_schema
+      tool: load_schema
+      inputs:
+        source: "{{session.template_document}}"
+        hint: >
+          Column headers in the first sheet define the field names.
+
+    - id: reconcile_not_found
+      tool: llm_job
+      inputs:
+        extracted: "{{session.extracted_fields}}"
+        schema: "{{load_output_schema.output}}"
+        prompt: >
+          Review the extracted field values across all periods. For any field
+          marked "__not_found__", determine whether the value is genuinely
+          absent from the filing or whether it appears under an alternative
+          label. If an alternative label is found, substitute the correct value.
+          If the value is genuinely absent, retain "__not_found__". Do not
+          invent values. Return the corrected extraction dict in the same
+          structure as the input.
+
+    - id: produce_xlsx
+      tool: export
+      inputs:
+        data: "{{reconcile_not_found.output}}"
+        schema: "{{load_output_schema.output}}"
+        format: xlsx
+        filename: "google_spreading_q1_2025"
+
+    - id: produce_markdown
+      tool: export
+      inputs:
+        data: "{{reconcile_not_found.output}}"
+        schema: "{{load_output_schema.output}}"
+        format: markdown
+        filename: "google_spreading_q1_2025"

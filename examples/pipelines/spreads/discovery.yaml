@@ -1,0 +1,38 @@
+# ─────────────────────────────────────────────
+# PIPELINE 1: discovery
+# ─────────────────────────────────────────────
+pipeline:
+  id: discovery
+  goal: >
+    Resolve the exchange ticker for Google and determine the correct set of
+    fiscal periods to pull based on the as_of_period of 2025-03-31.
+  inputs:
+    company: Google
+    as_of_period: "2026-04-10"
+
+  tasks:
+
+    - id: resolve_ticker
+      tool: compute
+      inputs:
+        function: ticker_lookup
+        company: "{{pipeline.inputs.company}}"
+
+    - id: resolve_periods
+      tool: compute
+      inputs:
+        function: fiscal_period_logic
+        as_of_date: "{{pipeline.inputs.as_of_period}}"
+        company: "{{pipeline.inputs.company}}"
+
+    - id: store_ticker
+      tool: store
+      inputs:
+        key: ticker
+        value: "{{resolve_ticker.output}}"
+
+    - id: store_periods
+      tool: store
+      inputs:
+        key: periods
+        value: "{{resolve_periods.output}}"
