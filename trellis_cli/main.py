@@ -4,6 +4,7 @@ Trellis CLI — validate and run pipelines.
 Commands:
   trellis validate PATH
   trellis run PATH [--inputs INPUTS_JSON] [--session SESSION_JSON]
+                  [--session-file PATH]
                   [--timeout SECONDS] [--concurrency N]
                   [--jitter FRACTION] [--json]
                   [--llm-provider NAME]
@@ -16,7 +17,9 @@ Commands:
 
 Examples (PowerShell):
   trellis validate .\pipelines\example.yaml
+  trellis validate .\pipelines\spreads\plan.yaml
   trellis run .\pipelines\example.yaml --inputs '{"param":"value"}' --timeout 30 --concurrency 5 --json
+  trellis run .\pipelines\spreads\data_acquisition.yaml --session-file .\session.json
   trellis run .\pipelines\example.yaml --llm-provider openai --openai-api-key $env:OPENAI_API_KEY --openai-model gpt-4o
   trellis run .\pipelines\example.yaml --env-file .env
 """
@@ -31,13 +34,16 @@ from typing import Optional, Any
 import dataclasses
 import logging
 
+import yaml
 import typer
 from dotenv import load_dotenv  # type: ignore
 
 from trellis.models.pipeline import Pipeline
+from trellis.models.plan import Plan
 from trellis.execution.orchestrator import Orchestrator
 from trellis.execution.dag import ExecutionOptions
-from trellis.validation.graph import pipeline_execution_waves
+from trellis.validation.graph import pipeline_execution_waves, plan_execution_waves
+from trellis.validation.contract import validate_contract
 
 app = typer.Typer(help="Trellis CLI — validate and run pipelines", no_args_is_help=True)
 
@@ -58,6 +64,85 @@ def _configure_logging() -> None:
 def _load_pipeline(path: Path) -> Pipeline:
     text = path.read_text(encoding="utf-8")
     return Pipeline.from_yaml(text)
+
+
+def _detect_yaml_kind(path: Path) -> str:
+    """Return 'plan' or 'pipeline' based on the YAML root key."""
+    doc = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if isinstance(doc, dict):
+        if "plan" in doc:
+            return "plan"
+        if "pipeline" in doc:
+            return "pipeline"
+    keys = list(doc.keys()) if isinstance(doc, dict) else type(doc).__name__
+    raise ValueError(
+        f"YAML must have a top-level `plan:` or `pipeline:` key. Got: {keys}"
+    )
+
+
+def _validate_plan(path: Path) -> dict[str, Any]:
+    """
+    Validate a plan YAML and all co-located sub-pipeline YAMLs.
+
+    For each sub-pipeline entry whose {id}.yaml sibling exists, loads the
+    pipeline and runs validate_contract to catch stores/reads/inputs violations.
+
+    Returns a stats dict suitable for display.
+    """
+    plan = Plan.from_yaml(path.read_text(encoding="utf-8"))
+    waves = plan_execution_waves(plan)
+
+    # Locate sibling pipeline files (same directory, named {id}.yaml)
+    plan_dir = path.parent
+    contract_results: list[dict[str, Any]] = []
+
+    for sp in plan.sub_pipelines:
+        sibling = plan_dir / f"{sp.id}.yaml"
+        if not sibling.exists():
+            contract_results.append({
+                "id": sp.id,
+                "file": str(sibling),
+                "status": "not_found",
+                "violations": [],
+            })
+            continue
+
+        try:
+            pipeline = Pipeline.from_yaml(sibling.read_text(encoding="utf-8"))
+        except Exception as exc:
+            contract_results.append({
+                "id": sp.id,
+                "file": str(sibling),
+                "status": "parse_error",
+                "error": str(exc),
+                "violations": [],
+            })
+            continue
+
+        violations = validate_contract(pipeline, sp)
+        contract_results.append({
+            "id": sp.id,
+            "file": str(sibling),
+            "status": "ok" if not violations else "violations",
+            "violations": [
+                {
+                    "kind": v.kind.value,
+                    "key": v.key,
+                    "task_id": v.task_id,
+                    "message": v.message,
+                }
+                for v in violations
+            ],
+        })
+
+    return {
+        "id": plan.id,
+        "goal": plan.goal,
+        "sub_pipelines": len(plan.sub_pipelines),
+        "waves": len(waves),
+        "wave_ids": [[sp.id for sp in wave] for wave in waves],
+        "contract_checks": contract_results,
+    }
 
 
 def _json_sanitize(value: Any) -> Any:
@@ -105,7 +190,7 @@ def _load_env_file(env_file: Optional[Path]) -> None:
 
 @app.command()
 def validate(
-    path: Path = typer.Argument(..., exists=True, readable=True, help="Path to pipeline YAML"),
+    path: Path = typer.Argument(..., exists=True, readable=True, help="Path to pipeline or plan YAML"),
     env_file: Optional[Path] = typer.Option(
         None,
         "--env-file",
@@ -113,16 +198,36 @@ def validate(
         help="Path to a .env file to load (default: ./.env if present)",
     ),
 ) -> None:
-    """Validate a pipeline YAML file and print basic stats."""
+    """Validate a pipeline or plan YAML file and print basic stats.
+
+    Detects whether the file is a plan (top-level `plan:` key) or a pipeline
+    (`pipeline:` key) and validates accordingly.
+
+    For plans, also locates co-located sub-pipeline YAMLs (same directory,
+    named <id>.yaml) and validates each against its contract: required session
+    keys stored, session refs declared in reads, inputs declared in pipeline.inputs.
+    """
     _configure_logging()
     _load_env_file(env_file)
     try:
+        kind = _detect_yaml_kind(path)
+    except Exception as exc:
+        typer.secho(f"Validation failed: {exc}", fg=typer.colors.RED)
+        raise typer.Exit(code=1)
+
+    if kind == "plan":
+        _run_plan_validate(path)
+    else:
+        _run_pipeline_validate(path)
+
+
+def _run_pipeline_validate(path: Path) -> None:
+    try:
         pipeline = _load_pipeline(path)
-        # Build execution waves (validates acyclicity)
         waves = pipeline_execution_waves(pipeline)
         stats = {
             "id": pipeline.id,
-            "title": pipeline.goal,
+            "goal": pipeline.goal,
             "tasks": len(pipeline.tasks),
             "tools": sorted({t.tool for t in pipeline.tasks}),
             "inputs_count": len(pipeline.inputs or {}),
@@ -140,6 +245,44 @@ def validate(
         raise typer.Exit(code=1)
 
 
+def _run_plan_validate(path: Path) -> None:
+    try:
+        stats = _validate_plan(path)
+    except Exception as exc:  # noqa: BLE001
+        typer.secho(f"Plan validation failed: {exc}", fg=typer.colors.RED)
+        raise typer.Exit(code=1)
+
+    checks = stats.pop("contract_checks")
+    all_ok = all(c["status"] in ("ok", "not_found") for c in checks)
+    has_violations = any(c["status"] == "violations" for c in checks)
+    has_errors = any(c["status"] == "parse_error" for c in checks)
+
+    color = typer.colors.GREEN if all_ok else typer.colors.RED
+    label = "Plan is valid." if all_ok else "Plan has contract violations."
+    typer.secho(label, fg=color)
+    typer.secho("Stats:", fg=typer.colors.GREEN)
+    typer.echo(json.dumps(stats, ensure_ascii=False, indent=2))
+
+    typer.secho("\nContract checks:", fg=typer.colors.GREEN)
+    for check in checks:
+        status = check["status"]
+        sid = check["id"]
+        if status == "ok":
+            typer.secho(f"  ✓ {sid}", fg=typer.colors.GREEN)
+        elif status == "not_found":
+            typer.secho(f"  ? {sid}  (no sibling {sid}.yaml found — skipped)", fg=typer.colors.YELLOW)
+        elif status == "parse_error":
+            typer.secho(f"  ✗ {sid}  parse error: {check['error']}", fg=typer.colors.RED)
+        else:
+            typer.secho(f"  ✗ {sid}  ({len(check['violations'])} violation(s))", fg=typer.colors.RED)
+            for v in check["violations"]:
+                task_hint = f" [task: {v['task_id']}]" if v["task_id"] else ""
+                typer.secho(f"      [{v['kind']}]{task_hint} {v['message']}", fg=typer.colors.RED)
+
+    if has_violations or has_errors:
+        raise typer.Exit(code=1)
+
+
 @app.command()
 def run(
     path: Path = typer.Argument(..., exists=True, readable=True, help="Path to pipeline YAML"),
@@ -152,6 +295,12 @@ def run(
         None,
         "--session",
         help="JSON string of session values (e.g., '{\"token\":\"...\"}')",
+    ),
+    session_file: Optional[Path] = typer.Option(
+        None,
+        "--session-file",
+        exists=False,
+        help="Path to a JSON file containing session values. Merged with --session; --session takes precedence on key conflicts.",
     ),
     timeout: Optional[float] = typer.Option(
         None,
@@ -267,7 +416,19 @@ def run(
 
     try:
         inputs_obj = json.loads(inputs) if inputs else None
-        session_obj = json.loads(session) if session else None
+        # Build session: start from file (if any), then overlay inline --session values.
+        session_obj: dict | None = None
+        if session_file is not None:
+            if not session_file.exists():
+                typer.secho(f"--session-file {session_file} not found.", fg=typer.colors.RED)
+                raise typer.Exit(code=2)
+            session_obj = json.loads(session_file.read_text(encoding="utf-8"))
+            if not isinstance(session_obj, dict):
+                typer.secho("--session-file must contain a JSON object.", fg=typer.colors.RED)
+                raise typer.Exit(code=2)
+        if session:
+            inline = json.loads(session)
+            session_obj = {**(session_obj or {}), **inline}
     except json.JSONDecodeError as exc:
         typer.secho(f"Invalid JSON: {exc}", fg=typer.colors.RED)
         raise typer.Exit(code=2)
