@@ -15,10 +15,14 @@ from ..base import BaseTool, ToolInput, ToolOutput
 from typing import Any, Dict, List, Iterable
 
 import json
+import logging
 import os
+import threading
 import time
 import urllib.request
 import urllib.parse
+
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Constants / configuration
@@ -39,6 +43,7 @@ SEC_THROTTLE_SECONDS = float(os.getenv("SEC_THROTTLE_SECONDS", "0.2"))
 _ticker_index_cache: dict[str, dict[str, Any]] | None = None
 _name_to_cik_cache: dict[str, str] = {}
 _ticker_to_cik_cache: dict[str, str] = {}
+_index_lock = threading.Lock()
 
 
 def _http_get_json(url: str) -> Any:
@@ -56,22 +61,29 @@ def _http_get_json(url: str) -> Any:
 
 def _load_ticker_index() -> dict[str, dict[str, Any]]:
     global _ticker_index_cache
+    # Fast path — already loaded (no lock needed for read after write).
     if _ticker_index_cache is not None:
         return _ticker_index_cache
-    # company_tickers.json is an object keyed by integer-like strings
-    obj = _http_get_json(SEC_TICKERS_URL)
-    index: dict[str, dict[str, Any]] = {}
-    for _k, rec in obj.items():
-        # rec: {ticker, title, cik_str}
-        index[rec["cik_str"]] = rec
-    _ticker_index_cache = index
-    # Build quick-lookup caches
-    _name_to_cik_cache.clear()
-    _ticker_to_cik_cache.clear()
-    for cik, rec in index.items():
-        _name_to_cik_cache[rec["title"].lower()] = cik
-        _ticker_to_cik_cache[rec["ticker"].upper()] = cik
-    return index
+    # Slow path — download once, under a lock so parallel threads don't race.
+    with _index_lock:
+        if _ticker_index_cache is not None:  # re-check after acquiring
+            return _ticker_index_cache
+        logger.debug("fetch_data: loading SEC ticker index from %s", SEC_TICKERS_URL)
+        obj = _http_get_json(SEC_TICKERS_URL)
+        index: dict[str, dict[str, Any]] = {}
+        new_name_cache: dict[str, str] = {}
+        new_ticker_cache: dict[str, str] = {}
+        for _k, rec in obj.items():
+            cik_key = rec["cik_str"]
+            index[cik_key] = rec
+            new_name_cache[rec["title"].lower()] = cik_key
+            new_ticker_cache[rec["ticker"].upper()] = cik_key
+        # Assign atomically — other threads only see complete caches.
+        _name_to_cik_cache.update(new_name_cache)
+        _ticker_to_cik_cache.update(new_ticker_cache)
+        _ticker_index_cache = index
+        logger.debug("fetch_data: ticker index loaded (%d companies)", len(index))
+    return _ticker_index_cache
 
 
 def _pad_cik(cik: str | int) -> str:
@@ -105,7 +117,21 @@ def _resolve_to_ciks(entities: Iterable[str]) -> list[dict[str, str]]:
             n = name.lower()
             if n in _name_to_cik_cache:
                 cik = _name_to_cik_cache[n]
-                meta = _ticker_index_cache[cik] if _ticker_index_cache else None
+                meta = _ticker_index_cache.get(cik) if _ticker_index_cache else None
+
+        # Fuzzy ticker fallback: SEC sometimes lists GOOG but not GOOGL (share-class
+        # suffix). Try progressively shorter prefixes (e.g. GOOGL → GOOG → GOO).
+        if cik is None and len(t) > 2:
+            for trim in range(1, min(4, len(t) - 1)):
+                prefix = t[:-trim]
+                if prefix in _ticker_to_cik_cache:
+                    cik = _ticker_to_cik_cache[prefix]
+                    meta = _ticker_index_cache.get(cik) if _ticker_index_cache else None
+                    logger.debug(
+                        "fetch_data: ticker %r not found; matched via prefix %r", t, prefix
+                    )
+                    break
+
         if cik:
             results.append({
                 "input": name,
@@ -147,7 +173,10 @@ class FetchTool(BaseTool):
         *,
         url: str | None = None,
         companies: List[str] | str | None = None,
+        ticker: List[str] | str | None = None,
         year: int | None = None,
+        period_end: str | None = None,
+        period_type: str | None = None,
         forms: List[str] | None = None,
         count: int = 20,
         method: str = "GET",
@@ -179,12 +208,44 @@ class FetchTool(BaseTool):
             }
 
         if source_lc in ("sec", "sec_edgar", "edgar"):
+            # Accept `ticker` as an alias for `companies` (spreading pipelines use ticker=)
+            if companies is None and ticker is not None:
+                companies = ticker
+
             if companies is None:
                 raise ValueError("fetch_data(sec_edgar): 'companies' (names or tickers) is required")
+
+            # Derive year from period_end when year is not supplied (e.g. "2025-03-31" → 2025)
+            if year is None and period_end:
+                try:
+                    year = int(str(period_end).split("-")[0])
+                except (ValueError, IndexError):
+                    pass
+
+            # Derive form filter from period_type when forms is not supplied.
+            # annual → 10-K only; ytd_current / ytd_prior / quarterly → 10-Q only.
+            if forms is None and period_type:
+                pt = str(period_type).lower()
+                if pt == "annual":
+                    forms = ["10-K"]
+                elif pt in ("ytd_current", "ytd_prior", "quarterly", "q"):
+                    forms = ["10-Q"]
+
+            # Annual forms (10-K) are filed in the calendar year AFTER the fiscal
+            # year end (e.g. FY 2025 → 10-K filed Feb 2026). Accept year+1 as well
+            # so period_end-derived year filters don't miss these filings.
+            _ANNUAL_FORMS = frozenset({"10-K", "10-KT", "20-F", "40-F"})
+            wanted_forms = [f.upper() for f in (forms or [])]
+            is_annual_filter = bool(wanted_forms) and all(f in _ANNUAL_FORMS for f in wanted_forms)
+            allowed_years: set[str] | None = None
+            if year is not None:
+                allowed_years = {str(year)}
+                if is_annual_filter:
+                    allowed_years.add(str(year + 1))
+
             items = companies if isinstance(companies, list) else [companies]
             resolved = _resolve_to_ciks(items)
             results: list[dict[str, Any]] = []
-            wanted_forms = [f.upper() for f in (forms or [])]
             for entry in resolved:
                 cik = entry["cik"]
                 sub = _fetch_sec_recent_filings(cik)
@@ -198,7 +259,7 @@ class FetchTool(BaseTool):
                 for f, acc, dt, doc in zip(forms_list, acc_list, date_list, doc_list):
                     if wanted_forms and f.upper() not in wanted_forms:
                         continue
-                    if year is not None and not (str(dt).startswith(str(year))):
+                    if allowed_years is not None and str(dt)[:4] not in allowed_years:
                         continue
                     filings.append({
                         "form": f,
@@ -229,7 +290,10 @@ class FetchTool(BaseTool):
             "source": ToolInput(name="source", description="Data source (sec_edgar|url)", required=True),
             "url": ToolInput(name="url", description="HTTP URL (when source=url)", required=False, default=None),
             "companies": ToolInput(name="companies", description="Company names or tickers (list or string)", required=False, default=None),
+            "ticker": ToolInput(name="ticker", description="Alias for companies — single ticker string or list", required=False, default=None),
             "year": ToolInput(name="year", description="Filter filings by filing year (int)", required=False, default=None),
+            "period_end": ToolInput(name="period_end", description="ISO period-end date (YYYY-MM-DD); year extracted for filing filter when year is not set", required=False, default=None),
+            "period_type": ToolInput(name="period_type", description="annual|ytd_current|ytd_prior — infers form filter (10-K / 10-Q) when forms is not set", required=False, default=None),
             "forms": ToolInput(name="forms", description="Filter by SEC form types (e.g., [10-K, 10-Q, 8-K])", required=False, default=None),
             "count": ToolInput(name="count", description="Max filings per company", required=False, default=20),
             "method": ToolInput(name="method", description="HTTP method for source=url", required=False, default="GET"),

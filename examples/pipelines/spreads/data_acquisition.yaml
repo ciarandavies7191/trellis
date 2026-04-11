@@ -7,8 +7,8 @@ pipeline:
     Fetch SEC financial statement filings for GOOGL across all resolved periods,
     and load the spreading template and manual documents.
   inputs:
-    template_path: "inputs/spreading_template.xlsx"
-    manual_path: "inputs/spreading_manual.pdf"
+    template_path: "examples/data/spreading_template_income_statement.md"
+    manual_path: "examples/data/spreading_template_income_statement.md"
 
   tasks:
 

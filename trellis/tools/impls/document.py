@@ -352,20 +352,107 @@ def _handle_from_bytes(
     )
 
 
+def _resolve_local_path(path: str) -> pathlib.Path:
+    """
+    Resolve a local file path, falling back to cwd-relative if not found as-is.
+
+    Resolution order:
+      1. Exact path as given (absolute or relative to the process cwd).
+      2. Relative to the current working directory explicitly (covers cases where
+         the path is a bare filename or partial path from a different working dir).
+
+    Raises FileNotFoundError with a clear message listing both candidates tried.
+    """
+    p = pathlib.Path(path)
+    if p.exists():
+        return p.resolve()
+
+    cwd_relative = pathlib.Path.cwd() / path
+    if cwd_relative.exists():
+        logger.debug(
+            "ingest_document: %r not found at given path, resolved via cwd: %s",
+            path, cwd_relative,
+        )
+        return cwd_relative.resolve()
+
+    raise FileNotFoundError(
+        f"ingest_document: file not found: {path!r}. "
+        f"Tried: [{str(p.resolve())!r}, {str(cwd_relative)!r}]"
+    )
+
+
 def _load_local(path: str) -> DocumentHandle:
-    with open(path, "rb") as fh:
+    resolved = _resolve_local_path(path)
+    with open(resolved, "rb") as fh:
         data = fh.read()
-    fmt = _detect_format(path)
-    return _handle_from_bytes(os.path.abspath(path), data, fmt, is_url=False)
+    fmt = _detect_format(str(resolved))
+    return _handle_from_bytes(str(resolved), data, fmt, is_url=False)
 
 
 def _load_url(url: str) -> DocumentHandle:
-    req = urllib.request.Request(url, headers={"User-Agent": "Trellis/1.0"})
-    with urllib.request.urlopen(req, timeout=20) as resp:
+    # SEC EDGAR policy requires a descriptive User-Agent with contact info.
+    # Fall back to the same env var used by the fetch tool so they stay in sync.
+    _SEC_UA: str = os.getenv("SEC_USER_AGENT", "Trellis/0.1 (contact@example.com)")
+
+    parsed = urllib.parse.urlparse(url)
+    is_sec = parsed.netloc.lower().endswith(".sec.gov")
+    user_agent = _SEC_UA if is_sec else "Trellis/1.0"
+
+    # SEC 10-K/10-Q HTML filings can be 50-100 MB; use a generous timeout.
+    timeout = 300 if is_sec else 60
+
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": user_agent,
+            "Accept": "*/*",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
         data = resp.read()
         content_type = resp.headers.get("Content-Type") or None
     fmt = _detect_format(url, content_type)
     return _handle_from_bytes(url, data, fmt, is_url=True, content_type=content_type)
+
+
+def _urls_from_fetch_result(obj: dict) -> list[str]:
+    """
+    Extract document URLs from a fetch_data result dict.
+
+    Handles the sec_edgar result shape:
+        {"source": "sec_edgar", "results": [{"filings": [{"url": "..."}]}]}
+
+    Also handles a bare filing dict:
+        {"url": "...", "form": "10-K", ...}
+    """
+    urls: list[str] = []
+
+    # Bare filing entry (url at top level)
+    if "url" in obj and isinstance(obj["url"], str):
+        urls.append(obj["url"])
+        return urls
+
+    # sec_edgar result wrapper: {"results": [{"filings": [...]}]}
+    for company_result in obj.get("results", []):
+        filings = company_result.get("filings", [])
+        logger.debug(
+            "ingest_document: company=%r cik=%r filings_count=%d",
+            company_result.get("ticker") or company_result.get("company_input"),
+            company_result.get("cik"),
+            len(filings),
+        )
+        for filing in filings:
+            url = filing.get("url")
+            if isinstance(url, str) and url:
+                urls.append(url)
+            logger.debug(
+                "ingest_document:   filing form=%r date=%r url=%r",
+                filing.get("form"),
+                filing.get("filing_date"),
+                url,
+            )
+
+    return urls
 
 
 # ---------------------------------------------------------------------------
@@ -414,10 +501,35 @@ class IngestDocumentTool(BaseTool):
             if isinstance(p, DocumentHandle):
                 handles.append(p)
                 continue
+            # fetch_data result dict — extract URLs and ingest each filing
+            if isinstance(p, dict):
+                urls = _urls_from_fetch_result(p)
+                if not urls:
+                    logger.warning(
+                        "ingest_document: dict at index %d contains no document URLs "
+                        "(period may have no filings yet) — skipping. "
+                        "Keys: %s",
+                        i, sorted(p.keys()),
+                    )
+                    continue
+                for url in urls:
+                    try:
+                        h = _load_url(url)
+                    except Exception as exc:
+                        logger.warning(
+                            "ingest_document: failed to fetch filing %r — skipping. %s: %s",
+                            url, type(exc).__name__, exc,
+                        )
+                        continue
+                    _apply_ocr_to_pages(h.pages, model)
+                    handles.append(h)
+                continue
+
             if not isinstance(p, str):
                 raise TypeError(
                     f"ingest_document: unsupported item type {type(p).__name__!r} "
-                    f"at index {i}. Expected a file path/URL string or DocumentHandle."
+                    f"at index {i}. Expected a file path/URL string, DocumentHandle, "
+                    f"or fetch_data result dict."
                 )
             item = p
             try:
@@ -433,6 +545,13 @@ class IngestDocumentTool(BaseTool):
             # Eagerly run OCR on any scanned/image-heavy pages
             _apply_ocr_to_pages(handle.pages, model)
             handles.append(handle)
+
+        if not handles:
+            raise ValueError(
+                "ingest_document: no documents could be loaded from the provided input. "
+                "All paths were missing, all fetch results had no filings, or all URLs failed. "
+                "Check the debug log for per-item details."
+            )
 
         return handles[0] if len(handles) == 1 else handles
 

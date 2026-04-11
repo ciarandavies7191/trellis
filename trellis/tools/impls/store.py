@@ -12,12 +12,14 @@ class StoreTool(BaseTool):
         super().__init__(name, "Persist a value to the session blackboard (stub)")
 
     def execute(self, key: str, value: Any, append: bool = False, **kwargs: Any) -> Dict[str, Any]:
-        # Placeholder: echo intent; actual persistence occurs in orchestrator/blackboard integration
+        # Actual persistence occurs in the DAG executor (dag.py) which writes to the blackboard.
+        # Return the value directly so the CLI's _json_sanitize can serialize it to proper JSON
+        # (e.g. PeriodDescriptor dataclasses become dicts), making it copy-pasteable into session files.
         return {
             "status": "success",
             "key": key,
             "append": append,
-            "summary": str(value)[:200],
+            "value": value,
         }
 
     def get_inputs(self) -> Dict[str, ToolInput]:
