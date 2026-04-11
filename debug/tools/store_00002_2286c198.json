@@ -1,0 +1,60 @@
+{
+  "tool": "store",
+  "invocation": 2,
+  "timestamp": "2026-04-11T19:19:43.779687",
+  "inputs": {
+    "key": "periods",
+    "value": [
+      {
+        "$type": "PeriodDescriptor",
+        "label": "FY 2024",
+        "period_end": "2024-12-31",
+        "period_type": "annual",
+        "is_annual": true
+      },
+      {
+        "$type": "PeriodDescriptor",
+        "label": "Q1 2025",
+        "period_end": "2025-03-31",
+        "period_type": "ytd_current",
+        "is_annual": false
+      },
+      {
+        "$type": "PeriodDescriptor",
+        "label": "Q1 2024",
+        "period_end": "2024-03-31",
+        "period_type": "ytd_prior",
+        "is_annual": false
+      }
+    ]
+  },
+  "output": {
+    "status": "success",
+    "key": "periods",
+    "append": false,
+    "value": [
+      {
+        "$type": "PeriodDescriptor",
+        "label": "FY 2024",
+        "period_end": "2024-12-31",
+        "period_type": "annual",
+        "is_annual": true
+      },
+      {
+        "$type": "PeriodDescriptor",
+        "label": "Q1 2025",
+        "period_end": "2025-03-31",
+        "period_type": "ytd_current",
+        "is_annual": false
+      },
+      {
+        "$type": "PeriodDescriptor",
+        "label": "Q1 2024",
+        "period_end": "2024-03-31",
+        "period_type": "ytd_prior",
+        "is_annual": false
+      }
+    ]
+  },
+  "error": null
+}

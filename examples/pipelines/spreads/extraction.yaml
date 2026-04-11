@@ -4,9 +4,10 @@
 pipeline:
   id: extraction
   goal: >
-    Derive the output field schema from the spreading template, then for each
-    SEC filing select the relevant financial statement pages and extract values
-    for all schema fields, guided by the spreading manual.
+    Derive the output field schema from the spreading template. For each
+    filing, select only the income statement pages to reduce context size.
+    Then for each resolved period, extract the relevant field values from
+    the filtered pages, using period_end to focus on the correct column.
 
   tasks:
 
@@ -24,16 +25,20 @@ pipeline:
       inputs:
         document: "{{item}}"
         prompt: >
-          Pages containing the income statement, balance sheet, or
-          cash flow statement. Exclude cover pages, notes, and exhibits.
+          Pages containing the consolidated income statement (also titled
+          "Statements of Operations" or "Statements of Earnings"), including
+          the comparative period columns. Also include any segment revenue
+          footnote page and any other income / non-operating income footnote.
+          Exclude cover pages, risk factors, legal proceedings, and exhibits.
 
     - id: extract_fields
       tool: extract_fields
-      parallel_over: "{{select_pages.output}}"
+      parallel_over: "{{session.periods}}"
       inputs:
-        document: "{{item}}"
+        document: "{{select_pages.output}}"
         schema: "{{load_output_schema.output}}"
         rules: "{{session.manual_document}}"
+        period_end: "{{item.period_end}}"
 
     - id: store_extracted_fields
       tool: store

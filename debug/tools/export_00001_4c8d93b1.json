@@ -1,0 +1,292 @@
+{
+  "tool": "export",
+  "invocation": 1,
+  "timestamp": "2026-04-11T19:20:12.303775",
+  "inputs": {
+    "data": "```json\n[\n  {\n    \"Segment Revenue — [1]\": \"121,263\",\n    \"Segment Revenue — [2]\": \"6,112\",\n    \"Segment Revenue — [3]\": \"350018\",\n    \"Other / Eliminations\": \"211\",\n    \"Total Revenues\": \"350018\",\n    \"YoY Growth (%)\": \"__not_found__\",\n    \"Cost of Revenues\": \"173105\",\n    \"Gross Profit\": \"176913\",\n    \"Gross Margin (%)\": \"__not_found__\",\n    \"Research and Development\": \"47914\",\n    \"Sales and Marketing\": \"27104\",\n    \"General and Administrative\": \"16931\",\n    \"Restructuring and Other Charges\": \"__not_found__\",\n    \"Total Operating Expenses\": \"92049\",\n    \"Operating Income (Loss)\": \"112390\",\n    \"Operating Margin (%)\": \"__not_found__\",\n    \"Segment OI — [1]\": \"121263\",\n    \"Segment OI — [2]\": \"6112\",\n    \"Segment OI — [3]\": \"-4,444\",\n    \"Unallocated / Corporate\": \"-10,541\",\n    \"Interest Income\": \"4,482\",\n    \"Interest Expense\": \"-268\",\n    \"FX Gains (Losses), Net\": \"-409\",\n    \"Gains (Losses) on Investments, Net\": \"2671\",\n    \"Other Non-Operating, Net\": \"919\",\n    \"Total Other Income (Expense), Net\": \"7425\",\n    \"Income Before Income Taxes\": \"119815\",\n    \"Provision for Income Taxes\": \"19697\",\n    \"Effective Tax Rate (%)\": \"16.4\",\n    \"Net Income (Loss)\": \"100118\",\n    \"Net Margin (%)\": \"__not_found__\",\n    \"EPS — Basic ($)\": \"__not_found__\",\n    \"EPS — Diluted ($)\": \"__not_found__\",\n    \"Wtd. Avg. Shares — Basic (MM)\": \"5864\",\n    \"Wtd. Avg. Shares — Diluted (MM)\": \"__not_found__\"\n  },\n  {\n    \"Segment Revenue — [1]\": \"77264\",\n    \"Segment Revenue — [2]\": \"12260\",\n    \"Segment Revenue — [3]\": \"450\",\n    \"Other / Eliminations\": \"260\",\n    \"Total Revenues\": \"90234\",\n    \"YoY Growth (%)\": \"12\",\n    \"Cost of Revenues\": \"36361\",\n    \"Gross Profit\": \"__not_found__\",\n    \"Gross Margin (%)\": \"__not_found__\",\n    \"Research and Development\": \"__not_found__\",\n    \"Sales and Marketing\": \"__not_found__\",\n    \"General and Administrative\": \"__not_found__\",\n    \"Restructuring and Other Charges\": \"__not_found__\",\n    \"Total Operating Expenses\": \"__not_found__\",\n    \"Operating Income (Loss)\": \"30606\",\n    \"Operating Margin (%)\": \"34\",\n    \"Segment OI — [1]\": \"32682\",\n    \"Segment OI — [2]\": \"2177\",\n    \"Segment OI — [3]\": \"-1226\",\n    \"Unallocated / Corporate\": \"-3027\",\n    \"Interest Income\": \"1001\",\n    \"Interest Expense\": \"-34\",\n    \"FX Gains (Losses), Net\": \"-106\",\n    \"Gains (Losses) on Investments, Net\": \"__not_found__\",\n    \"Other Non-Operating, Net\": \"__not_found__\",\n    \"Total Other Income (Expense), Net\": \"11183\",\n    \"Income Before Income Taxes\": \"41789\",\n    \"Provision for Income Taxes\": \"7249\",\n    \"Effective Tax Rate (%)\": \"17.3\",\n    \"Net Income (Loss)\": \"34540\",\n    \"Net Margin (%)\": \"__not_found__\",\n    \"EPS — Basic ($)\": \"__not_found__\",\n    \"EPS — Diluted ($)\": \"2.81\",\n    \"Wtd. Avg. Shares — Basic (MM)\": \"__not_found__\",\n    \"Wtd. Avg. Shares — Diluted (MM)\": \"__not_found__\"\n  },\n  {\n    \"Segment Revenue — [1]\": \"70398\",\n    \"Segment Revenue — [2]\": \"9574\",\n    \"Segment Revenue — [3]\": \"495\",\n    \"Other / Eliminations\": \"__not_found__\",\n    \"Total Revenues\": \"80539\",\n    \"YoY Growth (%)\": \"15\",\n    \"Cost of Revenues\": \"33712\",\n    \"Gross Profit\": \"__not_found__\",\n    \"Gross Margin (%)\": \"32\",\n    \"Research and Development\": \"11903\",\n    \"Sales and Marketing\": \"6426\",\n    \"General and Administrative\": \"3026\",\n    \"Restructuring and Other Charges\": \"__not_found__\",\n    \"Total Operating Expenses\": \"__not_found__\",\n    \"Operating Income (Loss)\": \"25472\",\n    \"Operating Margin (%)\": \"32\",\n    \"Segment OI — [1]\": \"27897\",\n    \"Segment OI — [2]\": \"900\",\n    \"Segment OI — [3]\": \"-1020\",\n    \"Unallocated / Corporate\": \"-2305\",\n    \"Interest Income\": \"1061\",\n    \"Interest Expense\": \"-94\",\n    \"FX Gains (Losses), Net\": \"-238\",\n    \"Gains (Losses) on Investments, Net\": \"2243\",\n    \"Other Non-Operating, Net\": \"__not_found__\",\n    \"Total Other Income (Expense), Net\": \"2843\",\n    \"Income Before Income Taxes\": \"28315\",\n    \"Provision for Income Taxes\": \"4653\",\n    \"Effective Tax Rate (%)\": \"16.4\",\n    \"Net Income (Loss)\": \"23662\",\n    \"Net Margin (%)\": \"__not_found__\",\n    \"EPS — Basic ($)\": \"1.91\",\n    \"EPS — Diluted ($)\": \"1.89\",\n    \"Wtd. Avg. Shares — Basic (MM)\": \"12252\",\n    \"Wtd. Avg. Shares — Diluted (MM)\": \"12296\"\n  }\n]\n```",
+    "schema": {
+      "$type": "SchemaHandle",
+      "fields": [
+        {
+          "$type": "FieldDefinition",
+          "name": "Segment Revenue — [1]",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Segment Revenue — [2]",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Segment Revenue — [3]",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Other / Eliminations",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Total Revenues",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "YoY Growth (%)",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Cost of Revenues",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Gross Profit",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Gross Margin (%)",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Research and Development",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Sales and Marketing",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "General and Administrative",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Restructuring and Other Charges",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Total Operating Expenses",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Operating Income (Loss)",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Operating Margin (%)",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Segment OI — [1]",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Segment OI — [2]",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Segment OI — [3]",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Unallocated / Corporate",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Interest Income",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Interest Expense",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "FX Gains (Losses), Net",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Gains (Losses) on Investments, Net",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Other Non-Operating, Net",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Total Other Income (Expense), Net",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Income Before Income Taxes",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Provision for Income Taxes",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Effective Tax Rate (%)",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Net Income (Loss)",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Net Margin (%)",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "EPS — Basic ($)",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "EPS — Diluted ($)",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Wtd. Avg. Shares — Basic (MM)",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Wtd. Avg. Shares — Diluted (MM)",
+          "type_hint": null,
+          "required": true,
+          "description": "Column headers in the first sheet define the field names.\n"
+        }
+      ],
+      "source": "spreading_template_income_statement.md",
+      "raw": {
+        "$type": "DocumentHandle",
+        "source": "D:\\projects\\trellis\\examples\\data\\spreading_template_income_statement.md",
+        "format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 1,
+            "text": "# Income Statement Spread\n**Company:** _______________________________________________  **Ticker:** ____________\n**Prepared By:** ______________________________  **Date:** ____________  **Reviewed By:** ____________\n**Source Filing:** _______________________________________________  **Filed:** ____________\n**Reporting Currency:** __________  **Units:** $ Millions (unless noted)  **Audited:** Yes / No\n\n---\n\n## Revenue\n\n| | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| Segment Revenue — [1] | | | | | | | | | | |\n| Segment Revenue — [2] | | | | | | | | | | |\n| Segment Revenue — [3] | | | | | | | | | | |\n| Other / Eliminations | | | | | | | | | | |\n| **Total Revenues** | | | | | | | | | | |\n| *YoY Growth (%)* | | | | | | | | | | |\n\n---\n\n## Costs and Expenses\n\n| | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| Cost of Revenues | | | | | | | | | | |\n| *Gross Profit* | | | | | | | | | | |\n| *Gross Margin (%)* | | | | | | | | | | |\n| Research and Development | | | | | | | | | | |\n| Sales and Marketing | | | | | | | | | | |\n| General and Administrative | | | | | | | | | | |\n| Restructuring and Other Charges | | | | | | | | | | |\n| **Total Operating Expenses** | | | | | | | | | | |\n\n---\n\n## Operating Results\n\n| | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| **Operating Income (Loss)** | | | | | | | | | | |\n| *Operating Margin (%)* | | | | | | | | | | |\n\n---\n\n## Segment Operating Income *(from footnotes — complete only if disclosed)*\n\n| | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| Segment OI — [1] | | | | | | | | | | |\n| Segment OI — …",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {}
+          }
+        ],
+        "page_count": 1,
+        "is_scanned": false,
+        "source_url": null,
+        "metadata": {}
+      },
+      "task_id": null
+    },
+    "format": "json",
+    "filename": "google_spreading_q1_2025"
+  },
+  "output": {
+    "status": "success",
+    "format": "json",
+    "filename": "google_spreading_q1_2025",
+    "path": "outputs\\google_spreading_q1_2025.json",
+    "size": 4359,
+    "schema_source": "spreading_template_income_statement.md"
+  },
+  "error": null
+}

@@ -19,7 +19,13 @@
       "Bash(python -m pytest tests/unit/models/test_handles.py tests/unit/tools/test_schema_registry.py tests/unit/tools/test_function_registry.py tests/unit/tools/test_finance_functions.py tests/unit/tools/test_compute_tool.py tests/unit/tools/test_load_schema_tool.py tests/unit/tools/test_extract_fields_tool.py -v)",
       "Bash(python -m pytest tests/unit/models/test_pipeline.py tests/unit/tools/ -v --ignore=tests/unit/tools/test_schema_registry.py --ignore=tests/unit/tools/test_function_registry.py --ignore=tests/unit/tools/test_finance_functions.py --ignore=tests/unit/tools/test_compute_tool.py --ignore=tests/unit/tools/test_load_schema_tool.py --ignore=tests/unit/tools/test_extract_fields_tool.py)",
       "Bash(python -c ':*)",
-      "Bash(python -c \"from trellis.tools.impls.extract_fields import ExtractFieldsTool; t = ExtractFieldsTool\\(\\); print\\('ok, inputs:', list\\(t.get_inputs\\(\\).keys\\(\\)\\)\\)\")"
+      "Bash(python -c \"from trellis.tools.impls.extract_fields import ExtractFieldsTool; t = ExtractFieldsTool\\(\\); print\\('ok, inputs:', list\\(t.get_inputs\\(\\).keys\\(\\)\\)\\)\")",
+      "Bash(python -m pytest tests/ -q --tb=short -k \"export\")",
+      "Bash(python -m trellis_cli.main validate examples/pipelines/spreads/plan.yaml)",
+      "Bash(PYTHONUTF8=1 python -m trellis_cli.main validate examples/pipelines/spreads/plan.yaml)",
+      "Bash(python -m pytest tests/ -q --tb=short)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\({k:v for k,v in \\(d.get\\('output',{}\\) or {}\\).items\\(\\) if v != '__not_found__'}, indent=2\\)\\)\")",
+      "Bash(python:*)"
     ]
   }
 }

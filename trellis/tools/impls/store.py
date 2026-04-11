@@ -5,8 +5,10 @@ from __future__ import annotations
 from typing import Any, Dict
 
 from ..base import BaseTool, ToolInput, ToolOutput
+from ..decorators import export_io
 
 
+@export_io(path="debug/tools")
 class StoreTool(BaseTool):
     def __init__(self, name: str = "store") -> None:
         super().__init__(name, "Persist a value to the session blackboard (stub)")

@@ -115,6 +115,10 @@ def _build_prompt(prompt: str, context: Dict[str, Any]) -> str:
     return "\n\n".join(parts)
 
 
+from ..decorators import export_io  # noqa: E402 — after stdlib/third-party imports
+
+
+@export_io(path="debug/tools")
 class LLMTool(BaseTool):
     """Provider-agnostic LLM tool backed by litellm."""
 

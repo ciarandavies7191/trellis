@@ -249,33 +249,67 @@ class FetchTool(BaseTool):
             for entry in resolved:
                 cik = entry["cik"]
                 sub = _fetch_sec_recent_filings(cik)
-                filings = []
                 recent = (sub.get("filings", {}) or {}).get("recent", {})
                 forms_list: list[str] = list(recent.get("form", []) or [])
                 acc_list: list[str] = list(recent.get("accessionNumber", []) or [])
                 date_list: list[str] = list(recent.get("filingDate", []) or [])
                 doc_list: list[str] = list(recent.get("primaryDocument", []) or [])
-                # Build filings
-                for f, acc, dt, doc in zip(forms_list, acc_list, date_list, doc_list):
+                report_date_list: list[str] = list(recent.get("reportDate", []) or [])
+                # Pad reportDate list if shorter (older EDGAR records may omit it)
+                while len(report_date_list) < len(forms_list):
+                    report_date_list.append("")
+
+                # Collect all candidate filings that pass form/year filters.
+                # We do NOT apply count here so we can do period-end matching first.
+                candidates: list[dict[str, Any]] = []
+                for f, acc, dt, doc, rd in zip(
+                    forms_list, acc_list, date_list, doc_list, report_date_list
+                ):
                     if wanted_forms and f.upper() not in wanted_forms:
                         continue
                     if allowed_years is not None and str(dt)[:4] not in allowed_years:
                         continue
-                    filings.append({
+                    candidates.append({
                         "form": f,
                         "filing_date": dt,
+                        "report_date": rd,
                         "accession_no": acc,
                         "url": _build_filing_url(cik, acc, doc),
                         "primary_document": doc,
                     })
-                    if len(filings) >= max(1, int(count)):
-                        break
+
+                # When period_end is specified, prefer the filing whose reportDate
+                # matches it exactly, then accept the closest earlier date.
+                # This prevents count=1 from grabbing the latest filing in the year
+                # (e.g., Q3 2025) when Q1 2025 is the target.
+                filings: list[dict[str, Any]] = []
+                if period_end and candidates:
+                    exact = [c for c in candidates if c["report_date"] == period_end]
+                    if exact:
+                        filings = exact[:max(1, int(count))]
+                    else:
+                        # Take closest filing whose reportDate is ≤ period_end
+                        before = [c for c in candidates if c["report_date"] <= period_end and c["report_date"]]
+                        if before:
+                            # Sort ascending by report_date; take the closest (last)
+                            before_sorted = sorted(before, key=lambda x: x["report_date"])
+                            filings = before_sorted[-max(1, int(count)):]
+                        else:
+                            filings = candidates[:max(1, int(count))]
+                else:
+                    filings = candidates[:max(1, int(count))]
+
+                # Drop the internal report_date field from outgoing filing dicts
+                clean_filings = [
+                    {k: v for k, v in c.items() if k != "report_date"}
+                    for c in filings
+                ]
                 results.append({
                     "company_input": entry.get("input"),
                     "company_name": entry.get("title") or entry.get("input"),
                     "ticker": entry.get("ticker"),
                     "cik": cik,
-                    "filings": filings,
+                    "filings": clean_filings,
                 })
             return {
                 "status": "success",

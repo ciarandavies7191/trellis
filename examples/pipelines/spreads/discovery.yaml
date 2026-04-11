@@ -8,7 +8,7 @@ pipeline:
     fiscal periods to pull based on the as_of_period of 2025-03-31.
   inputs:
     company: Google
-    as_of_period: "2026-04-10"
+    as_of_period: "{{pipeline.inputs.as_of_period}}"
 
   tasks:
 

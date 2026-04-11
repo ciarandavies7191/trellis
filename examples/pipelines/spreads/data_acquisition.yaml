@@ -8,7 +8,7 @@ pipeline:
     and load the spreading template and manual documents.
   inputs:
     template_path: "examples/data/spreading_template_income_statement.md"
-    manual_path: "examples/data/spreading_template_income_statement.md"
+    manual_path: "examples/data/spreading_manual_income_statement.md"
 
   tasks:
 
@@ -20,7 +20,7 @@ pipeline:
         ticker: "{{session.ticker}}"
         period_end: "{{item.period_end}}"
         period_type: "{{item.period_type}}"
-        statement_types: [income_statement, balance_sheet, cash_flow_statement]
+        count: 1
 
     - id: ingest_filings
       tool: ingest_document

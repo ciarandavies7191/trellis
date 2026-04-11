@@ -4,8 +4,10 @@
 pipeline:
   id: output_generation
   goal: >
-    Populate the spreading template with extracted financial values for all
-    periods and produce an Excel output file and a Markdown summary report.
+    Populate the spreading template with extracted field values and produce
+    an Excel output file and a Markdown summary report. Resolves segment
+    names, fills in the document header, generates analyst notes, and
+    labels each column with its actual period date.
   inputs:
     company: Google
     as_of_period: "2025-03-31"
@@ -30,10 +32,67 @@ pipeline:
           absent from the filing or whether it appears under an alternative
           label. If an alternative label is found, substitute the correct value.
           If the value is genuinely absent, retain "__not_found__". Do not
-          invent values. Return the corrected extraction dict in the same
-          structure as the input.
+          invent values. Return the corrected extraction list in the same
+          structure as the input (a JSON array of dicts, one dict per period).
 
-    - id: produce_xlsx
+    - id: generate_metadata
+      tool: llm_job
+      inputs:
+        extracted: "{{session.extracted_fields}}"
+        periods: "{{session.periods}}"
+        filings: "{{session.filings}}"
+        company: "{{pipeline.inputs.company}}"
+        as_of_period: "{{pipeline.inputs.as_of_period}}"
+        prompt: >
+          Based on the filing metadata and extracted data, produce a JSON object
+          with the following keys for the document header:
+            company        — the full legal company name (e.g. "Alphabet Inc.")
+            ticker         — exchange ticker (e.g. "GOOGL")
+            as_of_period   — the target period end date (e.g. "2025-03-31")
+            source_filing  — the SEC form type and accession number of the
+                             primary filing (e.g. "10-Q (0001652044-25-000069)")
+            filed          — the filing date of the primary filing (YYYY-MM-DD)
+            currency       — reporting currency (e.g. "USD")
+            units          — unit description (e.g. "$ Millions (unless noted)")
+            audited        — "No" for 10-Q, "Yes" for 10-K
+          Return only the JSON object, no commentary.
+
+    - id: generate_analyst_notes
+      tool: llm_job
+      inputs:
+        extracted: "{{reconcile_not_found.output}}"
+        periods: "{{session.periods}}"
+        filings: "{{session.filings}}"
+        prompt: >
+          Review the extracted financial data and produce analyst notes.
+
+          1. Identify the actual business segment names this company uses (to
+             label rows [1], [2], [3] in the spread). For Alphabet/Google these
+             are typically Google Services, Google Cloud, and Other Bets.
+
+          2. Note any significant or unusual items:
+             - Non-recurring charges (restructuring, impairment, litigation)
+             - Large investment gains/losses that distort net income
+             - Changes in segment structure or accounting policy
+             - Periods where data was not available in the fetched filings
+             - Any cross-check failures (e.g. segment OI doesn't reconcile
+               to consolidated OI)
+
+          Return a JSON object with exactly two keys:
+            "segment_names": {
+              "[1]": "actual segment name",
+              "[2]": "actual segment name",
+              "[3]": "actual segment name"
+            },
+            "notes": [
+              {"period": "Q1 2025", "line_item": "...", "note": "..."},
+              ...
+            ]
+
+          The "notes" array should have 3–6 entries covering the most important
+          items. Keep each note to one concise sentence.
+
+    - id: produce_json
       tool: export
       inputs:
         data: "{{reconcile_not_found.output}}"
@@ -48,3 +107,6 @@ pipeline:
         schema: "{{load_output_schema.output}}"
         format: markdown
         filename: "google_spreading_q1_2025"
+        periods: "{{session.periods}}"
+        metadata: "{{generate_metadata.output}}"
+        analyst_notes: "{{generate_analyst_notes.output}}"

@@ -22,6 +22,7 @@ DEFAULT_OUTPUT_DIR = os.getenv("TRELLIS_OUTPUT_DIR", "outputs")
 class ContractError(Exception):
     """Raised when export data fails schema conformance validation."""
 
+@export_io(path="debug/tools")
 class ExportTool(BaseTool):
     def __init__(self, name: str = "export") -> None:
         super().__init__(name, "Export content to an artifact")
@@ -34,6 +35,9 @@ class ExportTool(BaseTool):
         schema: SchemaHandle | None = None,
         data: Any = None,
         strict: bool = False,
+        periods: Any = None,
+        metadata: Any = None,
+        analyst_notes: Any = None,
         **kwargs: Any,
     ) -> Dict[str, Any]:
         """
@@ -48,16 +52,24 @@ class ExportTool(BaseTool):
         template representation rather than generating a new file.
 
         Args:
-            content:  Content to export. May be a dict, string, or any value.
-            data:     Alias for content (either may be supplied; data takes
-                      precedence when both are given).
-            format:   Output format: "markdown", "json", "csv", "xlsx", "pdf".
-            filename: Base filename without extension.
-            schema:   Optional SchemaHandle. When present, validates conformance
-                      before writing and enables populate mode when schema.raw
-                      is non-None.
-            strict:   When True, extra fields in *content* raise ContractError
-                      instead of being silently dropped.
+            content:        Content to export. May be a dict, string, or any value.
+            data:           Alias for content (either may be supplied; data takes
+                            precedence when both are given).
+            format:         Output format: "markdown", "json", "csv", "xlsx", "pdf".
+            filename:       Base filename without extension.
+            schema:         Optional SchemaHandle. When present, validates conformance
+                            before writing and enables populate mode when schema.raw
+                            is non-None.
+            strict:         When True, extra fields in *content* raise ContractError
+                            instead of being silently dropped.
+            periods:        Optional list of period descriptors (dicts with a "label"
+                            key, or plain strings). Used as column headers in the
+                            markdown table instead of generic "Period N" labels.
+            metadata:       Optional dict with document header fields: company, ticker,
+                            as_of_period, source_filing, filed, currency, units.
+            analyst_notes:  Optional list of note dicts ({period, line_item, note}) or
+                            a plain string. Appended as an Analyst Notes table in
+                            the markdown output.
 
         Returns:
             Dict with status, format, filename, size, and optional schema info.
@@ -79,6 +91,9 @@ class ExportTool(BaseTool):
             filename=filename or "artifact",
             out_dir=out_dir,
             schema=schema,
+            periods=periods,
+            metadata=metadata,
+            analyst_notes=analyst_notes,
         )
 
         result: Dict[str, Any] = {
@@ -105,6 +120,9 @@ class ExportTool(BaseTool):
         filename: str,
         out_dir: pathlib.Path,
         schema: SchemaHandle | None,
+        periods: Any = None,
+        metadata: Any = None,
+        analyst_notes: Any = None,
     ) -> pathlib.Path:
         """Write *payload* to *out_dir* and return the path written."""
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -114,7 +132,10 @@ class ExportTool(BaseTool):
         if fmt in ("json",):
             return self._write_json(normalised, filename, out_dir)
         # markdown (and anything else) — default writer
-        return self._write_markdown(normalised, filename, out_dir, schema)
+        return self._write_markdown(
+            normalised, filename, out_dir, schema,
+            periods=periods, metadata=metadata, analyst_notes=analyst_notes,
+        )
 
     @staticmethod
     def _parse_payload(payload: Any) -> Any:
@@ -143,27 +164,95 @@ class ExportTool(BaseTool):
         return dest
 
     @staticmethod
+    def _coerce_json(value: Any) -> Any:
+        """If *value* is a JSON string (possibly fenced), parse and return it; otherwise return as-is."""
+        if not isinstance(value, str):
+            return value
+        stripped = re.sub(r"^```[a-z]*\s*", "", value.strip(), flags=re.I)
+        stripped = re.sub(r"\s*```$", "", stripped)
+        try:
+            return json.loads(stripped)
+        except Exception:
+            return value
+
+    @staticmethod
     def _write_markdown(
         payload: Any,
         filename: str,
         out_dir: pathlib.Path,
         schema: SchemaHandle | None,
+        periods: Any = None,
+        metadata: Any = None,
+        analyst_notes: Any = None,
     ) -> pathlib.Path:
         dest = out_dir / f"{filename}.md"
         lines: List[str] = []
 
-        # Header
-        lines.append(f"# {filename.replace('_', ' ').title()}")
-        lines.append("")
+        # Coerce JSON strings → Python objects for metadata and analyst_notes
+        metadata = ExportTool._coerce_json(metadata)
+        analyst_notes = ExportTool._coerce_json(analyst_notes)
+        # llm_job may return {"notes": [...], "segment_names": {...}}; unwrap the notes list
+        if isinstance(analyst_notes, dict):
+            analyst_notes = analyst_notes.get("notes", analyst_notes)
+
+        # Document header block
+        if isinstance(metadata, dict):
+            company = metadata.get("company", "_______________")
+            ticker = metadata.get("ticker", "____________")
+            prepared_by = metadata.get("prepared_by", "______________________________")
+            date = metadata.get("date", "____________")
+            reviewed_by = metadata.get("reviewed_by", "____________")
+            source_filing = metadata.get("source_filing", "_______________________________________________")
+            filed = metadata.get("filed", "____________")
+            currency = metadata.get("currency", "__________")
+            units = metadata.get("units", "$ Millions (unless noted)")
+            audited = metadata.get("audited", "Yes / No")
+            lines.append("# Income Statement Spread")
+            lines.append(f"**Company:** {company}  **Ticker:** {ticker}")
+            lines.append(
+                f"**Prepared By:** {prepared_by}  **Date:** {date}  **Reviewed By:** {reviewed_by}"
+            )
+            lines.append(f"**Source Filing:** {source_filing}  **Filed:** {filed}")
+            lines.append(
+                f"**Reporting Currency:** {currency}  **Units:** {units}  **Audited:** {audited}"
+            )
+            lines.append("")
+            lines.append("---")
+            lines.append("")
+        else:
+            lines.append(f"# {filename.replace('_', ' ').title()}")
+            lines.append("")
+
+        # Resolve period labels from the periods argument.
+        # Accepts dicts (JSON-serialised PeriodDescriptor), dataclasses with a
+        # .label attribute, or plain strings.
+        if periods:
+            period_list = periods if isinstance(periods, list) else []
+            period_labels: List[str] = []
+            for p in period_list:
+                if isinstance(p, dict):
+                    label = p.get("label") or p.get("period_label")
+                elif hasattr(p, "label"):
+                    label = p.label
+                else:
+                    label = None
+                period_labels.append(str(label) if label else f"Period {len(period_labels) + 1}")
+        else:
+            n = len(payload) if isinstance(payload, list) else 1
+            period_labels = [f"Period {i + 1}" for i in range(n)]
 
         # Payload is a list of per-period extraction dicts
         if isinstance(payload, list) and payload and isinstance(payload[0], dict):
-            periods = list(range(1, len(payload) + 1))
             field_names = schema.field_names() if schema else sorted(payload[0].keys())
 
+            # Pad or trim period labels to match data length
+            while len(period_labels) < len(payload):
+                period_labels.append(f"Period {len(period_labels) + 1}")
+            period_labels = period_labels[: len(payload)]
+
             # Column headers
-            header = "| Field | " + " | ".join(f"Period {p}" for p in periods) + " |"
-            sep = "|---|" + "---|" * len(periods)
+            header = "| Field | " + " | ".join(period_labels) + " |"
+            sep = "|---|" + "---|" * len(payload)
             lines.append(header)
             lines.append(sep)
 
@@ -183,6 +272,31 @@ class ExportTool(BaseTool):
 
         else:
             lines.append(str(payload) if payload is not None else "_no data_")
+
+        # Analyst Notes section
+        lines.append("")
+        lines.append("---")
+        lines.append("")
+        lines.append("## Analyst Notes")
+        lines.append("")
+        lines.append("| # | Period | Line Item | Note |")
+        lines.append("|---|--------|-----------|------|")
+        if isinstance(analyst_notes, list) and analyst_notes:
+            for i, note in enumerate(analyst_notes, 1):
+                if isinstance(note, dict):
+                    p = note.get("period", "")
+                    li = note.get("line_item", "")
+                    nt = note.get("note", "")
+                    lines.append(f"| {i} | {p} | {li} | {nt} |")
+                else:
+                    lines.append(f"| {i} | | | {note} |")
+        elif isinstance(analyst_notes, str) and analyst_notes.strip():
+            lines.append(f"| 1 | | | {analyst_notes.strip()} |")
+        else:
+            lines.append("| 1 | | | |")
+            lines.append("| 2 | | | |")
+            lines.append("| 3 | | | |")
+            lines.append("| 4 | | | |")
 
         dest.write_text("\n".join(lines) + "\n", encoding="utf-8")
         logger.info("export: wrote %s (%d bytes)", dest, dest.stat().st_size)
@@ -276,6 +390,33 @@ class ExportTool(BaseTool):
                 description="When True, extra fields raise ContractError instead of being dropped.",
                 required=False,
                 default=False,
+            ),
+            "periods": ToolInput(
+                name="periods",
+                description=(
+                    "List of period descriptors (dicts with 'label' key) or plain strings. "
+                    "Used as column headers in markdown output instead of generic 'Period N'."
+                ),
+                required=False,
+                default=None,
+            ),
+            "metadata": ToolInput(
+                name="metadata",
+                description=(
+                    "Dict with document header fields: company, ticker, as_of_period, "
+                    "source_filing, filed, currency, units, prepared_by, reviewed_by, audited."
+                ),
+                required=False,
+                default=None,
+            ),
+            "analyst_notes": ToolInput(
+                name="analyst_notes",
+                description=(
+                    "List of note dicts ({period, line_item, note}) or plain string. "
+                    "Written as the Analyst Notes table in markdown output."
+                ),
+                required=False,
+                default=None,
             ),
             "output_dir": ToolInput(
                 name="output_dir",

@@ -1,0 +1,56 @@
+{
+  "tool": "store",
+  "invocation": 3,
+  "timestamp": "2026-04-11T19:19:44.846211",
+  "inputs": {
+    "key": "template_document",
+    "value": {
+      "$type": "DocumentHandle",
+      "source": "D:\\projects\\trellis\\examples\\data\\spreading_template_income_statement.md",
+      "format": "text",
+      "pages": [
+        {
+          "$type": "Page",
+          "number": 1,
+          "text": "# Income Statement Spread\n**Company:** _______________________________________________  **Ticker:** ____________\n**Prepared By:** ______________________________  **Date:** ____________  **Reviewed By:** ____________\n**Source Filing:** _______________________________________________  **Filed:** ____________\n**Reporting Currency:** __________  **Units:** $ Millions (unless noted)  **Audited:** Yes / No\n\n---\n\n## Revenue\n\n| | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| Segment Revenue — [1] | | | | | | | | | | |\n| Segment Revenue — [2] | | | | | | | | | | |\n| Segment Revenue — [3] | | | | | | | | | | |\n| Other / Eliminations | | | | | | | | | | |\n| **Total Revenues** | | | | | | | | | | |\n| *YoY Growth (%)* | | | | | | | | | | |\n\n---\n\n## Costs and Expenses\n\n| | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| Cost of Revenues | | | | | | | | | | |\n| *Gross Profit* | | | | | | | | | | |\n| *Gross Margin (%)* | | | | | | | | | | |\n| Research and Development | | | | | | | | | | |\n| Sales and Marketing | | | | | | | | | | |\n| General and Administrative | | | | | | | | | | |\n| Restructuring and Other Charges | | | | | | | | | | |\n| **Total Operating Expenses** | | | | | | | | | | |\n\n---\n\n## Operating Results\n\n| | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| **Operating Income (Loss)** | | | | | | | | | | |\n| *Operating Margin (%)* | | | | | | | | | | |\n\n---\n\n## Segment Operating Income *(from footnotes — complete only if disclosed)*\n\n| | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| Segment OI — [1] | | | | | | | | | | |\n| Segment OI — …",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {}
+        }
+      ],
+      "page_count": 1,
+      "is_scanned": false,
+      "source_url": null,
+      "metadata": {}
+    }
+  },
+  "output": {
+    "status": "success",
+    "key": "template_document",
+    "append": false,
+    "value": {
+      "$type": "DocumentHandle",
+      "source": "D:\\projects\\trellis\\examples\\data\\spreading_template_income_statement.md",
+      "format": "text",
+      "pages": [
+        {
+          "$type": "Page",
+          "number": 1,
+          "text": "# Income Statement Spread\n**Company:** _______________________________________________  **Ticker:** ____________\n**Prepared By:** ______________________________  **Date:** ____________  **Reviewed By:** ____________\n**Source Filing:** _______________________________________________  **Filed:** ____________\n**Reporting Currency:** __________  **Units:** $ Millions (unless noted)  **Audited:** Yes / No\n\n---\n\n## Revenue\n\n| | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| Segment Revenue — [1] | | | | | | | | | | |\n| Segment Revenue — [2] | | | | | | | | | | |\n| Segment Revenue — [3] | | | | | | | | | | |\n| Other / Eliminations | | | | | | | | | | |\n| **Total Revenues** | | | | | | | | | | |\n| *YoY Growth (%)* | | | | | | | | | | |\n\n---\n\n## Costs and Expenses\n\n| | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| Cost of Revenues | | | | | | | | | | |\n| *Gross Profit* | | | | | | | | | | |\n| *Gross Margin (%)* | | | | | | | | | | |\n| Research and Development | | | | | | | | | | |\n| Sales and Marketing | | | | | | | | | | |\n| General and Administrative | | | | | | | | | | |\n| Restructuring and Other Charges | | | | | | | | | | |\n| **Total Operating Expenses** | | | | | | | | | | |\n\n---\n\n## Operating Results\n\n| | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| **Operating Income (Loss)** | | | | | | | | | | |\n| *Operating Margin (%)* | | | | | | | | | | |\n\n---\n\n## Segment Operating Income *(from footnotes — complete only if disclosed)*\n\n| | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ | Q1 20__ | Q2 20__ | Q3 20__ | Q4 20__ | FY 20__ |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| Segment OI — [1] | | | | | | | | | | |\n| Segment OI — …",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {}
+        }
+      ],
+      "page_count": 1,
+      "is_scanned": false,
+      "source_url": null,
+      "metadata": {}
+    }
+  },
+  "error": null
+}

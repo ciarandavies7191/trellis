@@ -8,7 +8,7 @@ plan:
     company: Google
     as_of_period: "2025-03-31"
     template_path: "examples/data/spreading_template_income_statement.md"
-    manual_path: "examples/data/spreading_template_income_statement.md"
+    manual_path: "examples/data/spreading_manual_income_statement.md"
 
   sub_pipelines:
 
@@ -30,16 +30,17 @@ plan:
 
     - id: extraction
       goal: >
-        Derive the output schema from the template, then for each filing select
-        the relevant financial statement pages and extract field values guided
-        by the spreading manual.
-      reads: [filings, template_document, manual_document]
+        Derive the output schema from the template, then for each resolved period
+        extract field values from the fetched filings guided by the spreading manual,
+        focusing each extraction on the correct reporting period.
+      reads: [filings, template_document, manual_document, periods]
       stores: [extracted_fields]
 
     - id: output_generation
       goal: >
         Populate the spreading template with the extracted field values and
-        produce an Excel file and a Markdown summary report.
-      reads: [extracted_fields, template_document]
+        produce an Excel file and a Markdown summary report, with proper period
+        labels, document header, segment name resolution, and analyst notes.
+      reads: [extracted_fields, template_document, periods, filings]
       stores: []
       inputs: [company, as_of_period]
