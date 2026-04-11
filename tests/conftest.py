@@ -7,7 +7,7 @@ Fixtures are organized by DSL level:
 
 Keeping YAML and model fixtures separate lets individual test modules
 import just the YAML when they want to test parsing, or the model
-directly when they want to test behaviour.
+directly when they want to test behavior.
 """
 
 from __future__ import annotations

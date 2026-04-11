@@ -20,6 +20,7 @@ Examples (PowerShell):
   trellis validate .\pipelines\spreads\plan.yaml
   trellis run .\pipelines\example.yaml --inputs '{"param":"value"}' --timeout 30 --concurrency 5 --json
   trellis run .\pipelines\spreads\data_acquisition.yaml --session-file .\session.json
+  trellis run .\pipelines\spreads\plan.yaml --env-file .env
   trellis run .\pipelines\example.yaml --llm-provider openai --openai-api-key $env:OPENAI_API_KEY --openai-model gpt-4o
   trellis run .\pipelines\example.yaml --env-file .env
 """
@@ -40,7 +41,7 @@ from dotenv import load_dotenv  # type: ignore
 
 from trellis.models.pipeline import Pipeline
 from trellis.models.plan import Plan
-from trellis.execution.orchestrator import Orchestrator
+from trellis.execution.orchestrator import Orchestrator, PlanRunResult
 from trellis.execution.dag import ExecutionOptions
 from trellis.validation.graph import pipeline_execution_waves, plan_execution_waves
 from trellis.validation.contract import validate_contract
@@ -285,7 +286,7 @@ def _run_plan_validate(path: Path) -> None:
 
 @app.command()
 def run(
-    path: Path = typer.Argument(..., exists=True, readable=True, help="Path to pipeline YAML"),
+    path: Path = typer.Argument(..., exists=True, readable=True, help="Path to pipeline or plan YAML"),
     inputs: Optional[str] = typer.Option(
         None,
         "--inputs",
@@ -380,18 +381,33 @@ def run(
         help="Path to a .env file to load (default: ./.env if present)",
     ),
 ) -> None:
-    """Run a pipeline YAML with options."""
+    """Run a pipeline or plan YAML with options."""
     _configure_logging()
     _load_env_file(env_file)
     logging.getLogger(__name__).debug(
         "CLI run invoked: path=%s, timeout=%s, concurrency=%s, jitter=%.2f, json=%s",
         str(path), timeout, concurrency, jitter, output_json,
     )
+
+    # Detect kind before loading
     try:
-        pipeline = _load_pipeline(path)
-    except Exception as exc:  # noqa: BLE001
-        typer.secho(f"Failed to load pipeline: {exc}", fg=typer.colors.RED)
+        kind = _detect_yaml_kind(path)
+    except Exception as exc:
+        typer.secho(f"Failed to detect YAML kind: {exc}", fg=typer.colors.RED)
         raise typer.Exit(code=1)
+
+    if kind == "plan":
+        try:
+            plan_obj = Plan.from_yaml(path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            typer.secho(f"Failed to load plan: {exc}", fg=typer.colors.RED)
+            raise typer.Exit(code=1)
+    else:
+        try:
+            pipeline = _load_pipeline(path)
+        except Exception as exc:  # noqa: BLE001
+            typer.secho(f"Failed to load pipeline: {exc}", fg=typer.colors.RED)
+            raise typer.Exit(code=1)
 
     # Apply LLM/env overrides for this run only
     if llm_provider:
@@ -441,35 +457,79 @@ def run(
 
     orch = Orchestrator()
 
-    async def _run() -> None:
-        result = await orch.run_pipeline(
-            pipeline,
-            inputs=inputs_obj,
-            session=session_obj,
-            options=options,
-            collect_events=not output_json,
-        )
-        safe_outputs = _json_sanitize(result.outputs)
-        safe_events = _json_sanitize(result.events) if (not output_json and result.events) else None
-        if output_json:
-            typer.echo(json.dumps(safe_outputs, ensure_ascii=False, indent=2))
-        else:
-            typer.secho("Outputs:", fg=typer.colors.GREEN)
-            typer.echo(json.dumps(safe_outputs, ensure_ascii=False, indent=2))
-            typer.secho("\nStats:", fg=typer.colors.GREEN)
-            typer.echo(json.dumps({
-                "waves_executed": result.waves_executed,
-                "tasks_executed": result.tasks_executed,
-            }, ensure_ascii=False, indent=2))
-            if safe_events:
-                typer.secho("\nEvents:", fg=typer.colors.GREEN)
-                typer.echo(json.dumps(safe_events, ensure_ascii=False, indent=2))
+    if kind == "plan":
+        def _progress_cb(sp_id: str, wave_idx: int, total_waves: int, sp_idx: int, wave_size: int) -> None:
+            typer.secho(
+                f"  [{wave_idx + 1}/{total_waves}] Running sub-pipeline: {sp_id}",
+                fg=typer.colors.CYAN,
+            )
 
-    try:
-        asyncio.run(_run())
-    except Exception as exc:  # noqa: BLE001
-        typer.secho(f"Run failed: {exc}", fg=typer.colors.RED)
-        raise typer.Exit(code=3)
+        async def _run_plan() -> None:
+            if not output_json:
+                typer.secho(f"Running plan: {plan_obj.id}", fg=typer.colors.BRIGHT_WHITE)
+            result: PlanRunResult = await orch.run_plan(
+                plan_obj,
+                path.parent,
+                inputs=inputs_obj,
+                session=session_obj,
+                options=options,
+                collect_events=not output_json,
+                progress_cb=None if output_json else _progress_cb,
+            )
+            safe_bb = _json_sanitize(result.blackboard)
+            safe_events = _json_sanitize(result.events) if (not output_json and result.events) else None
+            if output_json:
+                typer.echo(json.dumps(safe_bb, ensure_ascii=False, indent=2))
+            else:
+                typer.secho("\nFinal blackboard:", fg=typer.colors.GREEN)
+                typer.echo(json.dumps(safe_bb, ensure_ascii=False, indent=2))
+                typer.secho("\nStats:", fg=typer.colors.GREEN)
+                typer.echo(json.dumps({
+                    "plan_id": result.plan_id,
+                    "total_waves": result.total_waves,
+                    "total_tasks_executed": result.total_tasks_executed,
+                    "sub_pipelines": list(result.sub_results.keys()),
+                }, ensure_ascii=False, indent=2))
+                if safe_events:
+                    typer.secho("\nEvents:", fg=typer.colors.GREEN)
+                    typer.echo(json.dumps(safe_events, ensure_ascii=False, indent=2))
+
+        try:
+            asyncio.run(_run_plan())
+        except Exception as exc:  # noqa: BLE001
+            typer.secho(f"Run failed: {exc}", fg=typer.colors.RED)
+            raise typer.Exit(code=3)
+
+    else:
+        async def _run() -> None:
+            result = await orch.run_pipeline(
+                pipeline,
+                inputs=inputs_obj,
+                session=session_obj,
+                options=options,
+                collect_events=not output_json,
+            )
+            safe_outputs = _json_sanitize(result.outputs)
+            safe_events = _json_sanitize(result.events) if (not output_json and result.events) else None
+            if output_json:
+                typer.echo(json.dumps(safe_outputs, ensure_ascii=False, indent=2))
+            else:
+                typer.secho("Outputs:", fg=typer.colors.GREEN)
+                typer.echo(json.dumps(safe_outputs, ensure_ascii=False, indent=2))
+                typer.secho("\nStats:", fg=typer.colors.GREEN)
+                typer.echo(json.dumps({
+                    "waves_executed": result.waves_executed,
+                    "tasks_executed": result.tasks_executed,
+                }, ensure_ascii=False, indent=2))
+                if safe_events:
+                    typer.secho("\nEvents:", fg=typer.colors.GREEN)
+                    typer.echo(json.dumps(safe_events, ensure_ascii=False, indent=2))
+
+        try:
+            asyncio.run(_run())
+        except Exception as exc:  # noqa: BLE001
+            typer.secho(f"Run failed: {exc}", fg=typer.colors.RED)
+            raise typer.Exit(code=3)
 
 
 def main() -> None:

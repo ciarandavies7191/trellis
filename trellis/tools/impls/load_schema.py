@@ -131,16 +131,16 @@ class LoadSchemaTool(BaseTool):
         """
         Derive a SchemaHandle from a DocumentHandle.
 
-        For structured documents (XLSX, CSV, JSON), column/key names become
-        field definitions. For unstructured documents, *hint* is required and
-        the field list is empty (a downstream llm_job should populate it).
+        Resolution order:
+        1. Structured metadata (XLSX/CSV columns from metadata.columns or .headers).
+        2. Markdown table first-column row labels (templates use rows as field names).
+        3. Empty field list — caller should follow up with an llm_job to populate.
         """
         source_label = getattr(doc, "filename", None) or getattr(doc, "source", "document")
 
-        # Try to extract field names from document metadata or content
         fields: list[FieldDefinition] = []
 
-        # Check for column metadata (XLSX/CSV documents typically populate this)
+        # 1. Structured column metadata (XLSX/CSV)
         columns = None
         if hasattr(doc, "metadata") and isinstance(doc.metadata, dict):
             columns = doc.metadata.get("columns") or doc.metadata.get("headers")
@@ -153,6 +153,25 @@ class LoadSchemaTool(BaseTool):
                 for col in columns
                 if col
             ]
+            return SchemaHandle(
+                fields=fields,
+                source=str(source_label),
+                raw=doc,
+                task_id=task_id,
+            )
+
+        # 2. Markdown table row labels: concatenate page text and parse tables
+        if not fields:
+            full_text = ""
+            if hasattr(doc, "pages") and isinstance(doc.pages, list):
+                full_text = "\n".join(
+                    (getattr(p, "text", None) or "") for p in doc.pages
+                )
+            elif hasattr(doc, "text"):
+                full_text = doc.text or ""
+
+            if full_text:
+                fields = self._fields_from_markdown(full_text, hint=hint)
 
         return SchemaHandle(
             fields=fields,
@@ -160,6 +179,50 @@ class LoadSchemaTool(BaseTool):
             raw=doc,
             task_id=task_id,
         )
+
+    @staticmethod
+    def _fields_from_markdown(text: str, hint: str | None) -> list[FieldDefinition]:
+        """
+        Extract field names from Markdown table first-column row labels.
+
+        Markdown financial templates use a layout where the first column lists
+        metric names (e.g. "Total Revenues", "Cost of Revenues") and subsequent
+        columns are periods.  This method collects those row labels as fields.
+
+        Rows that are separators (|----|) or blank first cells are skipped.
+        Markdown emphasis markers (* ** _ __) are stripped from labels.
+        """
+        import re
+
+        fields: list[FieldDefinition] = []
+        seen: set[str] = set()
+
+        for line in text.splitlines():
+            line = line.strip()
+            if not line.startswith("|"):
+                continue
+            # Split keeping all cells so positional meaning is preserved.
+            # A Markdown table row looks like: | label | val | val |
+            # Split on | gives: ["", "label", "val", "val", ""]
+            raw_cells = line.split("|")
+            # Index 1 is the first column; skip if blank (period-header rows
+            # like "| | Q1 20__ | ..." have an intentionally empty first column)
+            if len(raw_cells) < 2 or not raw_cells[1].strip():
+                continue
+            first_raw = raw_cells[1].strip()
+            # Skip separator rows like |---|---:|
+            if re.fullmatch(r"[-:| ]+", first_raw):
+                continue
+            # Strip Markdown emphasis/bold markers (* ** _ __)
+            label = re.sub(r"[*_]+", "", first_raw).strip()
+            # Skip blank, purely numeric (footnote numbers), or single-char labels
+            if not label or re.fullmatch(r"[\d\s#*]+", label) or len(label) < 3:
+                continue
+            if label not in seen:
+                seen.add(label)
+                fields.append(FieldDefinition(name=label, description=hint))
+
+        return fields
 
     def get_inputs(self) -> Dict[str, ToolInput]:
         return {

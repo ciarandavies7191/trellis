@@ -37,7 +37,7 @@ def test_should_not_ocr_no_image_bytes():
                 metadata={"image_coverage": 0.9, "native_char_count": 0})
     # _should_ocr_page may return True, but _apply_ocr_to_pages checks image_bytes too
     # so it won't actually try to OCR
-    pass  # behaviour tested via _apply_ocr_to_pages below
+    pass  # behavior tested via _apply_ocr_to_pages below
 
 
 # ---------------------------------------------------------------------------

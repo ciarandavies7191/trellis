@@ -15,9 +15,14 @@ Selection modes (in priority order):
 from __future__ import annotations
 
 import json
+import logging
 import os
 import re
 from typing import Any, Dict, List
+
+from ..decorators import export_io
+
+logger = logging.getLogger(__name__)
 
 try:
     import litellm  # type: ignore
@@ -137,10 +142,16 @@ def _select_handle(document: DocumentHandle | PageList, prompt: str | None, page
         return _subset_by_pages(document, pages)
     if prompt and prompt.strip():
         chosen = _select_pages_via_llm(prompt.strip(), document, model)
-        return _subset_by_pages(document, chosen)
-    # No prompt and no explicit pages: passthrough (all pages)
+        if chosen:
+            return _subset_by_pages(document, chosen)
+        # LLM returned empty — fall through to passthrough so downstream tools
+        # still receive content (XBRL/HTML filings may confuse the selector).
+        logger.warning(
+            "select: LLM returned no pages for prompt %r on %r — passing through all %d pages",
+            prompt.strip()[:80], document.source, len(document.pages),
+        )
+    # No prompt, no explicit pages, or empty LLM result: passthrough (all pages)
     return PageList(parent_source=document.source, parent_format=document.format, pages=list(document.pages), selector_prompt="[passthrough]")
-
 
 class SelectTool(BaseTool):
     """Retrieval tool: filter a document to relevant pages by NL prompt or explicit page numbers.

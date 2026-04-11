@@ -38,7 +38,7 @@ pipeline:
       inputs:
         data: "{{reconcile_not_found.output}}"
         schema: "{{load_output_schema.output}}"
-        format: xlsx
+        format: json
         filename: "google_spreading_q1_2025"
 
     - id: produce_markdown

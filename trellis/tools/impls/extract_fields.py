@@ -2,10 +2,26 @@
 
 from __future__ import annotations
 
+import json
+import logging
+import os
+import re
 from typing import Any, Dict
+
+try:
+    import litellm  # type: ignore
+except ImportError:  # pragma: no cover
+    litellm = None  # type: ignore
 
 from ..base import BaseTool, ToolInput, ToolOutput
 from trellis.models.handles import FIELD_NOT_FOUND, FieldDefinition, SchemaHandle
+from ..decorators import export_io
+
+logger = logging.getLogger(__name__)
+
+DEFAULT_EXTRACT_MODEL = os.getenv("EXTRACT_FIELDS_MODEL") or os.getenv(
+    "EXTRACT_TEXT_MODEL", "openai/gpt-4o"
+)
 
 
 class ExtractFieldsTool(BaseTool):
@@ -20,9 +36,8 @@ class ExtractFieldsTool(BaseTool):
     suitable for unit testing without LLM credentials.
     """
 
-    def __init__(self, name: str = "extract_fields", llm_client: Any = None) -> None:
+    def __init__(self, name: str = "extract_fields") -> None:
         super().__init__(name, "Schema-bound field extraction from a document")
-        self._llm_client = llm_client
 
     def execute(
         self,
@@ -35,14 +50,16 @@ class ExtractFieldsTool(BaseTool):
         """
         Extract values for every field declared in *schema* from *document*.
 
+        All fields are extracted in a single LLM call that returns a JSON object.
+        Fields that cannot be located are set to FIELD_NOT_FOUND.
+
         Args:
-            document: A DocumentHandle, list of pages, or plain text string.
+            document: A DocumentHandle, PageList, list of pages, or plain text string.
             schema:   A SchemaHandle declaring which fields to extract.
             rules:    Optional DocumentHandle containing extraction rules (e.g.
-                      a spreading manual). When present, per-field instructions
-                      from the document are injected into the extraction context.
+                      a spreading manual). Appended to the extraction prompt.
             selector: Optional natural language hint to scope extraction to a
-                      region of the document before attempting field extraction.
+                      region of the document before field extraction.
 
         Returns:
             Dict mapping each field name in *schema* to its extracted value or
@@ -54,25 +71,20 @@ class ExtractFieldsTool(BaseTool):
                 f"got {type(schema).__name__!r}."
             )
 
-        # Materialise document text for extraction
+        if not schema.fields:
+            logger.warning("extract_fields: schema has no fields — returning empty dict")
+            return {}
+
+        model = kwargs.get("model", DEFAULT_EXTRACT_MODEL)
         doc_text = self._to_text(document, selector=selector)
+        rules_text = self._to_text(rules) if rules is not None else ""
 
-        # Build per-field extraction context from rules document if provided
-        rules_index = self._index_rules(rules) if rules is not None else {}
-
-        result: Dict[str, Any] = {}
-
-        if self._llm_client is not None:
-            # Real extraction path — calls LLM per field (or batched)
-            result = self._extract_with_llm(
-                doc_text=doc_text,
-                fields=schema.fields,
-                rules_index=rules_index,
-            )
-        else:
-            # Stub path: mark all fields as not found
-            for field_def in schema.fields:
-                result[field_def.name] = FIELD_NOT_FOUND
+        result = self._extract_with_llm(
+            doc_text=doc_text,
+            fields=schema.fields,
+            rules_text=rules_text,
+            model=model,
+        )
 
         # Ensure output only contains declared fields
         declared = set(schema.field_names())
@@ -82,12 +94,11 @@ class ExtractFieldsTool(BaseTool):
     # Internal helpers
     # ------------------------------------------------------------------
 
-    def _to_text(self, document: Any, selector: str | None) -> str:
+    def _to_text(self, document: Any, selector: str | None = None) -> str:
         """Convert various document representations to a plain text string."""
         if isinstance(document, str):
             return document
 
-        # DocumentHandle with pages
         if hasattr(document, "pages") and isinstance(document.pages, list):
             parts: list[str] = []
             for page in document.pages:
@@ -97,13 +108,11 @@ class ExtractFieldsTool(BaseTool):
                     parts.append(page.text or "")
                 elif isinstance(page, dict):
                     parts.append(page.get("text", ""))
-            return "\n".join(parts)
+            return "\n\n".join(p for p in parts if p)
 
-        # DocumentHandle with a single text attribute
         if hasattr(document, "text"):
             return document.text or ""
 
-        # List of strings or page-like objects
         if isinstance(document, list):
             parts = []
             for item in document:
@@ -111,67 +120,94 @@ class ExtractFieldsTool(BaseTool):
                     parts.append(item)
                 elif hasattr(item, "text"):
                     parts.append(item.text or "")
-            return "\n".join(parts)
+            return "\n\n".join(p for p in parts if p)
 
         return str(document)
-
-    def _index_rules(self, rules: Any) -> dict[str, str]:
-        """
-        Build a {field_name: instruction} index from a rules document.
-
-        In a real implementation this would parse the rules document and
-        match field-specific instructions by field name. Here we return an
-        empty dict as a stub — downstream pipelines should rely on llm_job
-        for sophisticated rules parsing.
-        """
-        return {}
 
     def _extract_with_llm(
         self,
         doc_text: str,
         fields: list[FieldDefinition],
-        rules_index: dict[str, str],
+        rules_text: str,
+        model: str,
     ) -> dict[str, Any]:
         """
-        Extract field values using the configured LLM client.
+        Extract all field values in a single LLM call.
 
-        This is a simplified single-pass extraction. A production implementation
-        would batch fields and handle rate limits.
+        Sends the full document text and the complete field list in one prompt,
+        asking the model to return a JSON object. Avoids N separate LLM calls.
+        Falls back to FIELD_NOT_FOUND for any field missing from the response.
         """
-        result: dict[str, Any] = {}
+        if litellm is None:  # pragma: no cover
+            raise RuntimeError("litellm is not installed. pip install litellm")
 
-        for field_def in fields:
-            # Build extraction prompt
-            field_context = f"Field: {field_def.name}"
-            if field_def.type_hint:
-                field_context += f"\nType: {field_def.type_hint}"
-            if field_def.description:
-                field_context += f"\nDescription: {field_def.description}"
-            if field_def.name in rules_index:
-                field_context += f"\nExtraction rule: {rules_index[field_def.name]}"
+        field_list = "\n".join(
+            f'  "{f.name}"'
+            + (f'  // {f.type_hint}' if f.type_hint else "")
+            for f in fields
+        )
 
-            prompt = (
-                f"{field_context}\n\n"
-                f"Document text:\n{doc_text}\n\n"
-                f"Extract the value for '{field_def.name}'. "
-                f"If not found, respond exactly with: {FIELD_NOT_FOUND}"
+        rules_block = (
+            f"\n\nExtraction rules / manual:\n{rules_text}\n"
+            if rules_text.strip()
+            else ""
+        )
+
+        system = (
+            "You are a precise financial data extraction engine. "
+            "Given document text and a list of field names, extract the value for every field. "
+            "Return ONLY a valid JSON object where each key is a field name and each value is "
+            "the extracted value as a string (numbers as strings, e.g. \"350018\"). "
+            f'Use the sentinel "{FIELD_NOT_FOUND}" for any field you cannot locate. '
+            "Do not include commentary, markdown fencing, or any text outside the JSON object."
+        )
+
+        user = (
+            f"Fields to extract:\n{{\n{field_list}\n}}"
+            f"{rules_block}"
+            f"\n\nDocument text:\n{doc_text}"
+        )
+
+        logger.debug(
+            "extract_fields: calling %s for %d fields, doc_chars=%d",
+            model, len(fields), len(doc_text),
+        )
+
+        try:
+            resp = litellm.completion(
+                model=model,
+                messages=[
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": user},
+                ],
+                max_tokens=4096,
+                response_format={"type": "json_object"},
             )
+            content = (resp.choices[0].message.content or "").strip()
+        except Exception as exc:
+            logger.warning("extract_fields: LLM call failed — %s: %s", type(exc).__name__, exc)
+            return {f.name: FIELD_NOT_FOUND for f in fields}
 
-            try:
-                response = self._llm_client.complete(prompt)
-                value = response.strip() if isinstance(response, str) else FIELD_NOT_FOUND
-            except Exception:
-                value = FIELD_NOT_FOUND
+        # Parse JSON response
+        try:
+            # Strip accidental code fences
+            m = re.search(r"\{.*\}", content, flags=re.S)
+            raw = json.loads(m.group(0) if m else content)
+        except Exception:
+            logger.warning("extract_fields: failed to parse LLM response as JSON — returning all not_found")
+            return {f.name: FIELD_NOT_FOUND for f in fields}
 
-            result[field_def.name] = value
-
+        # Map back to field names, defaulting missing entries
+        result: dict[str, Any] = {}
+        for f in fields:
+            result[f.name] = raw.get(f.name, FIELD_NOT_FOUND)
         return result
 
     def get_inputs(self) -> Dict[str, ToolInput]:
         return {
             "document": ToolInput(
                 name="document",
-                description="DocumentHandle, page list, or text string to extract from.",
+                description="DocumentHandle, PageList, list of pages, or text string to extract from.",
                 required=True,
             ),
             "schema": ToolInput(
@@ -182,20 +218,23 @@ class ExtractFieldsTool(BaseTool):
             "rules": ToolInput(
                 name="rules",
                 description=(
-                    "Optional DocumentHandle containing extraction rules. "
-                    "Per-field instructions are injected into the extraction context."
+                    "Optional DocumentHandle containing extraction rules / spreading manual. "
+                    "Appended to the extraction prompt."
                 ),
                 required=False,
                 default=None,
             ),
             "selector": ToolInput(
                 name="selector",
-                description=(
-                    "Optional natural language hint to scope extraction to a "
-                    "region of the document before field extraction."
-                ),
+                description="Optional natural language hint to scope extraction within the document.",
                 required=False,
                 default=None,
+            ),
+            "model": ToolInput(
+                name="model",
+                description="litellm model override (default: EXTRACT_FIELDS_MODEL env var).",
+                required=False,
+                default=DEFAULT_EXTRACT_MODEL,
             ),
         }
 

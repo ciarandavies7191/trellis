@@ -167,6 +167,8 @@ def _detect_format(path: str, content_type: Optional[str] = None) -> DocFormat:
         ".md": DocFormat.TEXT,
         ".csv": DocFormat.TEXT,
         ".json": DocFormat.TEXT,
+        ".htm": DocFormat.TEXT,
+        ".html": DocFormat.TEXT,
         ".xlsx": DocFormat.XLSX,
         ".xls": DocFormat.XLSX,
         ".docx": DocFormat.DOCX,
@@ -186,6 +188,60 @@ def _read_text(data: bytes, max_chars: int = 50000) -> str:
         return text[:max_chars]
     except Exception:
         return ""
+
+
+# ---------------------------------------------------------------------------
+# HTML / XBRL page extraction
+# ---------------------------------------------------------------------------
+
+def _looks_like_html(text: str) -> bool:
+    head = text[:2000].lower()
+    return "<html" in head or "<!doctype" in head or "<body" in head
+
+
+def _strip_html_tags(raw: str) -> str:
+    """Strip HTML/XML tags and decode entities, collapsing whitespace."""
+    import re
+    # Remove script/style/XBRL header blocks entirely (their content is noise)
+    raw = re.sub(r"(?is)<(script|style|ix:header)[^>]*>.*?</\1>", " ", raw)
+    # Remove all remaining tags
+    raw = re.sub(r"<[^>]+>", " ", raw)
+    # Decode common HTML entities
+    import html as _html_mod
+    raw = _html_mod.unescape(raw)
+    # Collapse whitespace runs into single spaces / newlines
+    raw = re.sub(r"[^\S\n]+", " ", raw)
+    raw = re.sub(r"\n{3,}", "\n\n", raw)
+    return raw.strip()
+
+
+def _html_to_pages(data: bytes, max_page_chars: int = 5000) -> List[Page]:
+    """Parse HTML/XBRL bytes, strip markup, and split into fixed-size pages."""
+    raw = data.decode("utf-8", errors="replace")
+    text = _strip_html_tags(raw)
+    if not text:
+        return [Page(number=1, text="", is_scanned=False)]
+
+    # Split into pages by chunking on paragraph boundaries where possible
+    pages: List[Page] = []
+    offset = 0
+    page_num = 1
+    while offset < len(text):
+        end = offset + max_page_chars
+        if end < len(text):
+            # Prefer to break at a paragraph boundary (double newline)
+            boundary = text.rfind("\n\n", offset, end)
+            if boundary == -1 or boundary <= offset:
+                # Fall back to single newline
+                boundary = text.rfind("\n", offset, end)
+            if boundary > offset:
+                end = boundary
+        chunk = text[offset:end].strip()
+        if chunk:
+            pages.append(Page(number=page_num, text=chunk, is_scanned=False))
+            page_num += 1
+        offset = end
+    return pages or [Page(number=1, text=text[:max_page_chars], is_scanned=False)]
 
 
 # ---------------------------------------------------------------------------
@@ -336,10 +392,15 @@ def _handle_from_bytes(
         try:
             obj = json.loads(text)
             text = json.dumps(obj, ensure_ascii=False, indent=2)
+            pages = [Page(number=1, text=text, is_scanned=False)]
+            page_count = 1
         except Exception:
-            pass
-        pages = [Page(number=1, text=text, is_scanned=False)]
-        page_count = 1
+            if _looks_like_html(text):
+                pages = _html_to_pages(data)
+                page_count = len(pages)
+            else:
+                pages = [Page(number=1, text=text, is_scanned=False)]
+                page_count = 1
 
     return DocumentHandle(
         source=source,
