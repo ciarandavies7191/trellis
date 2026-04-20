@@ -40,6 +40,7 @@ Resolution rules
 
 from __future__ import annotations
 
+import json
 import re
 from dataclasses import dataclass, field
 from typing import Any
@@ -116,6 +117,26 @@ def _walk_path(value: Any, path: list[str], full_expr: str) -> Any:
     ``last`` is used on an empty sequence.
     """
     for segment in path:
+        # Auto-parse JSON strings before attempting key/attribute lookup.
+        # LLM tools (llm_job) return JSON as a plain string; accessing a
+        # sub-key with e.g. {{task.output.segment_names}} should just work.
+        # Handles fences + trailing prose by scanning for the first {/[ span.
+        if isinstance(value, str) and segment not in ("first", "last"):
+            _s = re.sub(r"^```[a-z]*\s*", "", value.strip(), flags=re.I)
+            _s = re.sub(r"\s*```$", "", _s)
+            _parsed = None
+            try:
+                _parsed = json.loads(_s)
+            except Exception:
+                _m = re.search(r"(\{.*\}|\[.*\])", value, flags=re.S)
+                if _m:
+                    try:
+                        _parsed = json.loads(_m.group(0))
+                    except Exception:
+                        pass
+            if isinstance(_parsed, (dict, list)):
+                value = _parsed
+
         if isinstance(value, dict):
             if segment not in value:
                 raise ResolutionError(

@@ -4,41 +4,106 @@
 pipeline:
   id: output_generation
   goal: >
-    Populate the spreading template with extracted field values and produce
-    an Excel output file and a Markdown summary report. Resolves segment
-    names, fills in the document header, generates analyst notes, and
-    labels each column with its actual period date.
+    Populate the spreading template with validated, derived-field-complete
+    extracted data. Resolve segment names, generate analyst notes from the
+    validated figures, produce a document header, and write JSON and Markdown
+    output files.
   inputs:
-    company: Google
+    company: "Alphabet Inc."
     as_of_period: "2025-03-31"
 
   tasks:
 
+    # ── 1. Load output schema ─────────────────────────────────────────────────
+    # Use the enriched JSON schema (same source as extraction) so that the
+    # export tool knows which fields are computed vs. extracted.
     - id: load_output_schema
       tool: load_schema
       inputs:
-        source: "{{session.template_document}}"
-        hint: >
-          Column headers in the first sheet define the field names.
+        source: "examples/data/income_statement_schema.json"
 
-    - id: reconcile_not_found
+    # ── 2. Resolve actual segment names ───────────────────────────────────────
+    - id: resolve_segment_names
       tool: llm_job
       inputs:
         extracted: "{{session.extracted_fields}}"
-        schema: "{{load_output_schema.output}}"
         prompt: >
-          Review the extracted field values across all periods. For any field
-          marked "__not_found__", determine whether the value is genuinely
-          absent from the filing or whether it appears under an alternative
-          label. If an alternative label is found, substitute the correct value.
-          If the value is genuinely absent, retain "__not_found__". Do not
-          invent values. Return the corrected extraction list in the same
-          structure as the input (a JSON array of dicts, one dict per period).
+          You are given validated financial extraction data for Alphabet Inc.
+          Identify the actual business segment names corresponding to the
+          placeholder labels [1], [2], and [3] used in the extracted data.
 
+          For Alphabet Inc. the segments are:
+            [1] = Google Services
+            [2] = Google Cloud
+            [3] = Other Bets
+
+          Return ONLY a JSON object with exactly these keys:
+            {
+              "[1]": "Google Services",
+              "[2]": "Google Cloud",
+              "[3]": "Other Bets"
+            }
+          Return nothing else.
+
+    # ── 3. Apply segment names to the extracted data ──────────────────────────
+    - id: apply_segments
+      tool: compute
+      inputs:
+        function: apply_segment_names
+        extracted_fields: "{{session.extracted_fields}}"
+        segment_names: "{{resolve_segment_names.output}}"
+
+    # ── 4. Generate analyst notes from validated data ─────────────────────────
+    - id: generate_analyst_notes
+      tool: llm_job
+      inputs:
+        extracted: "{{apply_segments.output}}"
+        periods: "{{session.periods}}"
+        prompt: >
+          You are a credit analyst completing the documentation section of a
+          financial spread for Alphabet Inc. The data has already been
+          arithmetic-validated. Produce only factual, sourced observations —
+          no qualitative opinions or forward-looking commentary.
+
+          Document material items for each period:
+          a) INVESTMENT GAINS: If Gains (Losses) on Investments, Net > $500M
+             in any period, note the amount and state it is non-recurring
+             (equity mark-to-market). Cite as "(per 10-Q/10-K Other income
+             (expense), net footnote)".
+          b) RESTRUCTURING: If Restructuring and Other Charges is present,
+             note the amount and nature.
+          c) SEGMENT TRENDS: Note any segment where revenue or OI grew or
+             declined more than 15% year-over-year. State exact amounts.
+          d) EPS: Confirm diluted EPS and state shares outstanding.
+          e) TAX RATE: Note if effective tax rate differs from ~21% statutory
+             rate by more than 3 percentage points.
+
+          Return a JSON object with exactly two keys:
+            "segment_names": {
+              "[1]": "Google Services",
+              "[2]": "Google Cloud",
+              "[3]": "Other Bets"
+            },
+            "notes": [
+              {
+                "period": "period label e.g. Q1 2025",
+                "line_item": "exact template field name",
+                "note": "factual one-sentence finding: amount and source reference"
+              },
+              ...
+            ]
+
+          Rules for "notes":
+          - 4–8 entries covering material items and any cross-check failures
+          - Every note must state a specific dollar amount or percentage
+          - Every note must end with a source reference: "(per 10-Q Note N)"
+          - No qualitative opinions, no forward-looking statements
+
+    # ── 5. Generate document metadata header ─────────────────────────────────
     - id: generate_metadata
       tool: llm_job
       inputs:
-        extracted: "{{session.extracted_fields}}"
+        extracted: "{{apply_segments.output}}"
         periods: "{{session.periods}}"
         filings: "{{session.filings}}"
         company: "{{pipeline.inputs.company}}"
@@ -57,56 +122,22 @@ pipeline:
             audited        — "No" for 10-Q, "Yes" for 10-K
           Return only the JSON object, no commentary.
 
-    - id: generate_analyst_notes
-      tool: llm_job
-      inputs:
-        extracted: "{{reconcile_not_found.output}}"
-        periods: "{{session.periods}}"
-        filings: "{{session.filings}}"
-        prompt: >
-          Review the extracted financial data and produce analyst notes.
-
-          1. Identify the actual business segment names this company uses (to
-             label rows [1], [2], [3] in the spread). For Alphabet/Google these
-             are typically Google Services, Google Cloud, and Other Bets.
-
-          2. Note any significant or unusual items:
-             - Non-recurring charges (restructuring, impairment, litigation)
-             - Large investment gains/losses that distort net income
-             - Changes in segment structure or accounting policy
-             - Periods where data was not available in the fetched filings
-             - Any cross-check failures (e.g. segment OI doesn't reconcile
-               to consolidated OI)
-
-          Return a JSON object with exactly two keys:
-            "segment_names": {
-              "[1]": "actual segment name",
-              "[2]": "actual segment name",
-              "[3]": "actual segment name"
-            },
-            "notes": [
-              {"period": "Q1 2025", "line_item": "...", "note": "..."},
-              ...
-            ]
-
-          The "notes" array should have 3–6 entries covering the most important
-          items. Keep each note to one concise sentence.
-
+    # ── 6. Export outputs ─────────────────────────────────────────────────────
     - id: produce_json
       tool: export
       inputs:
-        data: "{{reconcile_not_found.output}}"
+        data: "{{apply_segments.output}}"
         schema: "{{load_output_schema.output}}"
         format: json
-        filename: "google_spreading_q1_2025"
+        filename: "alphabet_spreading_q1_2025"
 
     - id: produce_markdown
       tool: export
       inputs:
-        data: "{{reconcile_not_found.output}}"
+        data: "{{apply_segments.output}}"
         schema: "{{load_output_schema.output}}"
         format: markdown
-        filename: "google_spreading_q1_2025"
+        filename: "alphabet_spreading_q1_2025"
         periods: "{{session.periods}}"
         metadata: "{{generate_metadata.output}}"
         analyst_notes: "{{generate_analyst_notes.output}}"

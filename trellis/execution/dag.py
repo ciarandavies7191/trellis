@@ -106,6 +106,7 @@ from trellis.models.pipeline import Pipeline, Task
 from trellis.validation.graph import pipeline_execution_waves
 from trellis.execution.template import ResolutionContext, resolve
 from trellis.tools.registry import AsyncToolRegistry
+from trellis.tools.decorators import current_task_id
 
 logger = logging.getLogger(__name__)
 
@@ -282,7 +283,11 @@ async def _invoke_once(
     registry: AsyncToolRegistry,
 ) -> Any:
     """Invoke a tool exactly once. No retry logic. Pure delegation."""
-    return await registry.invoke(task.tool, resolved_inputs)
+    token = current_task_id.set(task.id)
+    try:
+        return await registry.invoke(task.tool, resolved_inputs)
+    finally:
+        current_task_id.reset(token)
 
 
 # ---------------------------------------------------------------------------

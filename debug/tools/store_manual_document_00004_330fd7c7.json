@@ -1,0 +1,57 @@
+{
+  "tool": "store",
+  "task_id": "store_manual_document",
+  "invocation": 4,
+  "timestamp": "2026-04-20T18:19:39.601792",
+  "inputs": {
+    "key": "manual_document",
+    "value": {
+      "$type": "DocumentHandle",
+      "source": "D:\\projects\\trellis\\examples\\data\\spreading_manual_income_statement.md",
+      "format": "text",
+      "pages": [
+        {
+          "$type": "Page",
+          "number": 1,
+          "text": "# Income Statement Spreading Manual\n## General Reference — Applicable to All Companies and Industries\n\n**Manual Version:** 1.0  \n**Applies to Template:** Income Statement Spread (10-column quarterly/annual layout)  \n**Audience:** Credit analysts, equity analysts, and automated LLM extraction systems\n\n---\n\n## How to Use This Manual\n\nThis manual defines how to populate every field in the Income Statement Spread template. Rules are general and apply across all companies, industries, reporting currencies, and filing jurisdictions. Where treatment differs by industry or circumstance, explicit guidance is given within the rule.\n\nRules are written to be **deterministic and reproducible**: two analysts — or two automated extraction passes — applying this manual to the same source filing must produce identical outputs.\n\n---\n\n## General Rules Applicable to All Sections\n\n| Rule | Description |\n|---|---|\n| **G1. Source hierarchy** | Extract values in this priority order: (1) the face of the Consolidated Statements of Income (Operations); (2) Notes to Financial Statements (revenue disaggregation note, segment information note); (3) Management's Discussion and Analysis (MD&A) revenue and segment tables. Always prefer the lowest-numbered source that contains the required figure. |\n| **G2. Units** | Use the unit convention stated on the face of the income statement (e.g., USD millions, EUR thousands). Record values as plain numbers without currency symbols or formatting. Apply consistent rounding throughout: if the filing reports in millions, round all values to the nearest whole million. |\n| **G3. Reporting currency** | Use the currency of the primary financial statements. Where the filing presents figures in a functional currency different from the presentation currency, use the presentation currency. Note any currency translation effects in the Analyst Notes section. |\n| **G4. Period columns** | The template has ten columns: Q1, Q2, Q3, Q4, FY for two consecutive fiscal years. L…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {}
+        }
+      ],
+      "page_count": 1,
+      "is_scanned": false,
+      "source_url": null,
+      "metadata": {}
+    }
+  },
+  "output": {
+    "status": "success",
+    "key": "manual_document",
+    "append": false,
+    "value": {
+      "$type": "DocumentHandle",
+      "source": "D:\\projects\\trellis\\examples\\data\\spreading_manual_income_statement.md",
+      "format": "text",
+      "pages": [
+        {
+          "$type": "Page",
+          "number": 1,
+          "text": "# Income Statement Spreading Manual\n## General Reference — Applicable to All Companies and Industries\n\n**Manual Version:** 1.0  \n**Applies to Template:** Income Statement Spread (10-column quarterly/annual layout)  \n**Audience:** Credit analysts, equity analysts, and automated LLM extraction systems\n\n---\n\n## How to Use This Manual\n\nThis manual defines how to populate every field in the Income Statement Spread template. Rules are general and apply across all companies, industries, reporting currencies, and filing jurisdictions. Where treatment differs by industry or circumstance, explicit guidance is given within the rule.\n\nRules are written to be **deterministic and reproducible**: two analysts — or two automated extraction passes — applying this manual to the same source filing must produce identical outputs.\n\n---\n\n## General Rules Applicable to All Sections\n\n| Rule | Description |\n|---|---|\n| **G1. Source hierarchy** | Extract values in this priority order: (1) the face of the Consolidated Statements of Income (Operations); (2) Notes to Financial Statements (revenue disaggregation note, segment information note); (3) Management's Discussion and Analysis (MD&A) revenue and segment tables. Always prefer the lowest-numbered source that contains the required figure. |\n| **G2. Units** | Use the unit convention stated on the face of the income statement (e.g., USD millions, EUR thousands). Record values as plain numbers without currency symbols or formatting. Apply consistent rounding throughout: if the filing reports in millions, round all values to the nearest whole million. |\n| **G3. Reporting currency** | Use the currency of the primary financial statements. Where the filing presents figures in a functional currency different from the presentation currency, use the presentation currency. Note any currency translation effects in the Analyst Notes section. |\n| **G4. Period columns** | The template has ten columns: Q1, Q2, Q3, Q4, FY for two consecutive fiscal years. L…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {}
+        }
+      ],
+      "page_count": 1,
+      "is_scanned": false,
+      "source_url": null,
+      "metadata": {}
+    }
+  },
+  "error": null
+}

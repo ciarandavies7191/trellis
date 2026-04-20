@@ -124,6 +124,64 @@ class TestExtractFieldsWithLLMClient:
         assert result["revenue"] == FIELD_NOT_FOUND
 
 
+class TestExtractFieldsSectionFilter:
+    """section_filter narrows extraction to fields belonging to that section."""
+
+    def _schema_with_sections(self) -> SchemaHandle:
+        return SchemaHandle(
+            fields=[
+                FieldDefinition(name="Total Revenues", section="face"),
+                FieldDefinition(name="Operating Income", section="face"),
+                FieldDefinition(name="Segment Revenue — [1]", section="segments"),
+                FieldDefinition(name="Segment Revenue — [2]", section="segments"),
+                FieldDefinition(name="Interest Income", section="other_income"),
+                FieldDefinition(name="EPS — Basic ($)", section="per_share"),
+            ],
+            source="test",
+        )
+
+    def test_face_filter_returns_only_face_fields(self):
+        tool = make_tool()
+        schema = self._schema_with_sections()
+        result = tool.execute(document="text", schema=schema, section_filter="face")
+        assert set(result.keys()) == {"Total Revenues", "Operating Income"}
+
+    def test_segments_filter_returns_only_segment_fields(self):
+        tool = make_tool()
+        schema = self._schema_with_sections()
+        result = tool.execute(document="text", schema=schema, section_filter="segments")
+        assert set(result.keys()) == {"Segment Revenue — [1]", "Segment Revenue — [2]"}
+
+    def test_other_income_filter(self):
+        tool = make_tool()
+        schema = self._schema_with_sections()
+        result = tool.execute(document="text", schema=schema, section_filter="other_income")
+        assert set(result.keys()) == {"Interest Income"}
+
+    def test_per_share_filter(self):
+        tool = make_tool()
+        schema = self._schema_with_sections()
+        result = tool.execute(document="text", schema=schema, section_filter="per_share")
+        assert set(result.keys()) == {"EPS — Basic ($)"}
+
+    def test_unknown_section_returns_empty_dict(self):
+        tool = make_tool()
+        schema = self._schema_with_sections()
+        result = tool.execute(document="text", schema=schema, section_filter="nonexistent")
+        assert result == {}
+
+    def test_no_filter_returns_all_fields(self):
+        tool = make_tool()
+        schema = self._schema_with_sections()
+        result = tool.execute(document="text", schema=schema)
+        assert len(result) == 6
+
+    def test_section_filter_in_inputs_spec(self):
+        tool = make_tool()
+        assert "section_filter" in tool.get_inputs()
+        assert tool.get_inputs()["section_filter"].required is False
+
+
 class TestExtractFieldsInputSpec:
     def test_document_required(self):
         tool = make_tool()

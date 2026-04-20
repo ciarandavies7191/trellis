@@ -21,10 +21,15 @@ import urllib.request
 from typing import Any, Dict, List, Optional, Union
 import litellm  # type: ignore
 import fitz  # PyMuPDF  # type: ignore
+from bs4 import BeautifulSoup, Tag
+from dataclasses import dataclass, field
+from typing import List, Optional
+import re
 
 
 from ..base import BaseTool, ToolInput, ToolOutput
 from trellis.models.document import DocumentHandle, Page, DocFormat
+from ..decorators import export_io
 
 logger = logging.getLogger(__name__)
 
@@ -215,34 +220,213 @@ def _strip_html_tags(raw: str) -> str:
     return raw.strip()
 
 
-def _html_to_pages(data: bytes, max_page_chars: int = 5000) -> List[Page]:
-    """Parse HTML/XBRL bytes, strip markup, and split into fixed-size pages."""
-    raw = data.decode("utf-8", errors="replace")
-    text = _strip_html_tags(raw)
-    if not text:
-        return [Page(number=1, text="", is_scanned=False)]
+# def _html_to_pages(data: bytes, max_page_chars: int = 5000) -> List[Page]:
+#     """Parse HTML/XBRL bytes, strip markup, and split into fixed-size pages."""
+#     raw = data.decode("utf-8", errors="replace")
+#     text = _strip_html_tags(raw)
+#     if not text:
+#         return [Page(number=1, text="", is_scanned=False)]
+#
+#     # Split into pages by chunking on paragraph boundaries where possible
+#     pages: List[Page] = []
+#     offset = 0
+#     page_num = 1
+#     while offset < len(text):
+#         end = offset + max_page_chars
+#         if end < len(text):
+#             # Prefer to break at a paragraph boundary (double newline)
+#             boundary = text.rfind("\n\n", offset, end)
+#             if boundary == -1 or boundary <= offset:
+#                 # Fall back to single newline
+#                 boundary = text.rfind("\n", offset, end)
+#             if boundary > offset:
+#                 end = boundary
+#         chunk = text[offset:end].strip()
+#         if chunk:
+#             pages.append(Page(number=page_num, text=chunk, is_scanned=False))
+#             page_num += 1
+#         offset = end
+#     return pages or [Page(number=1, text=text[:max_page_chars], is_scanned=False)]
 
-    # Split into pages by chunking on paragraph boundaries where possible
+def _html_to_pages(data: bytes, max_table_chars: int = 8000) -> List[Page]:
+    """
+    Parse SEC 10-Q/10-K HTML into semantically-bounded pages.
+
+    Strategy: chunk at structural boundaries, not character count.
+    Each Page corresponds to one of:
+      - A financial statement section (heading + its content until next heading)
+      - A financial statement table (kept atomic, never split)
+      - A note to financial statements (heading + content)
+
+    Page.metadata carries the section heading and note number for retrieval.
+    """
+    soup = BeautifulSoup(
+        data.decode("utf-8", errors="replace"),
+        "html.parser"
+    )
+
+    # Remove boilerplate that pollutes retrieval
+    for tag in soup.find_all(["script", "style", "ix:header", "xbrli:xbrl"]):
+        tag.decompose()
+
+    sections = _extract_sections(soup)
     pages: List[Page] = []
-    offset = 0
     page_num = 1
+
+    for section in sections:
+        # Tables are atomic — never split mid-table
+        if section["type"] == "table":
+            text = _table_to_text(section["element"])
+            if text.strip():
+                pages.append(Page(
+                    number=page_num,
+                    text=text,
+                    is_scanned=False,
+                    metadata={
+                        "type": "table",
+                        "heading": section.get("heading", ""),
+                        "note_label": section.get("note_label", ""),
+                    }
+                ))
+                page_num += 1
+
+        # Prose sections: chunk only if very long, always at paragraph boundary
+        else:
+            text = section["text"].strip()
+            if not text:
+                continue
+            heading = section.get("heading", "")
+            note_label = section.get("note_label", "")
+
+            if len(text) <= max_table_chars:
+                pages.append(Page(
+                    number=page_num,
+                    text=f"{heading}\n\n{text}" if heading else text,
+                    is_scanned=False,
+                    metadata={
+                        "type": "prose",
+                        "heading": heading,
+                        "note_label": note_label,
+                    }
+                ))
+                page_num += 1
+            else:
+                # Long prose: split at paragraph boundaries,
+                # carry heading forward into every chunk
+                for chunk in _split_prose(text, max_table_chars):
+                    pages.append(Page(
+                        number=page_num,
+                        text=f"{heading} (continued)\n\n{chunk}" if heading else chunk,
+                        is_scanned=False,
+                        metadata={
+                            "type": "prose",
+                            "heading": heading,
+                            "note_label": note_label,
+                        }
+                    ))
+                    page_num += 1
+
+    return pages or [Page(number=1, text="", is_scanned=False)]
+
+
+def _extract_sections(soup: BeautifulSoup) -> List[dict]:
+    """
+    Walk the document and emit sections bounded by heading elements.
+    Tables within a section are extracted as separate atomic units.
+    """
+    sections = []
+    current_heading = ""
+    current_note_label = ""
+    current_prose_parts = []
+
+    # SEC filings use h1-h4 and bold <p> or <div> as section markers
+    heading_tags = {"h1", "h2", "h3", "h4"}
+
+    def flush_prose():
+        text = "\n\n".join(current_prose_parts).strip()
+        if text:
+            sections.append({
+                "type": "prose",
+                "heading": current_heading,
+                "note_label": current_note_label,
+                "text": text,
+            })
+        current_prose_parts.clear()
+
+    body = soup.find("body") or soup
+
+    for element in body.descendants:
+        if not isinstance(element, Tag):
+            continue
+
+        # New heading — flush accumulated prose, start new section
+        if element.name in heading_tags:
+            flush_prose()
+            current_heading = element.get_text(" ", strip=True)
+            # Detect note labels: "Note 2", "NOTE 10", "2.", etc.
+            note_match = re.match(
+                r"^(note\s+\d+|item\s+\d+|\d+\.)\b",
+                current_heading,
+                re.IGNORECASE
+            )
+            current_note_label = note_match.group(0) if note_match else ""
+
+        # Table — flush prose, emit table as atomic unit, resume prose
+        elif element.name == "table":
+            flush_prose()
+            sections.append({
+                "type": "table",
+                "heading": current_heading,
+                "note_label": current_note_label,
+                "element": element,
+            })
+
+        # Paragraph/div — accumulate prose
+        elif element.name in {"p", "div"} and element.parent.name not in {"td", "th", "table"}:
+            text = element.get_text(" ", strip=True)
+            if text:
+                current_prose_parts.append(text)
+
+    flush_prose()
+    return sections
+
+
+def _table_to_text(table: Tag) -> str:
+    """
+    Convert an HTML table to aligned plain text.
+    Preserves row/column structure for LLM consumption.
+    Strips formatting but keeps cell values and their relationships.
+    """
+    rows = []
+    for tr in table.find_all("tr"):
+        cells = []
+        for cell in tr.find_all(["td", "th"]):
+            # Collapse whitespace, preserve numbers and labels
+            text = " ".join(cell.get_text(" ", strip=True).split())
+            # Parenthesised numbers are negative in SEC filings
+            if re.match(r"^\(\d[\d,]*\)$", text):
+                text = "-" + text[1:-1].replace(",", "")
+            cells.append(text)
+        row_text = " | ".join(cells)
+        if row_text.strip(" |"):
+            rows.append(row_text)
+    return "\n".join(rows)
+
+
+def _split_prose(text: str, max_chars: int) -> List[str]:
+    """Split long prose at paragraph boundaries."""
+    chunks, offset = [], 0
     while offset < len(text):
-        end = offset + max_page_chars
+        end = offset + max_chars
         if end < len(text):
-            # Prefer to break at a paragraph boundary (double newline)
             boundary = text.rfind("\n\n", offset, end)
-            if boundary == -1 or boundary <= offset:
-                # Fall back to single newline
+            if boundary <= offset:
                 boundary = text.rfind("\n", offset, end)
             if boundary > offset:
                 end = boundary
-        chunk = text[offset:end].strip()
-        if chunk:
-            pages.append(Page(number=page_num, text=chunk, is_scanned=False))
-            page_num += 1
+        chunks.append(text[offset:end].strip())
         offset = end
-    return pages or [Page(number=1, text=text[:max_page_chars], is_scanned=False)]
-
+    return [c for c in chunks if c]
 
 # ---------------------------------------------------------------------------
 # PDF page extraction (PyMuPDF)
@@ -256,7 +440,7 @@ def _pymupdf_pages(data: bytes) -> List[Page]:
     image_coverage, image_coverage_pct, and text from native text blocks.
 
     Pages whose image_coverage meets RASTERIZE_COVERAGE_THRESHOLD are
-    rasterised and stored in image_bytes so OCR can run at ingest time.
+    rasterized and stored in image_bytes so OCR can run at ingest time.
     """
     if fitz is None:  # pragma: no cover - optional dep not installed
         raise RuntimeError("PyMuPDF (fitz) not installed. pip install pymupdf")
@@ -520,7 +704,7 @@ def _urls_from_fetch_result(obj: dict) -> list[str]:
 # Public tool
 # ---------------------------------------------------------------------------
 
-
+@export_io(path="debug/tools")
 class IngestDocumentTool(BaseTool):
     """Load and fully ingest a document, including eager OCR for scanned pages.
 

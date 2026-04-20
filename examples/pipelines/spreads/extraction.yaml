@@ -4,44 +4,244 @@
 pipeline:
   id: extraction
   goal: >
-    Derive the output field schema from the spreading template. For each
-    filing, select only the income statement pages to reduce context size.
-    Then for each resolved period, extract the relevant field values from
-    the filtered pages, using period_end to focus on the correct column.
+    Load the enriched income-statement schema, select section-specific pages
+    from each filing (face, segments, other_income, per_share), zip each
+    page-set list with the matching period so every extraction call receives
+    exactly one filing's pages, extract each section independently, assemble
+    the sections into unified per-period dicts, compute derived fields
+    deterministically, validate arithmetic cross-checks, and correct any
+    failures via targeted re-extraction before storing the final result.
 
   tasks:
 
-    - id: load_output_schema
+    # ── 1. Load enriched schema from JSON definition file ────────────────────
+    - id: load_json_schema
       tool: load_schema
       inputs:
-        source: "{{session.template_document}}"
-        hint: >
-          The column headers in the first sheet define the field names.
-          Each header is a field the extraction must populate.
+        source: "examples/data/income_statement_schema.json"
 
-    - id: select_pages
+    # ── 2. Section-specific page selection (parallel over filings) ────────────
+    # Produces one PageList per filing, ordered identically to session.periods.
+
+    - id: select_face
       tool: select
       parallel_over: "{{session.filings}}"
       inputs:
         document: "{{item}}"
         prompt: >
-          Pages containing the consolidated income statement (also titled
-          "Statements of Operations" or "Statements of Earnings"), including
-          the comparative period columns. Also include any segment revenue
-          footnote page and any other income / non-operating income footnote.
-          Exclude cover pages, risk factors, legal proceedings, and exhibits.
+          Select only the pages containing the consolidated income statement
+          (also titled "Statements of Operations" or "Statements of Earnings"),
+          including comparative period columns. Include the page with Total
+          Revenues, Cost of Revenues, R&D, Sales & Marketing, G&A,
+          Restructuring, Operating Income, and Net Income.
+          Exclude: footnotes, cover pages, balance sheets, cash flows, risk
+          factors, and all exhibit sections.
 
-    - id: extract_fields
-      tool: extract_fields
-      parallel_over: "{{session.periods}}"
+    - id: select_segments
+      tool: select
+      parallel_over: "{{session.filings}}"
       inputs:
-        document: "{{select_pages.output}}"
-        schema: "{{load_output_schema.output}}"
+        document: "{{item}}"
+        prompt: >
+          Select only the pages containing disaggregated revenue by business
+          segment (the revenue disaggregation table, typically in a Revenue
+          footnote or Note to Financial Statements). This is the table showing
+          revenue broken out by Google Services, Google Cloud, Other Bets, etc.
+          Also include any page showing operating income by segment (Segment
+          Information footnote).
+          Exclude: the consolidated income statement face, balance sheet,
+          cash flow statement, cover pages, and risk factors.
+
+    - id: select_other_income
+      tool: select
+      parallel_over: "{{session.filings}}"
+      inputs:
+        document: "{{item}}"
+        prompt: >
+          Select only the pages containing the "Other income (expense), net"
+          footnote. This note breaks down the single line on the income
+          statement face into: Interest Income, Interest Expense, Foreign
+          Currency Exchange gains/losses, Net gain/loss on equity securities
+          (investment gains), and Other.
+          Exclude: the consolidated income statement face, segment footnotes,
+          balance sheet, and cover pages.
+
+    - id: select_per_share
+      tool: select
+      parallel_over: "{{session.filings}}"
+      inputs:
+        document: "{{item}}"
+        prompt: >
+          Select only the pages containing earnings per share data: Basic EPS,
+          Diluted EPS, weighted average basic shares outstanding, and weighted
+          average diluted shares outstanding. This is usually on the face of the
+          income statement or in a dedicated EPS footnote.
+          Exclude: segment footnotes, other income footnotes, balance sheet,
+          and cover pages.
+
+    # ── 3. Zip page sets with periods ─────────────────────────────────────────
+    # select_* outputs are lists [PageList_0, PageList_1, PageList_2] — one per
+    # filing, same order as session.periods. zip_pages_with_periods pairs each
+    # page set with its matching period_end so each extraction call receives
+    # exactly one filing's pages instead of the concatenated whole.
+
+    - id: zip_face
+      tool: compute
+      inputs:
+        function: zip_pages_with_periods
+        pages_list: "{{select_face.output}}"
+        periods: "{{session.periods}}"
+
+    - id: zip_segments
+      tool: compute
+      inputs:
+        function: zip_pages_with_periods
+        pages_list: "{{select_segments.output}}"
+        periods: "{{session.periods}}"
+
+    - id: zip_other_income
+      tool: compute
+      inputs:
+        function: zip_pages_with_periods
+        pages_list: "{{select_other_income.output}}"
+        periods: "{{session.periods}}"
+
+    - id: zip_per_share
+      tool: compute
+      inputs:
+        function: zip_pages_with_periods
+        pages_list: "{{select_per_share.output}}"
+        periods: "{{session.periods}}"
+
+    # ── 4. Section-specific field extraction (parallel over zipped pairs) ─────
+    # Each item is {pages: PageList_i, period_end: "YYYY-MM-DD"}.
+    # document = item.pages  →  exactly one filing's section pages
+    # period_end = item.period_end  →  correct column disambiguation
+
+    - id: extract_face
+      tool: extract_fields
+      parallel_over: "{{zip_face.output}}"
+      inputs:
+        document: "{{item.pages}}"
+        schema: "{{load_json_schema.output}}"
         rules: "{{session.manual_document}}"
         period_end: "{{item.period_end}}"
+        section_filter: "face"
+
+    - id: extract_segments
+      tool: extract_fields
+      parallel_over: "{{zip_segments.output}}"
+      inputs:
+        document: "{{item.pages}}"
+        schema: "{{load_json_schema.output}}"
+        rules: "{{session.manual_document}}"
+        period_end: "{{item.period_end}}"
+        section_filter: "segments"
+
+    - id: extract_other_income
+      tool: extract_fields
+      parallel_over: "{{zip_other_income.output}}"
+      inputs:
+        document: "{{item.pages}}"
+        schema: "{{load_json_schema.output}}"
+        rules: "{{session.manual_document}}"
+        period_end: "{{item.period_end}}"
+        section_filter: "other_income"
+
+    - id: extract_per_share
+      tool: extract_fields
+      parallel_over: "{{zip_per_share.output}}"
+      inputs:
+        document: "{{item.pages}}"
+        schema: "{{load_json_schema.output}}"
+        rules: "{{session.manual_document}}"
+        period_end: "{{item.period_end}}"
+        section_filter: "per_share"
+
+    # ── 5. Assemble sections into unified per-period dicts ────────────────────
+    - id: assemble_sections
+      tool: compute
+      inputs:
+        function: assemble_extraction_sections
+        face: "{{extract_face.output}}"
+        segments: "{{extract_segments.output}}"
+        other_income: "{{extract_other_income.output}}"
+        per_share: "{{extract_per_share.output}}"
+
+    # ── 6. Deterministic computation of derived fields ────────────────────────
+    - id: compute_derived
+      tool: compute
+      inputs:
+        function: compute_derived_fields
+        extracted_fields: "{{assemble_sections.output}}"
+        periods: "{{session.periods}}"
+
+    # ── 7. Arithmetic cross-check validation ──────────────────────────────────
+    - id: validate
+      tool: compute
+      inputs:
+        function: validate_cross_checks
+        extracted_fields: "{{compute_derived.output}}"
+        periods: "{{session.periods}}"
+
+    # ── 8. Targeted re-extraction for any failed cross-checks ─────────────────
+    # If validate returned an empty list, this step returns an empty list too
+    # and finalize will pass through base_fields unchanged.
+    - id: re_extract
+      tool: llm_job
+      inputs:
+        failures: "{{validate.output}}"
+        extracted: "{{compute_derived.output}}"
+        schema: "{{load_json_schema.output}}"
+        prompt: >
+          You are given a list of arithmetic cross-check failures from a
+          financial extraction step. Each failure identifies a period and one
+          or more fields whose values did not reconcile within tolerance.
+
+          If the failures list is empty, return an empty JSON array [] and
+          stop.
+
+          For each failure, examine the extracted values for that period and
+          identify the most likely extraction error (wrong sign, wrong table,
+          wrong column, missing alias). Apply the following rules:
+
+          RULE 1 — Segment Revenue vs Segment OI:
+            Segment Revenue [1/2/3] must come from the REVENUE DISAGGREGATION
+            table (2-10x larger than OI). If segment_rev_sum >> total_revenues,
+            the revenues were pulled from the wrong table. Correct to the
+            revenue table values.
+
+          RULE 2 — Interest Expense sign (v2 manual §5.2):
+            Interest Expense must always be a POSITIVE number (absolute value of
+            the expense magnitude). The OI&E note typically shows it as negative —
+            strip the sign and enter the absolute value. If it was extracted as
+            negative, negate it to make it positive.
+
+          RULE 3 — Gains on Investments alias:
+            "Gains (Losses) on Investments, Net" may appear as "Net gain on
+            equity securities" or "Gain (loss) on equity securities, net" in
+            the Other income (expense), net footnote.
+
+          RULE 4 — EPS units:
+            EPS must be in dollars per share, not millions. If EPS is a large
+            number (> 100), it is likely in the wrong units.
+
+          Return ONLY the corrected fields as a JSON array, one dict per period
+          (same order and length as the input extracted list). Include only the
+          corrected field keys — leave all other keys absent. If no correction
+          is needed for a period, include an empty dict {} for that period.
+          Return nothing else besides the JSON array.
+
+    # ── 9. Apply corrections and store final result ────────────────────────────
+    - id: finalize
+      tool: compute
+      inputs:
+        function: finalize_extraction
+        base_fields: "{{compute_derived.output}}"
+        corrections: "{{re_extract.output}}"
 
     - id: store_extracted_fields
       tool: store
       inputs:
         key: extracted_fields
-        value: "{{extract_fields.output}}"
+        value: "{{finalize.output}}"

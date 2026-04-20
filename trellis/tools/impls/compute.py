@@ -6,8 +6,10 @@ import asyncio
 from typing import Any, Dict
 
 from ..base import BaseTool, ToolInput, ToolOutput
+from ..decorators import export_io
 
 
+@export_io(path="debug/tools")
 class ComputeTool(BaseTool):
     """
     Invoke a named deterministic function from a FunctionRegistry.

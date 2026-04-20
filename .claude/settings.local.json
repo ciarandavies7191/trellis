@@ -25,7 +25,10 @@
       "Bash(PYTHONUTF8=1 python -m trellis_cli.main validate examples/pipelines/spreads/plan.yaml)",
       "Bash(python -m pytest tests/ -q --tb=short)",
       "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\({k:v for k,v in \\(d.get\\('output',{}\\) or {}\\).items\\(\\) if v != '__not_found__'}, indent=2\\)\\)\")",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(ls *.py)",
+      "Bash(ls scripts/)",
+      "Bash(trellis validate:*)"
     ]
   }
 }

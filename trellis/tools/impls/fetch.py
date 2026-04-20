@@ -22,6 +22,8 @@ import time
 import urllib.request
 import urllib.parse
 
+from ..decorators import export_io
+
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
@@ -160,7 +162,7 @@ def _build_filing_url(cik_padded: str, accession_no: str, primary_doc: str | Non
 # Tool implementation
 # ---------------------------------------------------------------------------
 
-
+@export_io(path="debug/tools")
 class FetchTool(BaseTool):
     """Tool for fetching data from external sources (SEC EDGAR, URLs)."""
 

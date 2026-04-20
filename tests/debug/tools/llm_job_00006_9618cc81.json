@@ -1,0 +1,19 @@
+{
+  "tool": "llm_job",
+  "invocation": 6,
+  "timestamp": "2026-04-16T16:45:39.015635",
+  "inputs": {
+    "prompt": {
+      "$type": "DocumentHandle",
+      "source": "test.pdf",
+      "format": "pdf",
+      "pages": [],
+      "page_count": 0,
+      "is_scanned": false,
+      "source_url": null,
+      "metadata": {}
+    }
+  },
+  "output": null,
+  "error": "TypeError: llm_job: 'prompt' must be a str, got 'DocumentHandle'. To process a DocumentHandle or PageList, use extract_from_texts or extract_from_tables instead, or pass `{{task.output.some_text_field}}`."
+}

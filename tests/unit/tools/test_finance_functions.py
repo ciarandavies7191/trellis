@@ -10,6 +10,7 @@ from trellis.registry.finance_functions import (
     fiscal_year_end,
     period_label,
     ticker_lookup,
+    zip_pages_with_periods,
 )
 
 
@@ -197,6 +198,60 @@ class TestFiscalYearEnd:
 # ---------------------------------------------------------------------------
 
 
+class TestZipPagesWithPeriods:
+    """zip_pages_with_periods fixes the parallel select→extract routing bug."""
+
+    def _make_period(self, period_end: str):
+        return PeriodDescriptor(
+            label="Q1 2025",
+            period_end=period_end,
+            period_type="quarterly",
+            is_annual=False,
+        )
+
+    def test_zips_page_sets_with_period_ends(self):
+        pages = ["pages_0", "pages_1", "pages_2"]
+        periods = [
+            self._make_period("2024-12-31"),
+            self._make_period("2024-03-31"),
+            self._make_period("2025-03-31"),
+        ]
+        result = zip_pages_with_periods(pages, periods)
+        assert len(result) == 3
+        assert result[0] == {"pages": "pages_0", "period_end": "2024-12-31"}
+        assert result[1] == {"pages": "pages_1", "period_end": "2024-03-31"}
+        assert result[2] == {"pages": "pages_2", "period_end": "2025-03-31"}
+
+    def test_each_item_gets_its_own_pages(self):
+        # Verifies that items are NOT all pointing to the same page object.
+        page_sets = [object(), object(), object()]
+        periods = [self._make_period(f"2025-0{i}-01") for i in range(1, 4)]
+        result = zip_pages_with_periods(page_sets, periods)
+        assert result[0]["pages"] is page_sets[0]
+        assert result[1]["pages"] is page_sets[1]
+        assert result[2]["pages"] is page_sets[2]
+
+    def test_period_as_dict_also_works(self):
+        pages = ["p0"]
+        periods = [{"period_end": "2025-03-31", "label": "Q1 2025"}]
+        result = zip_pages_with_periods(pages, periods)
+        assert result[0]["period_end"] == "2025-03-31"
+
+    def test_empty_inputs_return_empty(self):
+        assert zip_pages_with_periods([], []) == []
+
+    def test_truncates_to_shorter_list(self):
+        # zip() semantics: stops at the shorter list
+        pages = ["p0", "p1", "p2"]
+        periods = [self._make_period("2025-03-31")]
+        result = zip_pages_with_periods(pages, periods)
+        assert len(result) == 1
+
+    def test_registered_in_default_registry(self):
+        reg = build_finance_registry()
+        assert "zip_pages_with_periods" in reg.names()
+
+
 class TestBuildFinanceRegistry:
     def test_all_canonical_functions_registered(self):
         reg = build_finance_registry()
@@ -206,6 +261,11 @@ class TestBuildFinanceRegistry:
             "financial_scale_normalize",
             "period_label",
             "fiscal_year_end",
+            "zip_pages_with_periods",
+            "assemble_extraction_sections",
+            "compute_derived_fields",
+            "validate_cross_checks",
+            "finalize_extraction",
         }
         assert expected.issubset(set(reg.names()))
 

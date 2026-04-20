@@ -15,6 +15,8 @@ Key components:
 - `tools/registry.py`: Async tool discovery/invocation; subclass `BaseTool` for new tools (e.g., `tools/impls/llm.py`). Use `AsyncToolRegistry.discover_impls()` or `build_default_registry()` for auto-registration; manual registration via `AsyncToolRegistry.register_tool()` or `register_callable()`
 - `tools/impls/`: Built-in tool implementations (see below for registry details)
 - `validation/graph.py`: Cycle detection; `validation/contract.py`: Tool input/output validation
+- `models/handles.py`: First-class handles (`FieldDefinition`, `SchemaHandle`, `PeriodDescriptor`, `FIELD_NOT_FOUND`) used by tools and validators
+- `registry/finance_functions.py`: Built-in deterministic finance functions (e.g., `fiscal_period_logic`, `ticker_lookup`, `compute_derived_fields`); `build_default_registry()` wires these into the `compute` tool
 
 Data flow: Natural language goal → Plan (task sequence) → Pipeline (executable DAG) → Execution via `execute_pipeline` (or via `Orchestrator`)
 
@@ -25,14 +27,16 @@ Data flow: Natural language goal → Plan (task sequence) → Pipeline (executab
 - **Linting**: `black .; isort .; mypy trellis/; ruff .` (line length 100, profile black)
 - **Building**: `python -m build` (setuptools backend)
 - **API Server**: `python -m trellis_api.main` (runs on localhost:8000)
-- **CLI Usage**: `trellis validate path/to/pipeline.yaml; trellis run path/to/pipeline.yaml [--inputs JSON] [--session JSON] [--timeout SECONDS] [--concurrency N] [--jitter FRACTION] [--json] [--llm-provider NAME] [--llm-model NAME] [--openai-api-key KEY] [--openai-model NAME] [--anthropic-api-key KEY] [--anthropic-model NAME] [--ollama-host URL] [--ollama-model NAME] [--extract-model NAME] [--env-file PATH]`
-  - PowerShell example: `trellis run .\examples\pipelines\single_mock.yaml --inputs '{"param":"value"}' --timeout 30 --concurrency 5 --json`
+- **CLI Usage**: `trellis validate path/to/{pipeline_or_plan}.yaml; trellis run path/to/{pipeline_or_plan}.yaml [--inputs JSON] [--session JSON] [--session-file PATH] [--timeout SECONDS] [--concurrency N] [--jitter FRACTION] [--json] [--llm-provider NAME] [--llm-model NAME] [--openai-api-key KEY] [--openai-model NAME] [--anthropic-api-key KEY] [--anthropic-model NAME] [--ollama-host URL] [--ollama-model NAME] [--extract-model NAME] [--env-file PATH]`
+  - PowerShell example: `trellis run .\examples\pipelines\pdf_summarize.yaml --inputs '{"path":".\\examples\\data\\apple_10q_4q25.pdf"}' --timeout 30 --concurrency 5 --json`
   - PowerShell (OpenAI): `trellis run .\examples\pipelines\pdf_summarize.yaml --llm-provider openai --openai-api-key $env:OPENAI_API_KEY --openai-model gpt-4o`
   - PowerShell (Ollama): `trellis run .\examples\pipelines\pdf_summarize.yaml --llm-provider ollama --ollama-host http://localhost:11434 --ollama-model llama3`
   - PowerShell (Anthropic): `trellis run .\examples\pipelines\pdf_summarize.yaml --llm-provider anthropic --anthropic-api-key $env:ANTHROPIC_API_KEY --anthropic-model claude-3-haiku-20240307`
   - PowerShell (.env): `trellis run .\examples\pipelines\pdf_summarize.yaml --env-file .env`
   - Note: These flags set per-run environment overrides for built-in tools. `ingest_document` uses `INGEST_OCR_MODEL` for OCR (falls back to `EXTRACT_TEXT_MODEL`). `extract_from_texts`/`extract_from_tables` use `EXTRACT_MODEL` or `EXTRACT_TEXT_MODEL`. `select` uses `SELECT_MODEL` (falls back to `EXTRACT_TEXT_MODEL`). The `--llm-model` and `--extract-model` flags set `EXTRACT_TEXT_MODEL`.
   - For `llm_job`, the default model is read from `TRELLIS_LLM_MODEL` (see `tools/impls/llm.py`). To affect `llm_job` globally without per-task overrides, set `TRELLIS_LLM_MODEL` (the `--llm-model` CLI flag does not change this unless you also export that env var).
+  - Validate/Run accept either a single-pipeline YAML (`pipeline:` root) or a plan YAML (`plan:` root). For plans, `validate` also reports contract checks; `run` executes sub-pipelines in wave order and prints the final blackboard when `--json` is not set.
+
 - **API: Async queued runs (fallback queue)**
   - Submit: `POST /pipelines/run_async` with `{ pipeline, inputs?, session?, options?, tenant_id?, collect_events? }` → `{ run_id, status: queued }`
   - Status: `GET /pipelines/runs/{run_id}` → `{ status, result?, error?, events? }`
@@ -43,15 +47,15 @@ Data flow: Natural language goal → Plan (task sequence) → Pipeline (executab
 - **Implicit Dependencies**: No `depends_on`; infer from template references like `{{extract_tables.output}}` (see `execution/template.py`)
 - **Blackboard Pattern**: Shared execution state (task outputs, pipeline inputs, goal, session keys, and current `{{item}}`) is held in `execution/template.py:ResolutionContext`. A tenant-scoped Blackboard (`execution/blackboard.py`) isolates persisted session data per `tenant_id`. The `store` tool writes are persisted to the tenant blackboard during execution and reflected into the in-run `session` for downstream reads. Note: the `store` tool implementation is an echo; persistence is handled by the executor, not the tool itself.
 - **Multi-tenancy**: Pass `tenant_id` via `Orchestrator(tenant_id=...)` or in API `run_async` request body; all persisted blackboard reads/writes are isolated by `tenant_id`.
-- **Tool Extension**: Subclass `BaseTool` and prefer auto-discovery via `AsyncToolRegistry.discover_impls()`/`build_default_registry()` (default constructor required). For manual wiring use `AsyncToolRegistry.register_tool()` or `register_callable()`. Examples in `tools/impls/` (e.g., `llm.py`, `mock.py`, `extract.py`, `document.py`, `store.py`, `search.py`, `export.py`).
+- **Tool Extension**: Subclass `BaseTool` and prefer auto-discovery via `AsyncToolRegistry.discover_impls()`/`build_default_registry()` (default constructor required). For manual wiring use `AsyncToolRegistry.register_tool()` or `register_callable()`. Examples in `tools/impls/` (e.g., `llm.py`, `mock.py`, `extract.py`, `document.py`, `store.py`, `search.py`, `export.py`, `load_schema.py`, `extract_fields.py`, `compute.py`).
 - **DSL Design**: Flat task list; parallelism automatic; logic in `llm_job` prompts, not structure (see `docs/PIPELINE-DSL-V1.md`)
 - **Naming**: Snake_case for pipeline/task IDs; avoid nesting or conditionals in DSL
 - **Entry Points**: Thin wrappers; import from `trellis.*` (e.g., `trellis_cli/main.py` uses `Orchestrator`; `trellis_api/main.py` wires routers)
 
 ## Integration Points
 
-- **External Tools**: Provide `BaseTool` implementations under `tools/impls/` (e.g., `fetch.py`, `document.py`, `llm.py`, `extract.py`, `store.py`, `search.py`, `export.py`, `mock.py`). Names should match DSL expectations (see `KNOWN_TOOLS` in `models/pipeline.py`). Auto-registered by the async registry when using `build_default_registry()`.
-- **API Endpoints**: Add routers in `trellis_api/routers/` (e.g., `pipelines.py`). Synchronous runs: `POST /pipelines/run`. Queued runs: `POST /pipelines/run_async`, poll `GET /pipelines/runs/{id}`, cancel via `POST /pipelines/runs/{id}/cancel`. Pipeline validation: `POST /pipelines/validate`. Tool discovery: `GET /pipelines/tools` lists registered tools with metadata. Plan validation: `POST /plans/validate`.
+- **External Tools**: Provide `BaseTool` implementations under `tools/impls/` (e.g., `fetch.py`, `document.py`, `llm.py`, `extract.py`, `load_schema.py`, `extract_fields.py`, `compute.py`, `store.py`, `search.py`, `export.py`, `mock.py`). Names should match DSL expectations (see `KNOWN_TOOLS` in `models/pipeline.py`). Auto-registered by the async registry when using `build_default_registry()`; the `compute` tool is re-registered with the built-in finance `FunctionRegistry`.
+- **API Endpoints**: Add routers in `trellis_api/routers/` (e.g., `pipelines.py`). Synchronous runs: `POST /pipelines/run`. Queued runs: `POST /pipelines/run_async`, poll `GET /pipelines/runs/{id}`, cancel via `POST /pipelines/runs/{id}/cancel`. Pipeline validation: `POST /pipelines/validate`. Tool discovery: `GET /pipelines/tools` lists registered tools with metadata.
 - **Execution Backends**: Local executor is default. Prefect adapter (`execution/prefect_adapter.py`) will provide a pluggable backend; background queue (`execution/run_queue.py`) is the fallback for dev/local.
 - **MCP Protocol**: Expose tools to clients via `trellis_mcp/server.py`
 - **Dependencies**: Core uses pydantic, pyyaml; API uses fastapi/uvicorn; CLI uses typer/rich and python-dotenv; built-in document/LLM tools use litellm, PyPDF2, and PyMuPDF; Python >= 3.12
@@ -66,6 +70,9 @@ Document processing pipeline: `ingest_document → select → extract_from_texts
 | select              | Retrieval: filter document to relevant pages by NL prompt or page numbers | no        |
 | extract_from_texts  | Structured field extraction from page text → JSON dict                   | no        |
 | extract_from_tables | Structured table extraction → list of {headers, rows, source_page}       | no        |
+| load_schema         | Load/derive SchemaHandle from file/URL/DocumentHandle/registry name      | no        |
+| extract_fields      | Schema-bound extraction for declared fields (emits `"__not_found__"`)    | no        |
+| compute             | Invoke a named deterministic function from the FunctionRegistry          | no        |
 | llm_job             | LLM reasoning, extraction, synthesis, generation                         | no        |
 | fetch_data          | Retrieve structured data from external sources                            | no        |
 | search_web          | Web search, returns snippets and URLs                                     | no        |

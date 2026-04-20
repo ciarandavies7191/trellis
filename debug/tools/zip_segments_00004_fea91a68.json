@@ -1,0 +1,492 @@
+{
+  "tool": "compute",
+  "task_id": "zip_segments",
+  "invocation": 4,
+  "timestamp": "2026-04-20T18:19:46.063548",
+  "inputs": {
+    "function": "zip_pages_with_periods",
+    "pages_list": [
+      {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204425000014/goog-20241231.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 90,
+            "text": "Financial Results\n\nRevenues\n\nThe following table presents revenues by type (in millions):\n\nYear Ended December 31, 2023 2024 Google Search & other $ 175,033 $ 198,084 YouTube ads 31,510 36,147 Google Network 31,312 30,359 Google advertising 237,855 264,590 Google subscriptions, platforms, and devices 34,688 40,340 Google Services total 272,543 304,930 Google Cloud 33,088 43,229 Other Bets 1,527 1,648 Hedging gains (losses) 236 211 Total revenues $ 307,394 $ 350,018",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 91,
+            "text": " |  |  | Year Ended December 31,\n |  |  | 2023 |  | 2024\nGoogle Search & other |  |  | $ | 175,033 |  |  | $ | 198,084 | \nYouTube ads |  |  | 31,510 |  |  | 36,147 | \nGoogle Network |  |  | 31,312 |  |  | 30,359 | \nGoogle advertising |  |  | 237,855 |  |  | 264,590 | \nGoogle subscriptions, platforms, and devices |  |  | 34,688 |  |  | 40,340 | \nGoogle Services total |  |  | 272,543 |  |  | 304,930 | \nGoogle Cloud |  |  | 33,088 |  |  | 43,229 | \nOther Bets |  |  | 1,527 |  |  | 1,648 | \nHedging gains (losses) |  |  | 236 |  |  | 211 | \nTotal revenues |  |  | $ | 307,394 |  |  | $ | 350,018 | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 92,
+            "text": "Google Services\n\nGoogle advertising revenues\n\nGoogle Search & other\n\nGoogle Search & other revenues increased $23.1 billion from 2023 to 2024. The overall growth was driven by interrelated factors including increases in search queries resulting from growth in user adoption and usage on mobile devices; growth in advertiser spending; and improvements we have made in ad formats and delivery.\n\nYouTube ads\n\nYouTube ads revenues increased $4.6 billion from 2023 to 2024. The growth was driven by our brand advertising products followed by our direct response advertising products, both of which benefited from increased spending by our advertisers.\n\nGoogle Network\n\nGoogle Network revenues decreased $953 million from 2023 to 2024, primarily driven by a decrease in Google Ad Manager and AdMob revenues. Additionally, Google Network revenues were adversely affected by changes in foreign currency exchange rates.\n\nMonetization Metrics\n\nThe following table presents changes in monetization metrics for Google Search & other revenues (paid clicks and cost-per-click) and Google Network revenues (impressions and cost-per-impression), expressed as a percentage, from 2023 to 2024:\n\nGoogle Search & other Paid clicks change 5 % Cost-per-click change 7 % Google Network Impressions change (11) % Cost-per-impression change 10 %",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 113,
+            "text": " |  |  | Year Ended December 31,\n |  |  | 2023 |  | 2024\nOperating income (loss): |  |  |  |  | \nGoogle Services |  |  | $ | 95,858 |  |  | $ | 121,263 | \nGoogle Cloud |  |  | 1,716 |  |  | 6,112 | \nOther Bets |  |  | -4095 |  |  | -4444 | \nAlphabet-level activities (1) |  |  | -9186 |  |  | -10541 | \nTotal income from operations |  |  | $ | 84,293 |  |  | $ | 112,390 | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 114,
+            "text": "(1) In addition to the costs included in Alphabet-level activities, hedging gains (losses) related to revenue were $236 million and $211 million in 2023 and 2024 , respectively. For the years ended December 31, 2023 and 2024 , Alphabet-level activities included substantially all of the charges related to employee severance and our office spa ce charges.\n\n39.\n\n39.\n\n39.\n\nTable of Contents Alphabet Inc.\n\nTable of Contents Alphabet Inc.",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 318,
+            "text": "As announced in April 2024, we consolidated teams that focus on building general AI models across Google Research and Google DeepMind to further accelerate our progress in AI. General AI model development teams previously under Google Research in our Google Services segment are reported within Alphabet-level activities prospectively beginning in the second quarter of 2024. As further announced, in October 2024, the Gemini app team that is developing the direct consumer interface to our Gemini models joined Google DeepMind. The costs associated with the Gemini app team continue to be reported within our Google Services segment.\n\nCertain costs are not allocated to our segments because they represent Alphabet-level activities. These costs primarily include certain AI-focused shared R&D activities, including development costs of our general AI models; corporate initiatives such as our philanthropic activities; corporate shared costs such as certain finance, human resource, and legal costs, including certain fines and settlements. Charges associated with employee severance and office space reductions during 2023 and 2024 were also not allocated to our segments. Additionally, hedging gains (losses) related to revenue are not allocated to our segments.\n\nOur Chief Operating Decision Maker (CODM) is our Chief Executive Officer, Sundar Pichai. Our CODM uses segment operating income (loss) to allocate resources to our segments in our annual planning process and to assess the performance of our segments, primarily by monitoring actual results versus the annual plan. Our operating segments are not evaluated using asset information.\n\nThe following table presents revenue, profitability, and expense information about our segments (in millions):\n\nYear Ended December 31, 2022 2023 2024 Revenues: Google Services $ 253,528 $ 272,543 $ 304,930 Google Cloud 26,280 33,088 43,229 Other Bets 1,068 1,527 1,648 Hedging gains (losses) 1,960 236 211 Total revenues $ 282,836 $ 307,394 $ 350,018 …",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 319,
+            "text": " | Year Ended December 31,\n | 2022 |  | 2023 |  | 2024\nRevenues: |  |  |  |  | \nGoogle Services | $ | 253,528 |  |  | $ | 272,543 |  |  | $ | 304,930 | \nGoogle Cloud | 26,280 |  |  | 33,088 |  |  | 43,229 | \nOther Bets | 1,068 |  |  | 1,527 |  |  | 1,648 | \nHedging gains (losses) | 1,960 |  |  | 236 |  |  | 211 | \nTotal revenues | $ | 282,836 |  |  | $ | 307,394 |  |  | $ | 350,018 | \nOperating income (loss): |  |  |  |  | \nGoogle Services | $ | 82,699 |  |  | $ | 95,858 |  |  | $ | 121,263 | \nGoogle Cloud | ( 1,922 ) |  |  | 1,716 |  |  | 6,112 | \nOther Bets | ( 4,636 ) |  |  | ( 4,095 ) |  |  | ( 4,444 ) | \nAlphabet-level activities | ( 1,299 ) |  |  | ( 9,186 ) |  |  | ( 10,541 ) | \nTotal income from operations | $ | 74,842 |  |  | $ | 84,293 |  |  | $ | 112,390 | \nSupplemental information about our segment expenses: |  |  |  |  | \nGoogle Services: |  |  |  |  | \nEmployee compensation expenses | $ | 43,529 |  |  | $ | 46,224 |  |  | $ | 44,560 | \nOther costs and expenses | 127,300 |  |  | 130,461 |  |  | 139,107 | \nTotal Google Services costs and expenses | $ | 170,829 |  |  | $ | 176,685 |  |  | $ | 183,667 | \nGoogle Cloud: |  |  |  |  | \nEmployee compensation expenses | $ | 16,132 |  |  | $ | 19,054 |  |  | $ | 20,519 | \nOther costs and expenses | 12,070 |  |  | 12,318 |  |  | 16,598 | \nTotal Google Cloud costs and expenses | $ | 28,202 |  |  | $ | 31,372 |  |  | $ | 37,117 | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      },
+      {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204425000043/goog-20250331.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 46,
+            "text": "Note 2. Revenues\n\nDisaggregated Revenues\n\nThe following table presents revenues disaggregated by type (in millions): Three Months Ended March 31, 2024 2025 Google Search & other $ 46,156 $ 50,702 YouTube ads 8,090 8,927 Google Network 7,413 7,256 Google advertising 61,659 66,885 Google subscriptions, platforms, and devices 8,739 10,379 Google Services total 70,398 77,264 Google Cloud 9,574 12,260 Other Bets 495 450 Hedging gains (losses) 72 260 Total revenues $ 80,539 $ 90,234",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 126,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nRevenues: |  |  |  |  |  |  | \nGoogle Services | $ | 70,398 |  |  | $ | 77,264 |  |  |  |  | \nGoogle Cloud | 9,574 |  |  | 12,260 |  |  |  |  | \nOther Bets | 495 |  |  | 450 |  |  |  |  | \nHedging gains (losses) | 72 |  |  | 260 |  |  |  |  | \nTotal revenues | $ | 80,539 |  |  | $ | 90,234 |  |  |  |  | \nOperating income (loss): |  |  |  |  |  |  | \nGoogle Services | $ | 27,897 |  |  | $ | 32,682 |  |  |  |  | \nGoogle Cloud | 900 |  |  | 2,177 |  |  |  |  | \nOther Bets | ( 1,020 ) |  |  | ( 1,226 ) |  |  |  |  | \nAlphabet-level activities | ( 2,305 ) |  |  | ( 3,027 ) |  |  |  |  | \nTotal income from operations | $ | 25,472 |  |  | $ | 30,606 |  |  |  |  | \nSupplemental information about segment expenses: |  |  |  |  |  |  | \nGoogle Services: |  |  |  |  |  |  | \nEmployee compensation expenses | $ | 11,511 |  |  | $ | 11,337 |  |  |  |  | \nOther costs and expenses | 30,990 |  |  | 33,245 |  |  |  |  | \nTotal Google Services costs and expenses | $ | 42,501 |  |  | $ | 44,582 |  |  |  |  | \nGoogle Cloud: |  |  |  |  |  |  | \nEmployee compensation expenses | $ | 5,157 |  |  | $ | 5,412 |  |  |  |  | \nOther costs and expenses | 3,517 |  |  | 4,671 |  |  |  |  | \nTotal Google Cloud costs and expenses | $ | 8,674 |  |  | $ | 10,083 |  |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 149,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nOperating income (loss): |  |  |  |  |  |  | \nGoogle Services | $ | 27,897 |  |  | $ | 32,682 |  |  |  |  | \nGoogle Cloud | 900 |  |  | 2,177 |  |  |  |  | \nOther Bets | -1020 |  |  | -1226 |  |  |  |  | \nAlphabet-level activities (1) | -2305 |  |  | -3027 |  |  |  |  | \nTotal income from operations | $ | 25,472 |  |  | $ | 30,606 |  |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      },
+      {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204424000053/goog-20240331.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 46,
+            "text": "Note 2. Revenues\n\nDisaggregated Revenues\n\nThe following table presents revenues disaggregated by type (in millions): Three Months Ended March 31, 2023 2024 Google Search & other $ 40,359 $ 46,156 YouTube ads 6,693 8,090 Google Network 7,496 7,413 Google advertising 54,548 61,659 Google subscriptions, platforms, and devices 7,413 8,739 Google Services total 61,961 70,398 Google Cloud 7,454 9,574 Other Bets 288 495 Hedging gains (losses) 84 72 Total revenues $ 69,787 $ 80,539",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 47,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nGoogle Search & other | $ | 40,359 |  |  | $ | 46,156 |  |  |  |  | \nYouTube ads | 6,693 |  |  | 8,090 |  |  |  |  | \nGoogle Network | 7,496 |  |  | 7,413 |  |  |  |  | \nGoogle advertising | 54,548 |  |  | 61,659 |  |  |  |  | \nGoogle subscriptions, platforms, and devices | 7,413 |  |  | 8,739 |  |  |  |  | \nGoogle Services total | 61,961 |  |  | 70,398 |  |  |  |  | \nGoogle Cloud | 7,454 |  |  | 9,574 |  |  |  |  | \nOther Bets | 288 |  |  | 495 |  |  |  |  | \nHedging gains (losses) | 84 |  |  | 72 |  |  |  |  | \nTotal revenues | $ | 69,787 |  |  | $ | 80,539 |  |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 114,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nRevenues: |  |  |  |  |  |  | \nGoogle Services | $ | 61,961 |  |  | $ | 70,398 |  |  |  |  | \nGoogle Cloud | 7,454 |  |  | 9,574 |  |  |  |  | \nOther Bets | 288 |  |  | 495 |  |  |  |  | \nHedging gains (losses) | 84 |  |  | 72 |  |  |  |  | \nTotal revenues | $ | 69,787 |  |  | $ | 80,539 |  |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 115,
+            "text": "Three Months Ended March 31, 2023 2024 Operating income (loss): Google Services $ 21,737 $ 27,897 Google Cloud 191 900 Other Bets ( 1,225 ) ( 1,020 ) Alphabet-level activities ( 3,288 ) ( 2,305 ) Total income from operations $ 17,415 $ 25,472",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      }
+    ],
+    "periods": [
+      {
+        "$type": "PeriodDescriptor",
+        "label": "FY 2024",
+        "period_end": "2024-12-31",
+        "period_type": "annual",
+        "is_annual": true
+      },
+      {
+        "$type": "PeriodDescriptor",
+        "label": "Q1 2025",
+        "period_end": "2025-03-31",
+        "period_type": "ytd_current",
+        "is_annual": false
+      },
+      {
+        "$type": "PeriodDescriptor",
+        "label": "Q1 2024",
+        "period_end": "2024-03-31",
+        "period_type": "ytd_prior",
+        "is_annual": false
+      }
+    ]
+  },
+  "output": [
+    {
+      "pages": {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204425000014/goog-20241231.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 90,
+            "text": "Financial Results\n\nRevenues\n\nThe following table presents revenues by type (in millions):\n\nYear Ended December 31, 2023 2024 Google Search & other $ 175,033 $ 198,084 YouTube ads 31,510 36,147 Google Network 31,312 30,359 Google advertising 237,855 264,590 Google subscriptions, platforms, and devices 34,688 40,340 Google Services total 272,543 304,930 Google Cloud 33,088 43,229 Other Bets 1,527 1,648 Hedging gains (losses) 236 211 Total revenues $ 307,394 $ 350,018",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 91,
+            "text": " |  |  | Year Ended December 31,\n |  |  | 2023 |  | 2024\nGoogle Search & other |  |  | $ | 175,033 |  |  | $ | 198,084 | \nYouTube ads |  |  | 31,510 |  |  | 36,147 | \nGoogle Network |  |  | 31,312 |  |  | 30,359 | \nGoogle advertising |  |  | 237,855 |  |  | 264,590 | \nGoogle subscriptions, platforms, and devices |  |  | 34,688 |  |  | 40,340 | \nGoogle Services total |  |  | 272,543 |  |  | 304,930 | \nGoogle Cloud |  |  | 33,088 |  |  | 43,229 | \nOther Bets |  |  | 1,527 |  |  | 1,648 | \nHedging gains (losses) |  |  | 236 |  |  | 211 | \nTotal revenues |  |  | $ | 307,394 |  |  | $ | 350,018 | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 92,
+            "text": "Google Services\n\nGoogle advertising revenues\n\nGoogle Search & other\n\nGoogle Search & other revenues increased $23.1 billion from 2023 to 2024. The overall growth was driven by interrelated factors including increases in search queries resulting from growth in user adoption and usage on mobile devices; growth in advertiser spending; and improvements we have made in ad formats and delivery.\n\nYouTube ads\n\nYouTube ads revenues increased $4.6 billion from 2023 to 2024. The growth was driven by our brand advertising products followed by our direct response advertising products, both of which benefited from increased spending by our advertisers.\n\nGoogle Network\n\nGoogle Network revenues decreased $953 million from 2023 to 2024, primarily driven by a decrease in Google Ad Manager and AdMob revenues. Additionally, Google Network revenues were adversely affected by changes in foreign currency exchange rates.\n\nMonetization Metrics\n\nThe following table presents changes in monetization metrics for Google Search & other revenues (paid clicks and cost-per-click) and Google Network revenues (impressions and cost-per-impression), expressed as a percentage, from 2023 to 2024:\n\nGoogle Search & other Paid clicks change 5 % Cost-per-click change 7 % Google Network Impressions change (11) % Cost-per-impression change 10 %",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 113,
+            "text": " |  |  | Year Ended December 31,\n |  |  | 2023 |  | 2024\nOperating income (loss): |  |  |  |  | \nGoogle Services |  |  | $ | 95,858 |  |  | $ | 121,263 | \nGoogle Cloud |  |  | 1,716 |  |  | 6,112 | \nOther Bets |  |  | -4095 |  |  | -4444 | \nAlphabet-level activities (1) |  |  | -9186 |  |  | -10541 | \nTotal income from operations |  |  | $ | 84,293 |  |  | $ | 112,390 | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 114,
+            "text": "(1) In addition to the costs included in Alphabet-level activities, hedging gains (losses) related to revenue were $236 million and $211 million in 2023 and 2024 , respectively. For the years ended December 31, 2023 and 2024 , Alphabet-level activities included substantially all of the charges related to employee severance and our office spa ce charges.\n\n39.\n\n39.\n\n39.\n\nTable of Contents Alphabet Inc.\n\nTable of Contents Alphabet Inc.",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 318,
+            "text": "As announced in April 2024, we consolidated teams that focus on building general AI models across Google Research and Google DeepMind to further accelerate our progress in AI. General AI model development teams previously under Google Research in our Google Services segment are reported within Alphabet-level activities prospectively beginning in the second quarter of 2024. As further announced, in October 2024, the Gemini app team that is developing the direct consumer interface to our Gemini models joined Google DeepMind. The costs associated with the Gemini app team continue to be reported within our Google Services segment.\n\nCertain costs are not allocated to our segments because they represent Alphabet-level activities. These costs primarily include certain AI-focused shared R&D activities, including development costs of our general AI models; corporate initiatives such as our philanthropic activities; corporate shared costs such as certain finance, human resource, and legal costs, including certain fines and settlements. Charges associated with employee severance and office space reductions during 2023 and 2024 were also not allocated to our segments. Additionally, hedging gains (losses) related to revenue are not allocated to our segments.\n\nOur Chief Operating Decision Maker (CODM) is our Chief Executive Officer, Sundar Pichai. Our CODM uses segment operating income (loss) to allocate resources to our segments in our annual planning process and to assess the performance of our segments, primarily by monitoring actual results versus the annual plan. Our operating segments are not evaluated using asset information.\n\nThe following table presents revenue, profitability, and expense information about our segments (in millions):\n\nYear Ended December 31, 2022 2023 2024 Revenues: Google Services $ 253,528 $ 272,543 $ 304,930 Google Cloud 26,280 33,088 43,229 Other Bets 1,068 1,527 1,648 Hedging gains (losses) 1,960 236 211 Total revenues $ 282,836 $ 307,394 $ 350,018 …",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 319,
+            "text": " | Year Ended December 31,\n | 2022 |  | 2023 |  | 2024\nRevenues: |  |  |  |  | \nGoogle Services | $ | 253,528 |  |  | $ | 272,543 |  |  | $ | 304,930 | \nGoogle Cloud | 26,280 |  |  | 33,088 |  |  | 43,229 | \nOther Bets | 1,068 |  |  | 1,527 |  |  | 1,648 | \nHedging gains (losses) | 1,960 |  |  | 236 |  |  | 211 | \nTotal revenues | $ | 282,836 |  |  | $ | 307,394 |  |  | $ | 350,018 | \nOperating income (loss): |  |  |  |  | \nGoogle Services | $ | 82,699 |  |  | $ | 95,858 |  |  | $ | 121,263 | \nGoogle Cloud | ( 1,922 ) |  |  | 1,716 |  |  | 6,112 | \nOther Bets | ( 4,636 ) |  |  | ( 4,095 ) |  |  | ( 4,444 ) | \nAlphabet-level activities | ( 1,299 ) |  |  | ( 9,186 ) |  |  | ( 10,541 ) | \nTotal income from operations | $ | 74,842 |  |  | $ | 84,293 |  |  | $ | 112,390 | \nSupplemental information about our segment expenses: |  |  |  |  | \nGoogle Services: |  |  |  |  | \nEmployee compensation expenses | $ | 43,529 |  |  | $ | 46,224 |  |  | $ | 44,560 | \nOther costs and expenses | 127,300 |  |  | 130,461 |  |  | 139,107 | \nTotal Google Services costs and expenses | $ | 170,829 |  |  | $ | 176,685 |  |  | $ | 183,667 | \nGoogle Cloud: |  |  |  |  | \nEmployee compensation expenses | $ | 16,132 |  |  | $ | 19,054 |  |  | $ | 20,519 | \nOther costs and expenses | 12,070 |  |  | 12,318 |  |  | 16,598 | \nTotal Google Cloud costs and expenses | $ | 28,202 |  |  | $ | 31,372 |  |  | $ | 37,117 | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      },
+      "period_end": "2024-12-31"
+    },
+    {
+      "pages": {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204425000043/goog-20250331.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 46,
+            "text": "Note 2. Revenues\n\nDisaggregated Revenues\n\nThe following table presents revenues disaggregated by type (in millions): Three Months Ended March 31, 2024 2025 Google Search & other $ 46,156 $ 50,702 YouTube ads 8,090 8,927 Google Network 7,413 7,256 Google advertising 61,659 66,885 Google subscriptions, platforms, and devices 8,739 10,379 Google Services total 70,398 77,264 Google Cloud 9,574 12,260 Other Bets 495 450 Hedging gains (losses) 72 260 Total revenues $ 80,539 $ 90,234",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 126,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nRevenues: |  |  |  |  |  |  | \nGoogle Services | $ | 70,398 |  |  | $ | 77,264 |  |  |  |  | \nGoogle Cloud | 9,574 |  |  | 12,260 |  |  |  |  | \nOther Bets | 495 |  |  | 450 |  |  |  |  | \nHedging gains (losses) | 72 |  |  | 260 |  |  |  |  | \nTotal revenues | $ | 80,539 |  |  | $ | 90,234 |  |  |  |  | \nOperating income (loss): |  |  |  |  |  |  | \nGoogle Services | $ | 27,897 |  |  | $ | 32,682 |  |  |  |  | \nGoogle Cloud | 900 |  |  | 2,177 |  |  |  |  | \nOther Bets | ( 1,020 ) |  |  | ( 1,226 ) |  |  |  |  | \nAlphabet-level activities | ( 2,305 ) |  |  | ( 3,027 ) |  |  |  |  | \nTotal income from operations | $ | 25,472 |  |  | $ | 30,606 |  |  |  |  | \nSupplemental information about segment expenses: |  |  |  |  |  |  | \nGoogle Services: |  |  |  |  |  |  | \nEmployee compensation expenses | $ | 11,511 |  |  | $ | 11,337 |  |  |  |  | \nOther costs and expenses | 30,990 |  |  | 33,245 |  |  |  |  | \nTotal Google Services costs and expenses | $ | 42,501 |  |  | $ | 44,582 |  |  |  |  | \nGoogle Cloud: |  |  |  |  |  |  | \nEmployee compensation expenses | $ | 5,157 |  |  | $ | 5,412 |  |  |  |  | \nOther costs and expenses | 3,517 |  |  | 4,671 |  |  |  |  | \nTotal Google Cloud costs and expenses | $ | 8,674 |  |  | $ | 10,083 |  |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 149,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nOperating income (loss): |  |  |  |  |  |  | \nGoogle Services | $ | 27,897 |  |  | $ | 32,682 |  |  |  |  | \nGoogle Cloud | 900 |  |  | 2,177 |  |  |  |  | \nOther Bets | -1020 |  |  | -1226 |  |  |  |  | \nAlphabet-level activities (1) | -2305 |  |  | -3027 |  |  |  |  | \nTotal income from operations | $ | 25,472 |  |  | $ | 30,606 |  |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      },
+      "period_end": "2025-03-31"
+    },
+    {
+      "pages": {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204424000053/goog-20240331.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 46,
+            "text": "Note 2. Revenues\n\nDisaggregated Revenues\n\nThe following table presents revenues disaggregated by type (in millions): Three Months Ended March 31, 2023 2024 Google Search & other $ 40,359 $ 46,156 YouTube ads 6,693 8,090 Google Network 7,496 7,413 Google advertising 54,548 61,659 Google subscriptions, platforms, and devices 7,413 8,739 Google Services total 61,961 70,398 Google Cloud 7,454 9,574 Other Bets 288 495 Hedging gains (losses) 84 72 Total revenues $ 69,787 $ 80,539",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 47,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nGoogle Search & other | $ | 40,359 |  |  | $ | 46,156 |  |  |  |  | \nYouTube ads | 6,693 |  |  | 8,090 |  |  |  |  | \nGoogle Network | 7,496 |  |  | 7,413 |  |  |  |  | \nGoogle advertising | 54,548 |  |  | 61,659 |  |  |  |  | \nGoogle subscriptions, platforms, and devices | 7,413 |  |  | 8,739 |  |  |  |  | \nGoogle Services total | 61,961 |  |  | 70,398 |  |  |  |  | \nGoogle Cloud | 7,454 |  |  | 9,574 |  |  |  |  | \nOther Bets | 288 |  |  | 495 |  |  |  |  | \nHedging gains (losses) | 84 |  |  | 72 |  |  |  |  | \nTotal revenues | $ | 69,787 |  |  | $ | 80,539 |  |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 114,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nRevenues: |  |  |  |  |  |  | \nGoogle Services | $ | 61,961 |  |  | $ | 70,398 |  |  |  |  | \nGoogle Cloud | 7,454 |  |  | 9,574 |  |  |  |  | \nOther Bets | 288 |  |  | 495 |  |  |  |  | \nHedging gains (losses) | 84 |  |  | 72 |  |  |  |  | \nTotal revenues | $ | 69,787 |  |  | $ | 80,539 |  |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 115,
+            "text": "Three Months Ended March 31, 2023 2024 Operating income (loss): Google Services $ 21,737 $ 27,897 Google Cloud 191 900 Other Bets ( 1,225 ) ( 1,020 ) Alphabet-level activities ( 3,288 ) ( 2,305 ) Total income from operations $ 17,415 $ 25,472",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      },
+      "period_end": "2024-03-31"
+    }
+  ],
+  "error": null
+}

@@ -1,0 +1,296 @@
+{
+  "tool": "compute",
+  "task_id": "zip_per_share",
+  "invocation": 6,
+  "timestamp": "2026-04-20T18:19:46.064549",
+  "inputs": {
+    "function": "zip_pages_with_periods",
+    "pages_list": [
+      {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204425000014/goog-20241231.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 88,
+            "text": "(1) See \"Use of Non-GAAP Constant Currency Information\" below for details relating to our use of constant currency information.\n\n(2) For additional information on the calculation of diluted EPS, see Note 12 of the Notes to Consolidated Financial Statements included in Item 8 of this Annual Report on Form 10-K.\n\n• Revenues were $350.0 billion, an increase of 14% year over year, primarily driven by an increase in Google Services revenues of $32.4 billion, or 12%, and an increase in Google Cloud revenues of $10.1 billion, or 31%.\n\n• Total constant currency revenues, which exclude the effect of hedging, increased 15% year over year.\n\n• Cost of revenues wa s $146.3 billion, an increase of 10% year over year, primarily driven by increases in content acquisition costs, TAC, and depreciation expense.\n\n• Operating expenses were $91.3 billion, an increase of 2% year over year, primarily driven by increases in de preciation expense, employee compensation expenses, and third-party services fees. These increases were partially offset by reductions in charges related to legal and other matters and charges related to our office space optimization efforts. The overall increase in employee compensation expenses was partially offset by a reduction in employee severance and related charges.\n\nOther Information:\n\n• Dividend payments to stockholders of Class A, Class B, and Class C shares, which were first paid in June 2024, were $3.5 billion, $519 million, and $3.3 billion, respectively, totaling $7.4 billion for the year ended December 31, 2024. For additional information, see Note 11 of the Notes to Consolidated Financial Statements included in Item 8 of this Annual Report on Form 10-K.\n\n• Repurchases of Class A and Class C shares were $11.9 billion and $50.2 billion, respectively, totaling $62.0 billion for the year ended December 31, 2024. For additional information, see Note 11 of the Notes to Consolidated Financial Statements included in Item 8 of this Annual Report on Form 10-K.\n…",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 284,
+            "text": "Note 11. Stockholders' Equity\n\nClass A and Class B Common Stock and Class C Capital Stock\n\nOur Board of Directors has authorized three classes of stock, Class A and Class B common stock, and Class C capital stock. The rights of the holders of each class of our common and capital stock are identical, except with respect to voting. Each share of Class A common stock is entitled to one vote per share. Each share of Class B common stock is entitled to 10 votes per share. Class C capital stock has no voting rights, except as required by applicable law. Shares of Class B common stock may be converted at any time at the option of the stockholder and automatically convert upon sale or transfer to Class A common stock.\n\nShare Repurchases\n\nIn the years ended December 31, 2022, 2023, and 2024 , we continued to repurchase both Class A and Class C shares in a manner deemed in the best interest of the company and its stockholders, taking into account the economic cost and prevailing market conditions, including the relative trading prices and volumes of the Class A and Class C shares. During the years ended December 31, 2022, 2023, and 2024, we repurchased $ 59.3 billion, $ 62.2 billion, and $ 62.0 billion, respectively, of Alphabet's Class A and Class C shares.\n\nIn April 2024, the Board of Directors of Alphabet authorized the company to repurchase up to an additional $ 70.0 billion of its Class A and Class C shares. As of December 31, 2024, $ 44.7 billion remained available for Class A and Class C share repurchases.\n\nThe following table presents Class A and Class C shares repurchased and subsequently retired (in millions):\n\nYear Ended December 31, 2023 Year Ended December 31, 2024 Shares Amount Shares Amount Class A share repurchases 78 $ 9,316 73 $ 11,855 Class C share repurchases 450 52,868 306 50,192 Total share repurchases (1) 528 $ 62,184 379 $ 62,047 (1) Shares repurchased include unsettled repurchases.",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 292,
+            "text": "Year Ended December 31, 2023 Class A Class B Class C Consolidated Basic net income per share: Numerator Allocation of distributed earnings (cash dividends paid) $ 0 $ 0 $ 0 $ 0 Allocation of undistributed earnings 34,601 5,124 34,070 73,795 Net income $ 34,601 $ 5,124 $ 34,070 $ 73,795 Denominator Number of shares used in per share computation 5,922 877 5,831 12,630 Basic net income per share $ 5.84 $ 5.84 $ 5.84 $ 5.84 Diluted net income per share: Numerator Allocation of total earnings for basic computation $ 34,601 $ 5,124 $ 34,070 $ 73,795 Reallocation of total earnings as a result of conversion of Class B to Class A shares 5,124 0 0 _ (1) Reallocation of undistributed earnings ( 287 ) ( 37 ) 287 _ (1) Net income $ 39,438 $ 5,087 $ 34,357 $ 73,795 Denominator Number of shares used in basic computation 5,922 877 5,831 12,630 Weighted-average effect of dilutive securities Add: Conversion of Class B to Class A shares outstanding 877 0 0 _ (1) Restricted stock units and other contingently issuable shares 0 0 92 92 Number of shares used in per share computation 6,799 877 5,923 12,722 Diluted net income per share $ 5.80 $ 5.80 $ 5.80 $ 5.80 (1) Not applicable for consolidated net income per share.",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 294,
+            "text": "Year Ended December 31, 2024 Class A Class B Class C Consolidated Basic net income per share: Numerator Allocation of distributed earnings (cash dividends paid) $ 3,509 $ 519 $ 3,335 $ 7,363 Allocation of undistributed earnings 44,085 6,520 42,150 92,755 Net income $ 47,594 $ 7,039 $ 45,485 $ 100,118 Denominator Number of shares used in per share computation 5,855 866 5,598 12,319 Basic net income per share $ 8.13 $ 8.13 $ 8.13 $ 8.13 Diluted net income per share: Numerator Allocation of total earnings for basic computation $ 47,594 $ 7,039 $ 45,485 $ 100,118 Reallocation of total earnings as a result of conversion of Class B to Class A shares 7,039 0 0 _ (1) Reallocation of undistributed earnings ( 520 ) ( 67 ) 520 _ (1) Net income $ 54,113 $ 6,972 $ 46,005 $ 100,118 Denominator Number of shares used in basic computation 5,855 866 5,598 12,319 Weighted-average effect of dilutive securities Add: Conversion of Class B to Class A shares outstanding 866 0 0 _ (1) Restricted stock units and other contingently issuable shares 0 0 128 128 Number of shares used in per share computation 6,721 866 5,726 12,447 Diluted net income per share $ 8.05 $ 8.05 $ 8.03 $ 8.04",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      },
+      {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204425000043/goog-20250331.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 120,
+            "text": " | Three Months Ended March 31,\n | 2024 |  | 2025 | \n | Class A |  | Class B |  | Class C |  | Consolidated |  | Class A |  | Class B |  | Class C |  | Consolidated | \nBasic net income per share: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | \nNumerator |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | \nAllocation of distributed earnings (cash dividends paid) | $ | 0 |  |  | $ | 0 |  |  | $ | 0 |  |  | $ | 0 |  |  | $ | 1,167 |  |  | $ | 171 |  |  | $ | 1,096 |  |  | $ | 2,434 |  | \nAllocation of undistributed earnings | 11,213 |  |  | 1,656 |  |  | 10,793 |  |  | 23,662 |  |  | 15,367 |  |  | 2,264 |  |  | 14,475 |  |  | 32,106 |  | \nNet income | $ | 11,213 |  |  | $ | 1,656 |  |  | $ | 10,793 |  |  | $ | 23,662 |  |  | $ | 16,534 |  |  | $ | 2,435 |  |  | $ | 15,571 |  |  | $ | 34,540 |  | \nDenominator |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | \nNumber of shares used in per share computation | 5,883 |  |  | 869 |  |  | 5,663 |  |  | 12,415 |  |  | 5,831 |  |  | 859 |  |  | 5,493 |  |  | 12,183 |  | \nBasic net income per share | $ | 1.91 |  |  | $ | 1.91 |  |  | $ | 1.91 |  |  | $ | 1.91 |  |  | $ | 2.84 |  |  | $ | 2.83 |  |  | $ | 2.83 |  |  | $ | 2.84 |  | \nDiluted net income per share: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | \nNumerator |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | \nAllocation of total earnings for basic computation | $ | 11,213 |  |  | $ | 1,656 |  |  | $ | 10,793 |  |  | $ | 23,662 |  |  | $ | 16,534 |  |  | $ | 2,435 |  |  | $ | 15,571 |  |  | $ | 34,540 |  | \nReallocation of total earnings as a result of conversion of Class B to Class A shares | 1,656 |  |  | 0 |  |  | 0 |  |  | _ (1) |  | 2,435 |  |  | 0 |  |  | 0 |  |  | _ (1) | \nReallocation of undistributed earnings | ( 115 ) |  |  | ( 15 ) |  |  | 115 |  |  | _ (1) |  | ( 156 ) |  |  | ( 20 ) |  |  | 156 |  |  | _ (1) | \nNet income | $ | 12,754 |  |  | $ | 1,641 |  |  | $ | 10,908 |  |  | $ | 23,662 |  |  | $ | 18,813 |  |  | $ | 2,415 |  |  | $ | 15,727 |  |  | 34,540 |  | \nDe…",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      },
+      {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204424000053/goog-20240331.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 108,
+            "text": " | Three Months Ended March 31,\n | 2023 |  | 2024\n | Class A |  | Class B |  | Class C |  | Class A |  | Class B |  | Class C\nBasic net income per share: |  |  |  |  |  |  |  |  |  |  | \nNumerator |  |  |  |  |  |  |  |  |  |  | \nAllocation of undistributed earnings | $ | 7,006 |  |  | $ | 1,040 |  |  | $ | 7,005 |  |  | $ | 11,213 |  |  | $ | 1,656 |  |  | $ | 10,793 | \nDenominator |  |  |  |  |  |  |  |  |  |  | \nNumber of shares used in per share computation | 5,949 |  |  | 883 |  |  | 5,949 |  |  | 5,883 |  |  | 869 |  |  | 5,663 | \nBasic net income per share | $ | 1.18 |  |  | $ | 1.18 |  |  | $ | 1.18 |  |  | $ | 1.91 |  |  | $ | 1.91 |  |  | $ | 1.91 | \nDiluted net income per share: |  |  |  |  |  |  |  |  |  |  | \nNumerator |  |  |  |  |  |  |  |  |  |  | \nAllocation of undistributed earnings for basic computation | $ | 7,006 |  |  | $ | 1,040 |  |  | $ | 7,005 |  |  | $ | 11,213 |  |  | $ | 1,656 |  |  | $ | 10,793 | \nReallocation of undistributed earnings as a result of conversion of Class B to Class A shares | 1,040 |  |  | 0 |  |  | 0 |  |  | 1,656 |  |  | 0 |  |  | 0 | \nReallocation of undistributed earnings | ( 27 ) |  |  | ( 4 ) |  |  | 27 |  |  | ( 115 ) |  |  | ( 15 ) |  |  | 115 | \nAllocation of undistributed earnings | $ | 8,019 |  |  | $ | 1,036 |  |  | $ | 7,032 |  |  | $ | 12,754 |  |  | $ | 1,641 |  |  | $ | 10,908 | \nDenominator |  |  |  |  |  |  |  |  |  |  | \nNumber of shares used in basic computation | 5,949 |  |  | 883 |  |  | 5,949 |  |  | 5,883 |  |  | 869 |  |  | 5,663 | \nWeighted-average effect of dilutive securities |  |  |  |  |  |  |  |  |  |  | \nAdd: |  |  |  |  |  |  |  |  |  |  | \nConversion of Class B to Class A shares outstanding | 883 |  |  | 0 |  |  | 0 |  |  | 869 |  |  | 0 |  |  | 0 | \nRestricted stock units and other contingently issuable shares | 0 |  |  | 0 |  |  | 42 |  |  | 0 |  |  | 0 |  |  | 112 | \nNumber of shares used in per share computation | 6,832 |  |  | 883 |  |  | 5,991 |  |  | 6,752 |  |  | 869 |  |  | 5,77…",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 109,
+            "text": "For the periods presented above, the net income per share amounts are the same for Class A, Class B, and Class C stock because the holders of each class are entitled to equal per share dividends or distributions in liquidation in accordance with the Amended and Restated Certificate of Incorporation of Alphabet Inc.\n\nNote 11. Compensation Plans\n\nStock-Based Compensation\n\nFor the three months ended March 31, 2023 and 2024, total stock based compensation (SBC) expense was $ 5.3 billion, including amounts associated with awards we expect to settle in Alphabet stock of $ 5.1 billion, for both periods.\n\n26\n\n26\n\n26\n\nStock-Based Award Activities\n\nThe following table summarizes the activities for unvested Alphabet restricted stock units (RSUs) for the three months ended March 31, 2024 (in millions, except per share amounts): Number of Shares Weighted- Average Grant-Date Fair Value Unvested as of December 31, 2023 338 $ 104.93 Granted 159 $ 133.43 Vested ( 49 ) $ 107.61 Forfeited/canceled ( 8 ) $ 106.64 Unvested as of March 31, 2024 440 $ 114.91",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      }
+    ],
+    "periods": [
+      {
+        "$type": "PeriodDescriptor",
+        "label": "FY 2024",
+        "period_end": "2024-12-31",
+        "period_type": "annual",
+        "is_annual": true
+      },
+      {
+        "$type": "PeriodDescriptor",
+        "label": "Q1 2025",
+        "period_end": "2025-03-31",
+        "period_type": "ytd_current",
+        "is_annual": false
+      },
+      {
+        "$type": "PeriodDescriptor",
+        "label": "Q1 2024",
+        "period_end": "2024-03-31",
+        "period_type": "ytd_prior",
+        "is_annual": false
+      }
+    ]
+  },
+  "output": [
+    {
+      "pages": {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204425000014/goog-20241231.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 88,
+            "text": "(1) See \"Use of Non-GAAP Constant Currency Information\" below for details relating to our use of constant currency information.\n\n(2) For additional information on the calculation of diluted EPS, see Note 12 of the Notes to Consolidated Financial Statements included in Item 8 of this Annual Report on Form 10-K.\n\n• Revenues were $350.0 billion, an increase of 14% year over year, primarily driven by an increase in Google Services revenues of $32.4 billion, or 12%, and an increase in Google Cloud revenues of $10.1 billion, or 31%.\n\n• Total constant currency revenues, which exclude the effect of hedging, increased 15% year over year.\n\n• Cost of revenues wa s $146.3 billion, an increase of 10% year over year, primarily driven by increases in content acquisition costs, TAC, and depreciation expense.\n\n• Operating expenses were $91.3 billion, an increase of 2% year over year, primarily driven by increases in de preciation expense, employee compensation expenses, and third-party services fees. These increases were partially offset by reductions in charges related to legal and other matters and charges related to our office space optimization efforts. The overall increase in employee compensation expenses was partially offset by a reduction in employee severance and related charges.\n\nOther Information:\n\n• Dividend payments to stockholders of Class A, Class B, and Class C shares, which were first paid in June 2024, were $3.5 billion, $519 million, and $3.3 billion, respectively, totaling $7.4 billion for the year ended December 31, 2024. For additional information, see Note 11 of the Notes to Consolidated Financial Statements included in Item 8 of this Annual Report on Form 10-K.\n\n• Repurchases of Class A and Class C shares were $11.9 billion and $50.2 billion, respectively, totaling $62.0 billion for the year ended December 31, 2024. For additional information, see Note 11 of the Notes to Consolidated Financial Statements included in Item 8 of this Annual Report on Form 10-K.\n…",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 284,
+            "text": "Note 11. Stockholders' Equity\n\nClass A and Class B Common Stock and Class C Capital Stock\n\nOur Board of Directors has authorized three classes of stock, Class A and Class B common stock, and Class C capital stock. The rights of the holders of each class of our common and capital stock are identical, except with respect to voting. Each share of Class A common stock is entitled to one vote per share. Each share of Class B common stock is entitled to 10 votes per share. Class C capital stock has no voting rights, except as required by applicable law. Shares of Class B common stock may be converted at any time at the option of the stockholder and automatically convert upon sale or transfer to Class A common stock.\n\nShare Repurchases\n\nIn the years ended December 31, 2022, 2023, and 2024 , we continued to repurchase both Class A and Class C shares in a manner deemed in the best interest of the company and its stockholders, taking into account the economic cost and prevailing market conditions, including the relative trading prices and volumes of the Class A and Class C shares. During the years ended December 31, 2022, 2023, and 2024, we repurchased $ 59.3 billion, $ 62.2 billion, and $ 62.0 billion, respectively, of Alphabet's Class A and Class C shares.\n\nIn April 2024, the Board of Directors of Alphabet authorized the company to repurchase up to an additional $ 70.0 billion of its Class A and Class C shares. As of December 31, 2024, $ 44.7 billion remained available for Class A and Class C share repurchases.\n\nThe following table presents Class A and Class C shares repurchased and subsequently retired (in millions):\n\nYear Ended December 31, 2023 Year Ended December 31, 2024 Shares Amount Shares Amount Class A share repurchases 78 $ 9,316 73 $ 11,855 Class C share repurchases 450 52,868 306 50,192 Total share repurchases (1) 528 $ 62,184 379 $ 62,047 (1) Shares repurchased include unsettled repurchases.",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 292,
+            "text": "Year Ended December 31, 2023 Class A Class B Class C Consolidated Basic net income per share: Numerator Allocation of distributed earnings (cash dividends paid) $ 0 $ 0 $ 0 $ 0 Allocation of undistributed earnings 34,601 5,124 34,070 73,795 Net income $ 34,601 $ 5,124 $ 34,070 $ 73,795 Denominator Number of shares used in per share computation 5,922 877 5,831 12,630 Basic net income per share $ 5.84 $ 5.84 $ 5.84 $ 5.84 Diluted net income per share: Numerator Allocation of total earnings for basic computation $ 34,601 $ 5,124 $ 34,070 $ 73,795 Reallocation of total earnings as a result of conversion of Class B to Class A shares 5,124 0 0 _ (1) Reallocation of undistributed earnings ( 287 ) ( 37 ) 287 _ (1) Net income $ 39,438 $ 5,087 $ 34,357 $ 73,795 Denominator Number of shares used in basic computation 5,922 877 5,831 12,630 Weighted-average effect of dilutive securities Add: Conversion of Class B to Class A shares outstanding 877 0 0 _ (1) Restricted stock units and other contingently issuable shares 0 0 92 92 Number of shares used in per share computation 6,799 877 5,923 12,722 Diluted net income per share $ 5.80 $ 5.80 $ 5.80 $ 5.80 (1) Not applicable for consolidated net income per share.",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 294,
+            "text": "Year Ended December 31, 2024 Class A Class B Class C Consolidated Basic net income per share: Numerator Allocation of distributed earnings (cash dividends paid) $ 3,509 $ 519 $ 3,335 $ 7,363 Allocation of undistributed earnings 44,085 6,520 42,150 92,755 Net income $ 47,594 $ 7,039 $ 45,485 $ 100,118 Denominator Number of shares used in per share computation 5,855 866 5,598 12,319 Basic net income per share $ 8.13 $ 8.13 $ 8.13 $ 8.13 Diluted net income per share: Numerator Allocation of total earnings for basic computation $ 47,594 $ 7,039 $ 45,485 $ 100,118 Reallocation of total earnings as a result of conversion of Class B to Class A shares 7,039 0 0 _ (1) Reallocation of undistributed earnings ( 520 ) ( 67 ) 520 _ (1) Net income $ 54,113 $ 6,972 $ 46,005 $ 100,118 Denominator Number of shares used in basic computation 5,855 866 5,598 12,319 Weighted-average effect of dilutive securities Add: Conversion of Class B to Class A shares outstanding 866 0 0 _ (1) Restricted stock units and other contingently issuable shares 0 0 128 128 Number of shares used in per share computation 6,721 866 5,726 12,447 Diluted net income per share $ 8.05 $ 8.05 $ 8.03 $ 8.04",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      },
+      "period_end": "2024-12-31"
+    },
+    {
+      "pages": {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204425000043/goog-20250331.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 120,
+            "text": " | Three Months Ended March 31,\n | 2024 |  | 2025 | \n | Class A |  | Class B |  | Class C |  | Consolidated |  | Class A |  | Class B |  | Class C |  | Consolidated | \nBasic net income per share: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | \nNumerator |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | \nAllocation of distributed earnings (cash dividends paid) | $ | 0 |  |  | $ | 0 |  |  | $ | 0 |  |  | $ | 0 |  |  | $ | 1,167 |  |  | $ | 171 |  |  | $ | 1,096 |  |  | $ | 2,434 |  | \nAllocation of undistributed earnings | 11,213 |  |  | 1,656 |  |  | 10,793 |  |  | 23,662 |  |  | 15,367 |  |  | 2,264 |  |  | 14,475 |  |  | 32,106 |  | \nNet income | $ | 11,213 |  |  | $ | 1,656 |  |  | $ | 10,793 |  |  | $ | 23,662 |  |  | $ | 16,534 |  |  | $ | 2,435 |  |  | $ | 15,571 |  |  | $ | 34,540 |  | \nDenominator |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | \nNumber of shares used in per share computation | 5,883 |  |  | 869 |  |  | 5,663 |  |  | 12,415 |  |  | 5,831 |  |  | 859 |  |  | 5,493 |  |  | 12,183 |  | \nBasic net income per share | $ | 1.91 |  |  | $ | 1.91 |  |  | $ | 1.91 |  |  | $ | 1.91 |  |  | $ | 2.84 |  |  | $ | 2.83 |  |  | $ | 2.83 |  |  | $ | 2.84 |  | \nDiluted net income per share: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | \nNumerator |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | \nAllocation of total earnings for basic computation | $ | 11,213 |  |  | $ | 1,656 |  |  | $ | 10,793 |  |  | $ | 23,662 |  |  | $ | 16,534 |  |  | $ | 2,435 |  |  | $ | 15,571 |  |  | $ | 34,540 |  | \nReallocation of total earnings as a result of conversion of Class B to Class A shares | 1,656 |  |  | 0 |  |  | 0 |  |  | _ (1) |  | 2,435 |  |  | 0 |  |  | 0 |  |  | _ (1) | \nReallocation of undistributed earnings | ( 115 ) |  |  | ( 15 ) |  |  | 115 |  |  | _ (1) |  | ( 156 ) |  |  | ( 20 ) |  |  | 156 |  |  | _ (1) | \nNet income | $ | 12,754 |  |  | $ | 1,641 |  |  | $ | 10,908 |  |  | $ | 23,662 |  |  | $ | 18,813 |  |  | $ | 2,415 |  |  | $ | 15,727 |  |  | 34,540 |  | \nDe…",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      },
+      "period_end": "2025-03-31"
+    },
+    {
+      "pages": {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204424000053/goog-20240331.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 108,
+            "text": " | Three Months Ended March 31,\n | 2023 |  | 2024\n | Class A |  | Class B |  | Class C |  | Class A |  | Class B |  | Class C\nBasic net income per share: |  |  |  |  |  |  |  |  |  |  | \nNumerator |  |  |  |  |  |  |  |  |  |  | \nAllocation of undistributed earnings | $ | 7,006 |  |  | $ | 1,040 |  |  | $ | 7,005 |  |  | $ | 11,213 |  |  | $ | 1,656 |  |  | $ | 10,793 | \nDenominator |  |  |  |  |  |  |  |  |  |  | \nNumber of shares used in per share computation | 5,949 |  |  | 883 |  |  | 5,949 |  |  | 5,883 |  |  | 869 |  |  | 5,663 | \nBasic net income per share | $ | 1.18 |  |  | $ | 1.18 |  |  | $ | 1.18 |  |  | $ | 1.91 |  |  | $ | 1.91 |  |  | $ | 1.91 | \nDiluted net income per share: |  |  |  |  |  |  |  |  |  |  | \nNumerator |  |  |  |  |  |  |  |  |  |  | \nAllocation of undistributed earnings for basic computation | $ | 7,006 |  |  | $ | 1,040 |  |  | $ | 7,005 |  |  | $ | 11,213 |  |  | $ | 1,656 |  |  | $ | 10,793 | \nReallocation of undistributed earnings as a result of conversion of Class B to Class A shares | 1,040 |  |  | 0 |  |  | 0 |  |  | 1,656 |  |  | 0 |  |  | 0 | \nReallocation of undistributed earnings | ( 27 ) |  |  | ( 4 ) |  |  | 27 |  |  | ( 115 ) |  |  | ( 15 ) |  |  | 115 | \nAllocation of undistributed earnings | $ | 8,019 |  |  | $ | 1,036 |  |  | $ | 7,032 |  |  | $ | 12,754 |  |  | $ | 1,641 |  |  | $ | 10,908 | \nDenominator |  |  |  |  |  |  |  |  |  |  | \nNumber of shares used in basic computation | 5,949 |  |  | 883 |  |  | 5,949 |  |  | 5,883 |  |  | 869 |  |  | 5,663 | \nWeighted-average effect of dilutive securities |  |  |  |  |  |  |  |  |  |  | \nAdd: |  |  |  |  |  |  |  |  |  |  | \nConversion of Class B to Class A shares outstanding | 883 |  |  | 0 |  |  | 0 |  |  | 869 |  |  | 0 |  |  | 0 | \nRestricted stock units and other contingently issuable shares | 0 |  |  | 0 |  |  | 42 |  |  | 0 |  |  | 0 |  |  | 112 | \nNumber of shares used in per share computation | 6,832 |  |  | 883 |  |  | 5,991 |  |  | 6,752 |  |  | 869 |  |  | 5,77…",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 109,
+            "text": "For the periods presented above, the net income per share amounts are the same for Class A, Class B, and Class C stock because the holders of each class are entitled to equal per share dividends or distributions in liquidation in accordance with the Amended and Restated Certificate of Incorporation of Alphabet Inc.\n\nNote 11. Compensation Plans\n\nStock-Based Compensation\n\nFor the three months ended March 31, 2023 and 2024, total stock based compensation (SBC) expense was $ 5.3 billion, including amounts associated with awards we expect to settle in Alphabet stock of $ 5.1 billion, for both periods.\n\n26\n\n26\n\n26\n\nStock-Based Award Activities\n\nThe following table summarizes the activities for unvested Alphabet restricted stock units (RSUs) for the three months ended March 31, 2024 (in millions, except per share amounts): Number of Shares Weighted- Average Grant-Date Fair Value Unvested as of December 31, 2023 338 $ 104.93 Granted 159 $ 133.43 Vested ( 49 ) $ 107.61 Forfeited/canceled ( 8 ) $ 106.64 Unvested as of March 31, 2024 440 $ 114.91",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      },
+      "period_end": "2024-03-31"
+    }
+  ],
+  "error": null
+}

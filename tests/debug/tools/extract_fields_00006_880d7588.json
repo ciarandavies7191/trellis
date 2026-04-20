@@ -1,0 +1,34 @@
+{
+  "tool": "extract_fields",
+  "invocation": 6,
+  "timestamp": "2026-04-16T16:45:38.920096",
+  "inputs": {
+    "document": "<FakeDoc: <test_extract_fields_tool.TestExtractFieldsDocumentHandling.test_document_with_pages_list_of_strings.<locals>.FakeDoc ob>",
+    "schema": {
+      "$type": "SchemaHandle",
+      "fields": [
+        {
+          "$type": "FieldDefinition",
+          "name": "field_a",
+          "type_hint": null,
+          "required": true,
+          "description": null,
+          "computed": false,
+          "formula": null,
+          "sign_convention": null,
+          "section": null,
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": null
+        }
+      ],
+      "source": "test",
+      "raw": null,
+      "task_id": null
+    }
+  },
+  "output": {
+    "field_a": "__not_found__"
+  },
+  "error": null
+}

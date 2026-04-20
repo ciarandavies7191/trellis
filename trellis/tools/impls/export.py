@@ -165,15 +165,29 @@ class ExportTool(BaseTool):
 
     @staticmethod
     def _coerce_json(value: Any) -> Any:
-        """If *value* is a JSON string (possibly fenced), parse and return it; otherwise return as-is."""
+        """If *value* is a JSON string (possibly fenced or followed by prose), parse and return it.
+
+        Handles LLM responses that append notes after the closing code fence,
+        e.g. ```json\\n{...}\\n```\\n\\n**Notes:** ...
+        Scans for the first {...} or [...] span rather than relying on fence stripping.
+        """
         if not isinstance(value, str):
             return value
+        # Fast path: clean JSON string
         stripped = re.sub(r"^```[a-z]*\s*", "", value.strip(), flags=re.I)
         stripped = re.sub(r"\s*```$", "", stripped)
         try:
             return json.loads(stripped)
         except Exception:
-            return value
+            pass
+        # Scan for first JSON object or array anywhere in the string
+        m = re.search(r"(\{.*\}|\[.*\])", value, flags=re.S)
+        if m:
+            try:
+                return json.loads(m.group(0))
+            except Exception:
+                pass
+        return value
 
     @staticmethod
     def _write_markdown(

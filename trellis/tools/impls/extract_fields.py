@@ -50,6 +50,7 @@ class ExtractFieldsTool(BaseTool):
         rules: Any = None,
         selector: str | None = None,
         period_end: str | None = None,
+        section_filter: str | None = None,
         **kwargs: Any,
     ) -> Dict[str, Any]:
         """
@@ -65,11 +66,16 @@ class ExtractFieldsTool(BaseTool):
                         a spreading manual). Appended to the extraction prompt.
             selector:   Optional natural language hint to scope extraction to a
                         region of the document before field extraction.
-            period_end: Optional ISO date string (YYYY-MM-DD). When provided the
-                        extraction prompt instructs the model to extract values for
-                        this specific period only, ignoring other periods present
-                        in the same document (e.g. prior-year comparatives in a
-                        10-K or 10-Q).
+            period_end:     Optional ISO date string (YYYY-MM-DD). When provided the
+                            extraction prompt instructs the model to extract values for
+                            this specific period only, ignoring other periods present
+                            in the same document (e.g. prior-year comparatives in a
+                            10-K or 10-Q).
+            section_filter: Optional section name (e.g. "face", "segments",
+                            "other_income", "per_share"). When provided, only fields
+                            belonging to that section are extracted. Used when pages
+                            have already been pre-selected per section, so that each
+                            extraction call is tightly scoped.
 
         Returns:
             Dict mapping each field name in *schema* to its extracted value or
@@ -84,6 +90,24 @@ class ExtractFieldsTool(BaseTool):
         if not schema.fields:
             logger.warning("extract_fields: schema has no fields — returning empty dict")
             return {}
+
+        # Narrow schema to requested section when section_filter is provided.
+        # Creates a lightweight SchemaHandle view; does not mutate the original.
+        if section_filter:
+            section_fields = schema.fields_for_section(section_filter)
+            if not section_fields:
+                logger.warning(
+                    "extract_fields: section_filter=%r matched no fields in schema — "
+                    "returning empty dict",
+                    section_filter,
+                )
+                return {}
+            schema = SchemaHandle(
+                fields=section_fields,
+                source=schema.source,
+                raw=schema.raw,
+                task_id=schema.task_id,
+            )
 
         if self._stub_mode:
             return {f.name: FIELD_NOT_FOUND for f in schema.fields}
@@ -215,6 +239,10 @@ class ExtractFieldsTool(BaseTool):
             "10-Q shows current quarter and prior-year quarter). Extract ONLY the column for "
             f"the period ending {period_end}. Do not mix values from different periods. "
             "If this exact period is not present in the document, use the sentinel for all fields.\n"
+            "\nCalculated rows — do NOT extract: gross_profit, gross_margin_pct, "
+            "operating_margin_pct, net_margin_pct, effective_tax_rate, and any field "
+            "whose name ends in '_pct', '_margin', '_growth', or '_rate'. "
+            f"Set these fields to \"{FIELD_NOT_FOUND}\" — they will be computed deterministically.\n"
             if period_end
             else ""
         )
@@ -225,7 +253,36 @@ class ExtractFieldsTool(BaseTool):
             "Return ONLY a valid JSON object where each key is a field name and each value is "
             "the extracted value as a string (numbers as strings, e.g. \"350018\"). "
             f'Use the sentinel "{FIELD_NOT_FOUND}" for any field you cannot locate. '
-            "Do not include commentary, markdown fencing, or any text outside the JSON object."
+            "Do not include commentary, markdown fencing, or any text outside the JSON object.\n\n"
+            "EXTRACTION RULES — follow exactly:\n"
+            "RULE 1 — SEGMENT REVENUE vs SEGMENT OI: "
+            "Fields labeled 'Segment Revenue' must be extracted from the Segment Information note "
+            "(revenue column/table) or MD&A revenue disaggregation table. The Segment Information "
+            "note contains BOTH a revenue table and an operating income table in separate columns "
+            "or sections — always use the revenue column for Segment Revenue fields. Segment "
+            "revenue values are typically 2–10x larger than segment operating income. Never "
+            "substitute operating income values for revenue values.\n"
+            "RULE 2 — SEGMENT OI: Fields labeled 'Segment OI' must be extracted ONLY from "
+            "the Segment Information footnote, operating income by segment column/table. Do NOT "
+            "use revenue figures here.\n"
+            "RULE 3 — CALCULATED FIELDS: The following fields are computed programmatically "
+            f"after extraction — ALWAYS return {FIELD_NOT_FOUND} for them, regardless of "
+            "what appears in the document: any field whose label contains 'Gross Profit', "
+            "'Gross Margin', 'Operating Margin', 'Net Margin', 'Effective Tax Rate', "
+            "'YoY Growth', '(%)', or ends in a percentage unit. Do not read a calculated "
+            "subtotal from the document and place it in these fields.\n"
+            "RULE 4 — INVESTMENT GAINS ALIASES: The field 'Gains (Losses) on Investments, Net' "
+            "may appear in the 'Other income (expense), net' footnote under alternative labels: "
+            "'Net gain on equity securities', 'Gain (loss) on equity securities, net', "
+            "'Net unrealized gain on investments', or 'Net gain (loss) on financial instruments'. "
+            "Search the Other Income footnote for any of these labels and use the matching value.\n"
+            "RULE 5 — INTEREST EXPENSE SIGN (manual v2 §5.2): The field 'Interest Expense' must "
+            "be entered as a POSITIVE number (the absolute value / magnitude of the expense). The "
+            "filing or OI&E note may present it as a negative figure — strip the sign and enter "
+            "the absolute value. Do not enter a negative number for Interest Expense.\n"
+            "RULE 6 — PERIOD ACCURACY: When a filing shows multiple periods side by side, "
+            "extract values from the correct period column only. Cross-check your selection "
+            "against the column header date before extracting.\n"
         )
 
         user = (
@@ -249,6 +306,7 @@ class ExtractFieldsTool(BaseTool):
                 ],
                 max_tokens=4096,
                 response_format={"type": "json_object"},
+                num_retries=6,
             )
             content = (resp.choices[0].message.content or "").strip()
         except Exception as exc:
@@ -302,6 +360,16 @@ class ExtractFieldsTool(BaseTool):
                 description=(
                     "Optional ISO date (YYYY-MM-DD). When set, extraction is scoped to the "
                     "column for this specific period; prior-year comparatives are ignored."
+                ),
+                required=False,
+                default=None,
+            ),
+            "section_filter": ToolInput(
+                name="section_filter",
+                description=(
+                    "Optional section name ('face', 'segments', 'other_income', 'per_share'). "
+                    "When set, only fields with a matching section label are extracted. "
+                    "Use when pages have been pre-selected per section to narrow scope."
                 ),
                 required=False,
                 default=None,

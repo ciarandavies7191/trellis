@@ -7,7 +7,7 @@ pipeline:
     Resolve the exchange ticker for Google and determine the correct set of
     fiscal periods to pull based on the as_of_period of 2025-03-31.
   inputs:
-    company: Google
+    company: "{{pipeline.inputs.company}}"
     as_of_period: "{{pipeline.inputs.as_of_period}}"
 
   tasks:

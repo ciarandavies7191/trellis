@@ -112,6 +112,7 @@ def _select_pages_via_llm(prompt: str, handle: DocumentHandle | PageList, model:
                 {"role": "user", "content": user},
             ],
             max_tokens=256,
+            num_retries=6,
         )
         content = resp.choices[0].message.content or ""
     except Exception as exc:  # noqa: BLE001
@@ -153,6 +154,7 @@ def _select_handle(document: DocumentHandle | PageList, prompt: str | None, page
     # No prompt, no explicit pages, or empty LLM result: passthrough (all pages)
     return PageList(parent_source=document.source, parent_format=document.format, pages=list(document.pages), selector_prompt="[passthrough]")
 
+@export_io(path="debug/tools")
 class SelectTool(BaseTool):
     """Retrieval tool: filter a document to relevant pages by NL prompt or explicit page numbers.
 

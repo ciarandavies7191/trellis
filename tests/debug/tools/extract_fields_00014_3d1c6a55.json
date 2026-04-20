@@ -1,0 +1,105 @@
+{
+  "tool": "extract_fields",
+  "invocation": 14,
+  "timestamp": "2026-04-16T16:45:38.929096",
+  "inputs": {
+    "document": "text",
+    "schema": {
+      "$type": "SchemaHandle",
+      "fields": [
+        {
+          "$type": "FieldDefinition",
+          "name": "Total Revenues",
+          "type_hint": null,
+          "required": true,
+          "description": null,
+          "computed": false,
+          "formula": null,
+          "sign_convention": null,
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": null
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Operating Income",
+          "type_hint": null,
+          "required": true,
+          "description": null,
+          "computed": false,
+          "formula": null,
+          "sign_convention": null,
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": null
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Segment Revenue — [1]",
+          "type_hint": null,
+          "required": true,
+          "description": null,
+          "computed": false,
+          "formula": null,
+          "sign_convention": null,
+          "section": "segments",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": null
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Segment Revenue — [2]",
+          "type_hint": null,
+          "required": true,
+          "description": null,
+          "computed": false,
+          "formula": null,
+          "sign_convention": null,
+          "section": "segments",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": null
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Interest Income",
+          "type_hint": null,
+          "required": true,
+          "description": null,
+          "computed": false,
+          "formula": null,
+          "sign_convention": null,
+          "section": "other_income",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": null
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "EPS — Basic ($)",
+          "type_hint": null,
+          "required": true,
+          "description": null,
+          "computed": false,
+          "formula": null,
+          "sign_convention": null,
+          "section": "per_share",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": null
+        }
+      ],
+      "source": "test",
+      "raw": null,
+      "task_id": null
+    },
+    "section_filter": "per_share"
+  },
+  "output": {
+    "EPS — Basic ($)": "__not_found__"
+  },
+  "error": null
+}

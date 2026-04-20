@@ -1,0 +1,37 @@
+{
+  "tool": "extract_fields",
+  "invocation": 8,
+  "timestamp": "2026-04-16T16:45:38.922096",
+  "inputs": {
+    "document": [
+      "line 1",
+      "line 2"
+    ],
+    "schema": {
+      "$type": "SchemaHandle",
+      "fields": [
+        {
+          "$type": "FieldDefinition",
+          "name": "x",
+          "type_hint": null,
+          "required": true,
+          "description": null,
+          "computed": false,
+          "formula": null,
+          "sign_convention": null,
+          "section": null,
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": null
+        }
+      ],
+      "source": "test",
+      "raw": null,
+      "task_id": null
+    }
+  },
+  "output": {
+    "x": "__not_found__"
+  },
+  "error": null
+}

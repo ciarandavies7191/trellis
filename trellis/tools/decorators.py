@@ -28,12 +28,16 @@ import os
 import pathlib
 import threading
 import uuid
+from contextvars import ContextVar
 from enum import Enum
 from typing import Any, Callable, Type, TypeVar
 
 logger = logging.getLogger(__name__)
 
 T = TypeVar("T")
+
+# Set by the DAG executor before each tool invocation so export_io can use it.
+current_task_id: ContextVar[str | None] = ContextVar("current_task_id", default=None)
 
 
 # ---------------------------------------------------------------------------
@@ -158,11 +162,16 @@ def export_io(
                 invocation = _counter[0]
 
             tool_name = getattr(self, "name", cls.__name__)
+            task_id = current_task_id.get()
             suffix = uuid.uuid4().hex[:8]
-            filename = f"{tool_name}_{invocation:05d}_{suffix}.json"
+            if task_id:
+                filename = f"{task_id}_{invocation:05d}_{suffix}.json"
+            else:
+                filename = f"{tool_name}_{invocation:05d}_{suffix}.json"
 
             record: dict[str, Any] = {
                 "tool": tool_name,
+                "task_id": task_id,
                 "invocation": invocation,
                 "timestamp": datetime.datetime.now().isoformat(),
                 "inputs": _serialize(kwargs, truncate_text=truncate_text),

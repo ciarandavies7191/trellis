@@ -35,20 +35,43 @@ class FieldDefinition:
     A single field in a schema.
 
     Attributes:
-        name:        Field name. Must be unique within the schema.
-        type_hint:   Optional string hint for the expected value type
-                     (e.g. "number", "string", "date"). Used for validation
-                     and extraction guidance. Not enforced as a hard type constraint.
-        required:    Whether the field must be present in conformant output.
-                     Default True.
-        description: Optional human-readable description of the field's
-                     semantics, passed to extract_fields as context.
+        name:             Field name. Must be unique within the schema.
+        type_hint:        Optional string hint for the expected value type
+                          (e.g. "number", "string", "date"). Used for validation
+                          and extraction guidance. Not enforced as a hard type
+                          constraint.
+        required:         Whether the field must be present in conformant output.
+                          Default True.
+        description:      Optional human-readable description of the field's
+                          semantics, passed to extract_fields as context.
+        computed:         True if this field is derived by a compute step (e.g.
+                          Gross Margin, Net Margin). Computed fields must NEVER
+                          be extraction targets — they are owned by compute_derived.
+        formula:          Optional expression describing the computation
+                          (e.g. "gross_profit / total_revenue * 100"). Informational.
+        sign_convention:  Optional sign rule, e.g. "negative" for Interest Expense.
+                          Injected into extraction prompts as a constraint.
+        section:          Logical section of the income statement this field belongs
+                          to: "face", "segments", "other_income", or "per_share".
+                          Used by filter_schema_by_section().
+        cross_check:      Optional arithmetic constraint string. Used by
+                          validate_cross_checks() to verify extracted values.
+        fallback_rule:    Optional rule applied when the company's presentation
+                          differs from the expected label (e.g. single SG&A line).
+        manual_ref:       Reference to the spreading manual section, e.g. "§3.1".
     """
 
     name: str
     type_hint: str | None = None
     required: bool = True
     description: str | None = None
+    computed: bool = False
+    formula: str | None = None
+    sign_convention: str | None = None
+    section: str | None = None
+    cross_check: str | None = None
+    fallback_rule: str | None = None
+    manual_ref: str | None = None
 
 
 @dataclass
@@ -86,19 +109,38 @@ class SchemaHandle:
         """Return a list of names for fields marked required=True."""
         return [f.name for f in self.fields if f.required]
 
+    def computed_field_names(self) -> list[str]:
+        """Return names of fields that are computed, not extracted."""
+        return [f.name for f in self.fields if f.computed]
+
+    def extractable_fields(self) -> list[FieldDefinition]:
+        """Return fields that should be extracted (computed=False)."""
+        return [f for f in self.fields if not f.computed]
+
+    def fields_for_section(self, section: str) -> list[FieldDefinition]:
+        """Return fields belonging to a named section (face/segments/other_income/per_share)."""
+        return [f for f in self.fields if f.section == section]
+
     def to_extraction_context(self) -> str:
         """
-        Render the schema as a compact string suitable for injection into
-        an llm_job or extract_fields prompt. Format: one field per line,
-        name | type_hint | description.
+        Render extractable (non-computed) fields as a compact string suitable
+        for injection into an llm_job or extract_fields prompt.
+        Format: one field per line — name | type_hint | description | sign | fallback.
+        Computed fields are excluded; they must never be extraction targets.
         """
         lines: list[str] = []
         for f in self.fields:
+            if f.computed:
+                continue
             parts: list[str] = [f.name]
             if f.type_hint:
                 parts.append(f.type_hint)
             if f.description:
                 parts.append(f.description)
+            if f.sign_convention:
+                parts.append(f"sign: {f.sign_convention}")
+            if f.fallback_rule:
+                parts.append(f"fallback: {f.fallback_rule}")
             lines.append(" | ".join(parts))
         return "\n".join(lines)
 

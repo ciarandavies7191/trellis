@@ -1,0 +1,660 @@
+{
+  "tool": "compute",
+  "task_id": "zip_face",
+  "invocation": 3,
+  "timestamp": "2026-04-20T18:19:46.063548",
+  "inputs": {
+    "function": "zip_pages_with_periods",
+    "pages_list": [
+      {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204425000014/goog-20241231.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 162,
+            "text": "Alphabet Inc.\n\nCONSOLIDATED STATEMENTS OF INCOME\n\n(in millions, except per share amounts) Year Ended December 31, 2022 2023 2024 Revenues $ 282,836 $ 307,394 $ 350,018 Costs and expenses: Cost of revenues 126,203 133,332 146,306 Research and development 39,500 45,427 49,326 Sales and marketing 26,567 27,917 27,808 General and administrative 15,724 16,425 14,188 Total costs and expenses 207,994 223,101 237,628 Income from operations 74,842 84,293 112,390 Other income (expense), net ( 3,514 ) 1,424 7,425 Income before income taxes 71,328 85,717 119,815 Provision for income taxes 11,356 11,922 19,697 Net income $ 59,972 $ 73,795 $ 100,118 Basic net income per share (Note 12) $ 4.59 $ 5.84 $ 8.13 Diluted net income per share (Note 12) $ 4.56 $ 5.80 $ 8.04",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 163,
+            "text": " | Year Ended December 31,\n | 2022 |  | 2023 |  | 2024\nRevenues | $ | 282,836 |  |  | $ | 307,394 |  |  | $ | 350,018 | \nCosts and expenses: |  |  |  |  | \nCost of revenues | 126,203 |  |  | 133,332 |  |  | 146,306 | \nResearch and development | 39,500 |  |  | 45,427 |  |  | 49,326 | \nSales and marketing | 26,567 |  |  | 27,917 |  |  | 27,808 | \nGeneral and administrative | 15,724 |  |  | 16,425 |  |  | 14,188 | \nTotal costs and expenses | 207,994 |  |  | 223,101 |  |  | 237,628 | \nIncome from operations | 74,842 |  |  | 84,293 |  |  | 112,390 | \nOther income (expense), net | ( 3,514 ) |  |  | 1,424 |  |  | 7,425 | \nIncome before income taxes | 71,328 |  |  | 85,717 |  |  | 119,815 | \nProvision for income taxes | 11,356 |  |  | 11,922 |  |  | 19,697 | \nNet income | $ | 59,972 |  |  | $ | 73,795 |  |  | $ | 100,118 | \nBasic net income per share (Note 12) | $ | 4.59 |  |  | $ | 5.84 |  |  | $ | 8.13 | \nDiluted net income per share (Note 12) | $ | 4.56 |  |  | $ | 5.80 |  |  | $ | 8.04 | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      },
+      {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204425000043/goog-20250331.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 14,
+            "text": "Alphabet Inc.\n\nForm 10-Q\n\nFor the Quarterly Period Ended March 31, 2025\n\nTABLE OF CONTENTS Page No. Note About Forward-Looking Statements 3 PART I. FINANCIAL INFORMATION Item 1 Financial Statements 5 Consolidated Balance Sheets - December 31, 2024 and March 31, 2025 5 Consolidated Statements of Income - Three Months Ended March 31 , 2024 and 2025 6 Consolidated Statements of Comprehensive Income - Three Months Ended March 31 , 2024 and 2025 7 Consolidated Statements of Stockholders' Equity - Three Months Ended March 31 , 2024 and 2025 8 Consolidated Statements of Cash Flows - Three Months Ended March 31 , 2024 and 2025 9 Notes to Consolidated Financial Statements 10 Item 2 Management’s Discussion and Analysis of Financial Condition and Results of Operations 32 Item 3 Quantitative and Qualitative Disclosures About Market Risk 46 Item 4 Controls and Procedures 46 PART II. OTHER INFORMATION Item 1 Legal Proceedings 47 Item 1A Risk Factors 47 Item 2 Unregistered Sales of Equity Securities and Use of Proceeds 47 Item 5 Other Information 47 Item 6 Exhibits 48 Signatures 49",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 15,
+            "text": " |  | Page No.\nNote About Forward-Looking Statements | 3\nPART I. FINANCIAL INFORMATION\nItem 1 | Financial Statements | 5\n | Consolidated Balance Sheets - December 31, 2024 and March 31, 2025 | 5\n | Consolidated Statements of Income - Three Months Ended March 31 , 2024 and 2025 | 6\n | Consolidated Statements of Comprehensive Income - Three Months Ended March 31 , 2024 and 2025 | 7\n | Consolidated Statements of Stockholders' Equity - Three Months Ended March 31 , 2024 and 2025 | 8\n | Consolidated Statements of Cash Flows - Three Months Ended March 31 , 2024 and 2025 | 9\n | Notes to Consolidated Financial Statements | 10\nItem 2 | Management’s Discussion and Analysis of Financial Condition and Results of Operations | 32\nItem 3 | Quantitative and Qualitative Disclosures About Market Risk | 46\nItem 4 | Controls and Procedures | 46\nPART II. OTHER INFORMATION\nItem 1 | Legal Proceedings | 47\nItem 1A | Risk Factors | 47\nItem 2 | Unregistered Sales of Equity Securities and Use of Proceeds | 47\nItem 5 | Other Information | 47\nItem 6 | Exhibits | 48\nSignatures | 49",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 26,
+            "text": "Alphabet Inc.\n\nCONSOLIDATED STATEMENTS OF INCOME\n\n(in millions, except per share amounts; unaudited) Three Months Ended March 31, 2024 2025 Revenues $ 80,539 $ 90,234 Costs and expenses: Cost of revenues 33,712 36,361 Research and development 11,903 13,556 Sales and marketing 6,426 6,172 General and administrative 3,026 3,539 Total costs and expenses 55,067 59,628 Income from operations 25,472 30,606 Other income (expense), net 2,843 11,183 Income before income taxes 28,315 41,789 Provision for income taxes 4,653 7,249 Net income $ 23,662 $ 34,540 Basic net income per share (Note 12) $ 1.91 $ 2.84 Diluted net income per share (Note 12) $ 1.89 $ 2.81",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 27,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nRevenues | $ | 80,539 |  |  | $ | 90,234 |  |  |  |  | \nCosts and expenses: |  |  |  |  |  |  | \nCost of revenues | 33,712 |  |  | 36,361 |  |  |  |  | \nResearch and development | 11,903 |  |  | 13,556 |  |  |  |  | \nSales and marketing | 6,426 |  |  | 6,172 |  |  |  |  | \nGeneral and administrative | 3,026 |  |  | 3,539 |  |  |  |  | \nTotal costs and expenses | 55,067 |  |  | 59,628 |  |  |  |  | \nIncome from operations | 25,472 |  |  | 30,606 |  |  |  |  | \nOther income (expense), net | 2,843 |  |  | 11,183 |  |  |  |  | \nIncome before income taxes | 28,315 |  |  | 41,789 |  |  |  |  | \nProvision for income taxes | 4,653 |  |  | 7,249 |  |  |  |  | \nNet income | $ | 23,662 |  |  | $ | 34,540 |  |  |  |  | \nBasic net income per share (Note 12) | $ | 1.91 |  |  | $ | 2.84 |  |  |  |  | \nDiluted net income per share (Note 12) | $ | 1.89 |  |  | $ | 2.81 |  |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 141,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nTAC | $ | 12,946 |  |  | $ | 13,748 |  |  |  |  | \nOther cost of revenues | 20,766 |  |  | 22,613 |  |  |  |  | \nTotal cost of revenues | $ | 33,712 |  |  | $ | 36,361 |  |  |  |  | \nTotal cost of revenues as a percentage of revenues | 42 | % |  | 40 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 142,
+            "text": "Cost of revenues increased $2.6 billion from the three months ended March 31, 2024 to the three months ended March 31, 2025 due to an increase in other cost of revenues and TAC of $1.8 billion and $802 million, respectively.\n\nThe increase in TAC from the three months ended March 31, 2024 to the three months ended March 31, 2025 was largely due to an increase in TAC paid to distribution partners, primarily driven by growth in revenues subject to TAC. The TAC rate decreased from 21.0% to 20.6% from the three months ended March 31, 2024 to the three months ended March 31, 2025 primarily due to a revenue mix shift from Google Network properties to Google Search & other properties. The TAC rate on Google Search & other revenues increased from the three months ended March 31, 2024 to the three months ended March 31, 2025 primarily due to increases related to mobile searches, which carries higher TAC because more mobile searches are channeled through paid access points. The TAC rate on Google Network revenues decreased from the three months ended March 31, 2024 to the three months ended March 31, 2025 due to a combination of factors, none of which were individually significant.\n\nThe increase in other cost of revenues from the three months ended March 31, 2024 to the three months ended March 31, 2025 was primarily due to increases in content acquisition costs, largely for YouTube,  depreciation expense, and other technical infrastructure operations costs.\n\n39\n\n39\n\n39\n\nResearch and Development\n\nThe following table presents R&D expenses (in millions, except percentages): Three Months Ended March 31, 2024 2025 Research and development expenses $ 11,903 $ 13,556 Research and development expenses as a percentage of revenues 15 % 15 %",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 143,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nResearch and development expenses | $ | 11,903 |  |  | $ | 13,556 |  |  |  |  | \nResearch and development expenses as a percentage of revenues | 15 | % |  | 15 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 145,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nSales and marketing expenses | $ | 6,426 |  |  | $ | 6,172 |  |  |  |  | \nSales and marketing expenses as a percentage of revenues | 8 | % |  | 7 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 147,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nGeneral and administrative expenses | $ | 3,026 |  |  | $ | 3,539 |  |  |  |  | \nGeneral and administrative expenses as a percentage of revenues | 4 | % |  | 4 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 149,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nOperating income (loss): |  |  |  |  |  |  | \nGoogle Services | $ | 27,897 |  |  | $ | 32,682 |  |  |  |  | \nGoogle Cloud | 900 |  |  | 2,177 |  |  |  |  | \nOther Bets | -1020 |  |  | -1226 |  |  |  |  | \nAlphabet-level activities (1) | -2305 |  |  | -3027 |  |  |  |  | \nTotal income from operations | $ | 25,472 |  |  | $ | 30,606 |  |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 153,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nIncome before provision for income taxes | $ | 28,315 |  |  | $ | 41,789 |  |  |  |  | \nProvision for income taxes | $ | 4,653 |  |  | $ | 7,249 |  |  |  |  | \nEffective tax rate | 16.4 | % |  | 17.3 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      },
+      {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204424000053/goog-20240331.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 26,
+            "text": "Alphabet Inc.\n\nCONSOLIDATED STATEMENTS OF INCOME\n\n(in millions, except per share amounts; unaudited) Three Months Ended March 31, 2023 2024 Revenues $ 69,787 $ 80,539 Costs and expenses: Cost of revenues 30,612 33,712 Research and development 11,468 11,903 Sales and marketing 6,533 6,426 General and administrative 3,759 3,026 Total costs and expenses 52,372 55,067 Income from operations 17,415 25,472 Other income (expense), net 790 2,843 Income before income taxes 18,205 28,315 Provision for income taxes 3,154 4,653 Net income $ 15,051 $ 23,662 Basic net income per share of Class A, Class B, and Class C stock $ 1.18 $ 1.91 Diluted net income per share of Class A, Class B, and Class C stock $ 1.17 $ 1.89",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 114,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nRevenues: |  |  |  |  |  |  | \nGoogle Services | $ | 61,961 |  |  | $ | 70,398 |  |  |  |  | \nGoogle Cloud | 7,454 |  |  | 9,574 |  |  |  |  | \nOther Bets | 288 |  |  | 495 |  |  |  |  | \nHedging gains (losses) | 84 |  |  | 72 |  |  |  |  | \nTotal revenues | $ | 69,787 |  |  | $ | 80,539 |  |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 115,
+            "text": "Three Months Ended March 31, 2023 2024 Operating income (loss): Google Services $ 21,737 $ 27,897 Google Cloud 191 900 Other Bets ( 1,225 ) ( 1,020 ) Alphabet-level activities ( 3,288 ) ( 2,305 ) Total income from operations $ 17,415 $ 25,472",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 131,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nTAC | $ | 11,721 |  |  | $ | 12,946 |  |  |  |  | \nOther cost of revenues | 18,891 |  |  | 20,766 |  |  |  |  | \nTotal cost of revenues | $ | 30,612 |  |  | $ | 33,712 |  |  |  |  | \nTotal cost of revenues as a percentage of revenues | 44 | % |  | 42 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 133,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nResearch and development expenses | $ | 11,468 |  |  | $ | 11,903 |  |  |  |  | \nResearch and development expenses as a percentage of revenues | 16 | % |  | 15 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 135,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nSales and marketing expenses | $ | 6,533 |  |  | $ | 6,426 |  |  |  |  | \nSales and marketing expenses as a percentage of revenues | 9 | % |  | 8 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 137,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nGeneral and administrative expenses | $ | 3,759 |  |  | $ | 3,026 |  |  |  |  | \nGeneral and administrative expenses as a percentage of revenues | 5 | % |  | 4 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      }
+    ],
+    "periods": [
+      {
+        "$type": "PeriodDescriptor",
+        "label": "FY 2024",
+        "period_end": "2024-12-31",
+        "period_type": "annual",
+        "is_annual": true
+      },
+      {
+        "$type": "PeriodDescriptor",
+        "label": "Q1 2025",
+        "period_end": "2025-03-31",
+        "period_type": "ytd_current",
+        "is_annual": false
+      },
+      {
+        "$type": "PeriodDescriptor",
+        "label": "Q1 2024",
+        "period_end": "2024-03-31",
+        "period_type": "ytd_prior",
+        "is_annual": false
+      }
+    ]
+  },
+  "output": [
+    {
+      "pages": {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204425000014/goog-20241231.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 162,
+            "text": "Alphabet Inc.\n\nCONSOLIDATED STATEMENTS OF INCOME\n\n(in millions, except per share amounts) Year Ended December 31, 2022 2023 2024 Revenues $ 282,836 $ 307,394 $ 350,018 Costs and expenses: Cost of revenues 126,203 133,332 146,306 Research and development 39,500 45,427 49,326 Sales and marketing 26,567 27,917 27,808 General and administrative 15,724 16,425 14,188 Total costs and expenses 207,994 223,101 237,628 Income from operations 74,842 84,293 112,390 Other income (expense), net ( 3,514 ) 1,424 7,425 Income before income taxes 71,328 85,717 119,815 Provision for income taxes 11,356 11,922 19,697 Net income $ 59,972 $ 73,795 $ 100,118 Basic net income per share (Note 12) $ 4.59 $ 5.84 $ 8.13 Diluted net income per share (Note 12) $ 4.56 $ 5.80 $ 8.04",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 163,
+            "text": " | Year Ended December 31,\n | 2022 |  | 2023 |  | 2024\nRevenues | $ | 282,836 |  |  | $ | 307,394 |  |  | $ | 350,018 | \nCosts and expenses: |  |  |  |  | \nCost of revenues | 126,203 |  |  | 133,332 |  |  | 146,306 | \nResearch and development | 39,500 |  |  | 45,427 |  |  | 49,326 | \nSales and marketing | 26,567 |  |  | 27,917 |  |  | 27,808 | \nGeneral and administrative | 15,724 |  |  | 16,425 |  |  | 14,188 | \nTotal costs and expenses | 207,994 |  |  | 223,101 |  |  | 237,628 | \nIncome from operations | 74,842 |  |  | 84,293 |  |  | 112,390 | \nOther income (expense), net | ( 3,514 ) |  |  | 1,424 |  |  | 7,425 | \nIncome before income taxes | 71,328 |  |  | 85,717 |  |  | 119,815 | \nProvision for income taxes | 11,356 |  |  | 11,922 |  |  | 19,697 | \nNet income | $ | 59,972 |  |  | $ | 73,795 |  |  | $ | 100,118 | \nBasic net income per share (Note 12) | $ | 4.59 |  |  | $ | 5.84 |  |  | $ | 8.13 | \nDiluted net income per share (Note 12) | $ | 4.56 |  |  | $ | 5.80 |  |  | $ | 8.04 | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      },
+      "period_end": "2024-12-31"
+    },
+    {
+      "pages": {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204425000043/goog-20250331.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 14,
+            "text": "Alphabet Inc.\n\nForm 10-Q\n\nFor the Quarterly Period Ended March 31, 2025\n\nTABLE OF CONTENTS Page No. Note About Forward-Looking Statements 3 PART I. FINANCIAL INFORMATION Item 1 Financial Statements 5 Consolidated Balance Sheets - December 31, 2024 and March 31, 2025 5 Consolidated Statements of Income - Three Months Ended March 31 , 2024 and 2025 6 Consolidated Statements of Comprehensive Income - Three Months Ended March 31 , 2024 and 2025 7 Consolidated Statements of Stockholders' Equity - Three Months Ended March 31 , 2024 and 2025 8 Consolidated Statements of Cash Flows - Three Months Ended March 31 , 2024 and 2025 9 Notes to Consolidated Financial Statements 10 Item 2 Management’s Discussion and Analysis of Financial Condition and Results of Operations 32 Item 3 Quantitative and Qualitative Disclosures About Market Risk 46 Item 4 Controls and Procedures 46 PART II. OTHER INFORMATION Item 1 Legal Proceedings 47 Item 1A Risk Factors 47 Item 2 Unregistered Sales of Equity Securities and Use of Proceeds 47 Item 5 Other Information 47 Item 6 Exhibits 48 Signatures 49",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 15,
+            "text": " |  | Page No.\nNote About Forward-Looking Statements | 3\nPART I. FINANCIAL INFORMATION\nItem 1 | Financial Statements | 5\n | Consolidated Balance Sheets - December 31, 2024 and March 31, 2025 | 5\n | Consolidated Statements of Income - Three Months Ended March 31 , 2024 and 2025 | 6\n | Consolidated Statements of Comprehensive Income - Three Months Ended March 31 , 2024 and 2025 | 7\n | Consolidated Statements of Stockholders' Equity - Three Months Ended March 31 , 2024 and 2025 | 8\n | Consolidated Statements of Cash Flows - Three Months Ended March 31 , 2024 and 2025 | 9\n | Notes to Consolidated Financial Statements | 10\nItem 2 | Management’s Discussion and Analysis of Financial Condition and Results of Operations | 32\nItem 3 | Quantitative and Qualitative Disclosures About Market Risk | 46\nItem 4 | Controls and Procedures | 46\nPART II. OTHER INFORMATION\nItem 1 | Legal Proceedings | 47\nItem 1A | Risk Factors | 47\nItem 2 | Unregistered Sales of Equity Securities and Use of Proceeds | 47\nItem 5 | Other Information | 47\nItem 6 | Exhibits | 48\nSignatures | 49",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 26,
+            "text": "Alphabet Inc.\n\nCONSOLIDATED STATEMENTS OF INCOME\n\n(in millions, except per share amounts; unaudited) Three Months Ended March 31, 2024 2025 Revenues $ 80,539 $ 90,234 Costs and expenses: Cost of revenues 33,712 36,361 Research and development 11,903 13,556 Sales and marketing 6,426 6,172 General and administrative 3,026 3,539 Total costs and expenses 55,067 59,628 Income from operations 25,472 30,606 Other income (expense), net 2,843 11,183 Income before income taxes 28,315 41,789 Provision for income taxes 4,653 7,249 Net income $ 23,662 $ 34,540 Basic net income per share (Note 12) $ 1.91 $ 2.84 Diluted net income per share (Note 12) $ 1.89 $ 2.81",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 27,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nRevenues | $ | 80,539 |  |  | $ | 90,234 |  |  |  |  | \nCosts and expenses: |  |  |  |  |  |  | \nCost of revenues | 33,712 |  |  | 36,361 |  |  |  |  | \nResearch and development | 11,903 |  |  | 13,556 |  |  |  |  | \nSales and marketing | 6,426 |  |  | 6,172 |  |  |  |  | \nGeneral and administrative | 3,026 |  |  | 3,539 |  |  |  |  | \nTotal costs and expenses | 55,067 |  |  | 59,628 |  |  |  |  | \nIncome from operations | 25,472 |  |  | 30,606 |  |  |  |  | \nOther income (expense), net | 2,843 |  |  | 11,183 |  |  |  |  | \nIncome before income taxes | 28,315 |  |  | 41,789 |  |  |  |  | \nProvision for income taxes | 4,653 |  |  | 7,249 |  |  |  |  | \nNet income | $ | 23,662 |  |  | $ | 34,540 |  |  |  |  | \nBasic net income per share (Note 12) | $ | 1.91 |  |  | $ | 2.84 |  |  |  |  | \nDiluted net income per share (Note 12) | $ | 1.89 |  |  | $ | 2.81 |  |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 141,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nTAC | $ | 12,946 |  |  | $ | 13,748 |  |  |  |  | \nOther cost of revenues | 20,766 |  |  | 22,613 |  |  |  |  | \nTotal cost of revenues | $ | 33,712 |  |  | $ | 36,361 |  |  |  |  | \nTotal cost of revenues as a percentage of revenues | 42 | % |  | 40 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 142,
+            "text": "Cost of revenues increased $2.6 billion from the three months ended March 31, 2024 to the three months ended March 31, 2025 due to an increase in other cost of revenues and TAC of $1.8 billion and $802 million, respectively.\n\nThe increase in TAC from the three months ended March 31, 2024 to the three months ended March 31, 2025 was largely due to an increase in TAC paid to distribution partners, primarily driven by growth in revenues subject to TAC. The TAC rate decreased from 21.0% to 20.6% from the three months ended March 31, 2024 to the three months ended March 31, 2025 primarily due to a revenue mix shift from Google Network properties to Google Search & other properties. The TAC rate on Google Search & other revenues increased from the three months ended March 31, 2024 to the three months ended March 31, 2025 primarily due to increases related to mobile searches, which carries higher TAC because more mobile searches are channeled through paid access points. The TAC rate on Google Network revenues decreased from the three months ended March 31, 2024 to the three months ended March 31, 2025 due to a combination of factors, none of which were individually significant.\n\nThe increase in other cost of revenues from the three months ended March 31, 2024 to the three months ended March 31, 2025 was primarily due to increases in content acquisition costs, largely for YouTube,  depreciation expense, and other technical infrastructure operations costs.\n\n39\n\n39\n\n39\n\nResearch and Development\n\nThe following table presents R&D expenses (in millions, except percentages): Three Months Ended March 31, 2024 2025 Research and development expenses $ 11,903 $ 13,556 Research and development expenses as a percentage of revenues 15 % 15 %",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 143,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nResearch and development expenses | $ | 11,903 |  |  | $ | 13,556 |  |  |  |  | \nResearch and development expenses as a percentage of revenues | 15 | % |  | 15 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 145,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nSales and marketing expenses | $ | 6,426 |  |  | $ | 6,172 |  |  |  |  | \nSales and marketing expenses as a percentage of revenues | 8 | % |  | 7 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 147,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nGeneral and administrative expenses | $ | 3,026 |  |  | $ | 3,539 |  |  |  |  | \nGeneral and administrative expenses as a percentage of revenues | 4 | % |  | 4 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 149,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nOperating income (loss): |  |  |  |  |  |  | \nGoogle Services | $ | 27,897 |  |  | $ | 32,682 |  |  |  |  | \nGoogle Cloud | 900 |  |  | 2,177 |  |  |  |  | \nOther Bets | -1020 |  |  | -1226 |  |  |  |  | \nAlphabet-level activities (1) | -2305 |  |  | -3027 |  |  |  |  | \nTotal income from operations | $ | 25,472 |  |  | $ | 30,606 |  |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 153,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2024 |  | 2025 |  |  |  | \nIncome before provision for income taxes | $ | 28,315 |  |  | $ | 41,789 |  |  |  |  | \nProvision for income taxes | $ | 4,653 |  |  | $ | 7,249 |  |  |  |  | \nEffective tax rate | 16.4 | % |  | 17.3 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      },
+      "period_end": "2025-03-31"
+    },
+    {
+      "pages": {
+        "$type": "PageList",
+        "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204424000053/goog-20240331.htm",
+        "parent_format": "text",
+        "pages": [
+          {
+            "$type": "Page",
+            "number": 26,
+            "text": "Alphabet Inc.\n\nCONSOLIDATED STATEMENTS OF INCOME\n\n(in millions, except per share amounts; unaudited) Three Months Ended March 31, 2023 2024 Revenues $ 69,787 $ 80,539 Costs and expenses: Cost of revenues 30,612 33,712 Research and development 11,468 11,903 Sales and marketing 6,533 6,426 General and administrative 3,759 3,026 Total costs and expenses 52,372 55,067 Income from operations 17,415 25,472 Other income (expense), net 790 2,843 Income before income taxes 18,205 28,315 Provision for income taxes 3,154 4,653 Net income $ 15,051 $ 23,662 Basic net income per share of Class A, Class B, and Class C stock $ 1.18 $ 1.91 Diluted net income per share of Class A, Class B, and Class C stock $ 1.17 $ 1.89",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 114,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nRevenues: |  |  |  |  |  |  | \nGoogle Services | $ | 61,961 |  |  | $ | 70,398 |  |  |  |  | \nGoogle Cloud | 7,454 |  |  | 9,574 |  |  |  |  | \nOther Bets | 288 |  |  | 495 |  |  |  |  | \nHedging gains (losses) | 84 |  |  | 72 |  |  |  |  | \nTotal revenues | $ | 69,787 |  |  | $ | 80,539 |  |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 115,
+            "text": "Three Months Ended March 31, 2023 2024 Operating income (loss): Google Services $ 21,737 $ 27,897 Google Cloud 191 900 Other Bets ( 1,225 ) ( 1,020 ) Alphabet-level activities ( 3,288 ) ( 2,305 ) Total income from operations $ 17,415 $ 25,472",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "prose",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 131,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nTAC | $ | 11,721 |  |  | $ | 12,946 |  |  |  |  | \nOther cost of revenues | 18,891 |  |  | 20,766 |  |  |  |  | \nTotal cost of revenues | $ | 30,612 |  |  | $ | 33,712 |  |  |  |  | \nTotal cost of revenues as a percentage of revenues | 44 | % |  | 42 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 133,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nResearch and development expenses | $ | 11,468 |  |  | $ | 11,903 |  |  |  |  | \nResearch and development expenses as a percentage of revenues | 16 | % |  | 15 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 135,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nSales and marketing expenses | $ | 6,533 |  |  | $ | 6,426 |  |  |  |  | \nSales and marketing expenses as a percentage of revenues | 9 | % |  | 8 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          },
+          {
+            "$type": "Page",
+            "number": 137,
+            "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nGeneral and administrative expenses | $ | 3,759 |  |  | $ | 3,026 |  |  |  |  | \nGeneral and administrative expenses as a percentage of revenues | 5 | % |  | 4 | % |  |  |  | ",
+            "image_bytes": null,
+            "image_mime": "image/png",
+            "is_scanned": false,
+            "sheet_name": null,
+            "metadata": {
+              "type": "table",
+              "heading": "",
+              "note_label": ""
+            }
+          }
+        ],
+        "selector_prompt": "[explicit pages]",
+        "metadata": {}
+      },
+      "period_end": "2024-03-31"
+    }
+  ],
+  "error": null
+}

@@ -1,0 +1,1363 @@
+{
+  "tool": "extract_fields",
+  "task_id": "extract_per_share",
+  "invocation": 11,
+  "timestamp": "2026-04-20T18:19:46.087939",
+  "inputs": {
+    "document": {
+      "$type": "PageList",
+      "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204425000043/goog-20250331.htm",
+      "parent_format": "text",
+      "pages": [
+        {
+          "$type": "Page",
+          "number": 120,
+          "text": " | Three Months Ended March 31,\n | 2024 |  | 2025 | \n | Class A |  | Class B |  | Class C |  | Consolidated |  | Class A |  | Class B |  | Class C |  | Consolidated | \nBasic net income per share: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | \nNumerator |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | \nAllocation of distributed earnings (cash dividends paid) | $ | 0 |  |  | $ | 0 |  |  | $ | 0 |  |  | $ | 0 |  |  | $ | 1,167 |  |  | $ | 171 |  |  | $ | 1,096 |  |  | $ | 2,434 |  | \nAllocation of undistributed earnings | 11,213 |  |  | 1,656 |  |  | 10,793 |  |  | 23,662 |  |  | 15,367 |  |  | 2,264 |  |  | 14,475 |  |  | 32,106 |  | \nNet income | $ | 11,213 |  |  | $ | 1,656 |  |  | $ | 10,793 |  |  | $ | 23,662 |  |  | $ | 16,534 |  |  | $ | 2,435 |  |  | $ | 15,571 |  |  | $ | 34,540 |  | \nDenominator |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | \nNumber of shares used in per share computation | 5,883 |  |  | 869 |  |  | 5,663 |  |  | 12,415 |  |  | 5,831 |  |  | 859 |  |  | 5,493 |  |  | 12,183 |  | \nBasic net income per share | $ | 1.91 |  |  | $ | 1.91 |  |  | $ | 1.91 |  |  | $ | 1.91 |  |  | $ | 2.84 |  |  | $ | 2.83 |  |  | $ | 2.83 |  |  | $ | 2.84 |  | \nDiluted net income per share: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | \nNumerator |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | \nAllocation of total earnings for basic computation | $ | 11,213 |  |  | $ | 1,656 |  |  | $ | 10,793 |  |  | $ | 23,662 |  |  | $ | 16,534 |  |  | $ | 2,435 |  |  | $ | 15,571 |  |  | $ | 34,540 |  | \nReallocation of total earnings as a result of conversion of Class B to Class A shares | 1,656 |  |  | 0 |  |  | 0 |  |  | _ (1) |  | 2,435 |  |  | 0 |  |  | 0 |  |  | _ (1) | \nReallocation of undistributed earnings | ( 115 ) |  |  | ( 15 ) |  |  | 115 |  |  | _ (1) |  | ( 156 ) |  |  | ( 20 ) |  |  | 156 |  |  | _ (1) | \nNet income | $ | 12,754 |  |  | $ | 1,641 |  |  | $ | 10,908 |  |  | $ | 23,662 |  |  | $ | 18,813 |  |  | $ | 2,415 |  |  | $ | 15,727 |  |  | 34,540 |  | \nDe…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        }
+      ],
+      "selector_prompt": "[explicit pages]",
+      "metadata": {}
+    },
+    "schema": {
+      "$type": "SchemaHandle",
+      "fields": [
+        {
+          "$type": "FieldDefinition",
+          "name": "Segment Revenue — [1]",
+          "type_hint": "number",
+          "required": true,
+          "description": "Revenue from the company's first (and typically largest) reportable segment. SOURCE: Segment Information note (revenue table or revenue column) or MD&A revenue disaggregation table. NEVER use the operating income column in the Segment Information note — segment revenue and segment operating income appear in different tables or different columns within the same note; revenue values are typically 2–10x larger than operating income values for the same segment.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive",
+          "section": "segments",
+          "cross_check": null,
+          "fallback_rule": "If the filing does not disaggregate segment revenue, return __not_found__.",
+          "manual_ref": "§1.1"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Segment Revenue — [2]",
+          "type_hint": "number",
+          "required": true,
+          "description": "Revenue from the company's second reportable segment. Same sourcing rule as [1]: Segment Information note (revenue column) or MD&A revenue table only. NEVER use operating income column values.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive",
+          "section": "segments",
+          "cross_check": null,
+          "fallback_rule": "If the filing does not disaggregate segment revenue, return __not_found__.",
+          "manual_ref": "§1.2"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Segment Revenue — [3]",
+          "type_hint": "number",
+          "required": true,
+          "description": "Revenue from the company's third reportable segment, or a grouped 'Other Segments' total if more than three segments exist. Same sourcing rule as [1]: Segment Information note (revenue column) or MD&A revenue table only.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive",
+          "section": "segments",
+          "cross_check": null,
+          "fallback_rule": "If the filing does not disaggregate segment revenue, return __not_found__.",
+          "manual_ref": "§1.3"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Other / Eliminations",
+          "type_hint": "number",
+          "required": true,
+          "description": "Reconciling amount in the segment revenue table that does not belong to a named segment. Includes intercompany revenue eliminations, corporate revenues not allocated to segments, and currency hedging gains/losses on revenues when reported as a separate reconciling line. Often small or zero.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "signed — positive if it adds to consolidated revenue (e.g. hedging gains), negative if it reduces consolidated revenue (e.g. intercompany eliminations)",
+          "section": "segments",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§1.4"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Total Revenues",
+          "type_hint": "number",
+          "required": true,
+          "description": "Consolidated total revenues from the face of the Consolidated Statements of Income. Use the line labeled 'Revenues', 'Total revenues', 'Net revenues', or 'Net sales'. For companies reporting gross revenues with face-statement deductions (returns, allowances, excise taxes), use the net figure. Revenues from discontinued operations are excluded.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive",
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§1.5"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "YoY Growth (%)",
+          "type_hint": "number",
+          "required": true,
+          "description": "Year-over-year percentage change in Total Revenues. Computed — never extract. Round to one decimal place.",
+          "computed": true,
+          "formula": "(current_total_revenues / prior_year_same_period_total_revenues - 1) * 100",
+          "sign_convention": null,
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§1.6"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Cost of Revenues",
+          "type_hint": "number",
+          "required": true,
+          "description": "Direct or indirect expenditure incurred in producing or delivering goods and services, as reported on the face income statement. Technology/SaaS inclusions: hosting infrastructure, content delivery, support costs, amortization of capitalized software used in delivery. Media inclusions: content rights amortization, film production costs, television program costs. Retail inclusions: cost of merchandise sold, warehousing, inbound freight. Restructuring and non-recurring charges are excluded (captured in Restructuring and Other Charges). D&A may be embedded here — see supplemental D&A fields.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive",
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§2.1"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Gross Profit",
+          "type_hint": "number",
+          "required": true,
+          "description": "Total Revenues minus Cost of Revenues. Computed — never extract even if the filing reports this line.",
+          "computed": true,
+          "formula": "total_revenues - cost_of_revenues",
+          "sign_convention": null,
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§2.2"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Gross Margin (%)",
+          "type_hint": "number",
+          "required": true,
+          "description": "Gross Profit divided by Total Revenues. Round to one decimal place. Computed — never extract.",
+          "computed": true,
+          "formula": "gross_profit / total_revenues * 100",
+          "sign_convention": null,
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§2.3"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Research and Development",
+          "type_hint": "number",
+          "required": true,
+          "description": "Research, development, and innovation expense as labeled on the face income statement. For technology, pharmaceutical, and manufacturing companies this is typically a separately disclosed operating expense line. Excludes capitalized development costs. If R&D is presented as a sub-line within COGS rather than a separate operating expense, return __not_found__ and note the treatment.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive",
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": "If R&D is embedded in COGS and not separately disclosed on the face statement, return __not_found__.",
+          "manual_ref": "§2.4"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Sales and Marketing",
+          "type_hint": "number",
+          "required": true,
+          "description": "Selling, marketing, advertising, and customer acquisition expense as labeled on the face income statement. Includes sales force compensation and commissions, advertising spend, promotional costs, and brand spending. NOTE: If the company presents a single combined 'Selling, general and administrative' (SG&A) line without a face-statement split, enter the combined SG&A total here and leave General and Administrative blank. Do not attempt to split SG&A from footnotes unless the filing provides an explicit breakdown on the face statement.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive",
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": "If company presents a single SG&A line, enter the combined figure here and return __not_found__ for General and Administrative.",
+          "manual_ref": "§2.5"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "General and Administrative",
+          "type_hint": "number",
+          "required": true,
+          "description": "Corporate overhead, administrative, legal, finance, HR, and executive compensation expense as labeled on the face income statement. Leave blank if the company presents a combined SG&A line (enter the combined amount in Sales and Marketing instead).",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive",
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": "If company presents a single combined SG&A line, return __not_found__.",
+          "manual_ref": "§2.6"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Restructuring and Other Charges",
+          "type_hint": "number",
+          "required": true,
+          "description": "Charges separately disclosed on the face income statement that are non-recurring in nature. Includes: restructuring charges (severance, facility closure costs), goodwill or long-lived asset impairment, litigation settlements recognized as operating charges, merger and integration costs, and gain/loss on disposal of a business segment if above the operating income line. Only enter amounts that appear as a distinct line on the face statement — do not reallocate from other line items. Restructuring reversals (credits) are entered as negative.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive for charges; negative for reversals",
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": "Return __not_found__ if no such charge was separately disclosed on the face statement in this period.",
+          "manual_ref": "§2.7"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Depreciation (Expense) [If not broken out]",
+          "type_hint": "number",
+          "required": false,
+          "description": "Supplemental field. Populate ONLY if: (a) depreciation is embedded within Cost of Revenues and NOT separately presented on the face income statement, AND (b) the filing separately discloses the COGS-embedded component (PP&E note or cash flow reconciliation). Purpose: allows reconstruction of cash-cost gross profit for comparability. Do not populate if depreciation is already a standalone face-statement line.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive",
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": "Return __not_found__ if depreciation is separately disclosed as a standalone line, or if the filing does not separately disclose the COGS-embedded component.",
+          "manual_ref": "§D&A 1"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Amortization (Expense) [If not broken out]",
+          "type_hint": "number",
+          "required": false,
+          "description": "Supplemental field. Populate ONLY if amortization of intangibles is embedded within Cost of Revenues and NOT separately presented on the face income statement, AND the filing separately discloses the COGS-embedded component (intangible assets note or business combinations note).",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive",
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": "Return __not_found__ if amortization is separately disclosed as a standalone line, or if the filing does not separately disclose the COGS-embedded component.",
+          "manual_ref": "§D&A 2"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Total Operating Expenses",
+          "type_hint": "number",
+          "required": true,
+          "description": "Sum of ALL operating cost lines: Cost of Revenues + R&D + Sales and Marketing + G&A + Restructuring (plus any other separately disclosed operating cost lines). Equals Total Revenues minus Operating Income. Computed — never extract the face-statement subtotal directly.",
+          "computed": true,
+          "formula": "cost_of_revenues + research_and_development + sales_and_marketing + general_and_administrative + restructuring_and_other_charges",
+          "sign_convention": null,
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§2.8"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Operating Income (Loss)",
+          "type_hint": "number",
+          "required": true,
+          "description": "Income (or loss) from operations as reported on the face of the Consolidated Statements of Income, before interest, other non-operating items, and income taxes. Use the line labeled 'Income from operations', 'Operating income', or 'Operating profit (loss)'. Extract directly from the filing — do not calculate.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive for income; negative for loss",
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§3.1"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Operating Margin (%)",
+          "type_hint": "number",
+          "required": true,
+          "description": "Operating Income divided by Total Revenues. Negative in loss periods. Round to one decimal place. Computed — never extract.",
+          "computed": true,
+          "formula": "operating_income / total_revenues * 100",
+          "sign_convention": null,
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§3.2"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Segment OI — [1]",
+          "type_hint": "number",
+          "required": true,
+          "description": "Operating income (or loss) attributed to the first reportable segment. SOURCE: Notes to Financial Statements — Segment Information note only (operating income by segment column/table). NEVER use revenue figures here. The segment's OI follows the company's stated segment accounting policies, which may differ from consolidated GAAP OI (e.g. stock-based compensation is commonly excluded from segment profit and captured instead in Unallocated/Corporate). Use the same segment ordering as Segment Revenue [1].",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive for income; negative for loss",
+          "section": "segments",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§4.1"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Segment OI — [2]",
+          "type_hint": "number",
+          "required": true,
+          "description": "Operating income (or loss) attributed to the second reportable segment. SOURCE: Segment Information note only. Same rules as Segment OI [1]. Use the same segment ordering as Segment Revenue [2].",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive for income; negative for loss",
+          "section": "segments",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§4.2"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Segment OI — [3]",
+          "type_hint": "number",
+          "required": true,
+          "description": "Operating income (or loss) attributed to the third reportable segment, or grouped 'Other Segments'. SOURCE: Segment Information note only. Typically negative for early-stage or investment-stage segments. Use the same segment ordering as Segment Revenue [3].",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive for income; negative for loss",
+          "section": "segments",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§4.3"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Unallocated / Corporate",
+          "type_hint": "number",
+          "required": true,
+          "description": "Reconciling amount between the sum of segment operating incomes and consolidated operating income, as reported in the Segment Information note reconciliation table. Typically includes: corporate overhead not charged to segments, stock-based compensation excluded from segment profit, amortization of acquired intangibles not allocated to segments, and restructuring charges held at corporate level. SOURCE: Segment Information note reconciliation table — look for a line labeled 'Unallocated corporate costs', 'Corporate and other', 'Reconciling items', or similar. Must be included so that seg_oi_1 + seg_oi_2 + seg_oi_3 + unallocated_corporate equals consolidated Operating Income.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "typically negative (net cost burden); enter as a signed number",
+          "section": "segments",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§4.4"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Interest Income",
+          "type_hint": "number",
+          "required": true,
+          "description": "Interest earned on cash, cash equivalents, short-term investments, and notes receivable. SOURCE: Face income statement (if separately disclosed) or the 'Other income (expense), net' footnote. Includes all interest-type income regardless of balance sheet classification.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive",
+          "section": "other_income",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§5.1"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Interest Expense",
+          "type_hint": "number",
+          "required": true,
+          "description": "Interest paid or accrued on long-term debt, bonds, revolving credit facilities, capital/finance leases, and similar obligations. SOURCE: Face income statement or OI&E footnote. The filing may present this as a negative figure — strip the sign and enter the absolute value. This field is entered as a positive number representing the magnitude of expense and is SUBTRACTED in the OI&E reconciliation formula (X5): interest_income - interest_expense + fx + gains + other = total_other_income.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive — always enter as absolute value (magnitude of expense), even if the filing shows it as a negative number",
+          "section": "other_income",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§5.2"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "FX Gains (Losses), Net",
+          "type_hint": "number",
+          "required": true,
+          "description": "Net foreign currency transaction gains or losses. Includes realized and unrealized FX on monetary assets and liabilities, and gains/losses on FX derivative contracts not designated as hedges. Exclude revenue-hedging gains/losses already captured in Other/Eliminations (§1.4). Positive for net gain; negative for net loss.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "signed — positive for gain, negative for loss",
+          "section": "other_income",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§5.3"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Gains (Losses) on Investments, Net",
+          "type_hint": "number",
+          "required": true,
+          "description": "Net realized and unrealized gains or losses on equity securities, debt investments, venture investments, and other financial assets held at fair value. Includes mark-to-market changes on equity securities (ASC 321/IFRS 9), realized gains on sale of investments, and investment impairment charges. Can be large and volatile for companies with significant investment portfolios. Alternative labels in the OI&E footnote: 'Net gain on equity securities', 'Gain (loss) on equity securities, net', 'Net unrealized gain on investments', 'Net gain (loss) on financial instruments'. Positive for net gain; negative for net loss.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "signed — positive for gain, negative for loss",
+          "section": "other_income",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§5.4"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Other Non-Operating, Net",
+          "type_hint": "number",
+          "required": true,
+          "description": "All remaining non-operating items not captured in rows 5.1–5.4. Includes: equity method investment income/loss, pension non-service costs, early debt extinguishment gains or losses, and other miscellaneous non-operating items. SOURCE: 'Other income (expense), net' footnote — the residual 'Other' line after interest, FX, and investment gains are separated out. Positive for net income contribution; negative for net expense. If a material item is included here, note it in Analyst Notes.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "signed — positive for net income, negative for net expense",
+          "section": "other_income",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§5.5"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Total Other Income (Expense), Net",
+          "type_hint": "number",
+          "required": true,
+          "description": "Total non-operating income or expense as reported on the face of the Consolidated Statements of Income. SOURCE: Face statement line labeled 'Other income (expense), net', 'Non-operating income (expense)', or equivalent. This is the anchor value for the OI&E section — it is extracted from the face statement and all component fields (5.1–5.5) must reconcile to it. Positive when net non-operating contribution is income; negative when it is a net expense.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "signed — positive for net income, negative for net expense",
+          "section": "other_income",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§5.6"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Income Before Income Taxes",
+          "type_hint": "number",
+          "required": true,
+          "description": "Pre-tax income or loss as reported on the face of the Consolidated Statements of Income. Use the line labeled 'Income before income taxes', 'Income (loss) before provision for income taxes', or equivalent. Positive for pre-tax income; negative for pre-tax loss.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive for income; negative for loss",
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§6.1"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Provision for Income Taxes",
+          "type_hint": "number",
+          "required": true,
+          "description": "Total income tax expense or benefit for the period as reported on the face income statement. Includes current plus deferred tax. Positive for tax expense (normal case); negative for a net tax benefit period.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive for expense; negative for benefit",
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§6.2"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Effective Tax Rate (%)",
+          "type_hint": "number",
+          "required": true,
+          "description": "Tax provision divided by pre-tax income. Round to one decimal place. Computed — never extract.",
+          "computed": true,
+          "formula": "provision_for_income_taxes / income_before_taxes * 100",
+          "sign_convention": null,
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§6.3"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Net Income (Loss)",
+          "type_hint": "number",
+          "required": true,
+          "description": "Final bottom line of the Consolidated Statements of Income. If the filing presents both 'Net income' and 'Net income attributable to [Company] shareholders' (after deducting noncontrolling interests), use the PARENT COMPANY figure ('attributable to shareholders') — this is consistent with the EPS denominator. If noncontrolling interests are absent or immaterial, both figures will be identical.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive for income; negative for loss",
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§7.1"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Net Margin (%)",
+          "type_hint": "number",
+          "required": true,
+          "description": "Net Income divided by Total Revenues. Negative in loss periods. Round to one decimal place. Computed — never extract.",
+          "computed": true,
+          "formula": "net_income / total_revenues * 100",
+          "sign_convention": null,
+          "section": "face",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§7.2"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "EPS — Basic ($)",
+          "type_hint": "number",
+          "required": true,
+          "description": "Basic earnings (or loss) per share as reported in the EPS section of the income statement or EPS note. For multi-class share structures, use the EPS attributable to ordinary/common shareholders. Units: currency per share, two decimal places.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": null,
+          "section": "per_share",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§8.1"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "EPS — Diluted ($)",
+          "type_hint": "number",
+          "required": true,
+          "description": "Diluted earnings (or loss) per share reflecting the potential dilutive impact of options, warrants, RSUs, convertible instruments, and similar securities. In loss periods, dilutive securities are excluded (anti-dilution rule) and Diluted EPS equals Basic EPS. Must be ≤ Basic EPS in income periods. Units: currency per share, two decimal places.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": null,
+          "section": "per_share",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§8.2"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Wtd. Avg. Shares — Basic (MM)",
+          "type_hint": "number",
+          "required": true,
+          "description": "Weighted average number of common shares outstanding used to calculate basic EPS, expressed in millions. SOURCE: Face income statement (immediately below the EPS lines) or EPS computation note, labeled 'Weighted-average shares outstanding — Basic' or 'Number of shares used in per share calculation — Basic'. Convert to millions if the filing reports in thousands or whole shares. DO NOT use: total shares outstanding, shares issued, or shares from the balance sheet — these are NOT weighted averages and are typically 5–10% higher than the weighted average, producing a consistently wrong EPS cross-check.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive",
+          "section": "per_share",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§8.3"
+        },
+        {
+          "$type": "FieldDefinition",
+          "name": "Wtd. Avg. Shares — Diluted (MM)",
+          "type_hint": "number",
+          "required": true,
+          "description": "Weighted average diluted share count used to calculate diluted EPS, expressed in millions. Includes the dilutive effect of in-the-money options, unvested RSUs, and convertible instruments using the treasury stock method or if-converted method. Must be ≥ Basic shares in income periods; equals Basic shares in loss periods (anti-dilution). SOURCE: Face income statement (immediately below EPS lines) or EPS computation note, labeled 'Weighted-average shares outstanding — Diluted'. DO NOT use: total shares outstanding, shares issued, or shares from the balance sheet — these are NOT weighted averages and will consistently produce an EPS cross-check failure. The balance sheet and cover page figures are typically 5–10% larger than the weighted average diluted count.",
+          "computed": false,
+          "formula": null,
+          "sign_convention": "positive",
+          "section": "per_share",
+          "cross_check": null,
+          "fallback_rule": null,
+          "manual_ref": "§8.4"
+        }
+      ],
+      "source": "income_statement_schema.json",
+      "raw": {
+        "schema_version": "2.0",
+        "template": "income_statement_spread",
+        "manual_ref": "income_statement_spreading_manual_v2",
+        "period_context": {
+          "description": "Before extracting any field values, resolve the period column labels from the income statement column headers. Each column header contains a period-end date (e.g., 'Three Months Ended March 31, 2025'). Map each to a short label. All extracted values must be keyed to their period label — a value with no period label is invalid and must not be returned.",
+          "resolve_before_extraction": true,
+          "label_format": "Q{N} {YYYY} for quarterly periods (e.g. 'Q1 2025'), FY {YYYY} for annual (e.g. 'FY 2024'), H1/H2 {YYYY} for half-year.",
+          "output_format": "Return ALL extracted values as a dict of dicts keyed first by field_key then by period label. Example: {\"total_revenues\": {\"Q1 2025\": 90234, \"Q1 2024\": 80539}, \"cost_of_revenues\": {\"Q1 2025\": 36361, \"Q1 2024\": 33712}}. A flat dict of field names only is invalid output — the period dimension is mandatory.",
+          "validation": [
+            "No two period columns may share the same label.",
+            "For a 10-Q filing, expect exactly 2 quarterly period columns (current quarter and prior-year same quarter). A full-year column in a 10-Q is unusual — if present, note its source.",
+            "After resolving labels, verify that total_revenues differs across period columns. Identical revenue across all columns almost always indicates a column propagation error — re-read the column headers before proceeding."
+          ]
+        },
+        "pre_extraction": {
+          "segment_name_resolution": {
+            "description": "Before extracting any segment revenue or segment OI fields, resolve the company's actual reportable segment names from the filing. These names replace the [1], [2], [3] placeholders in segment field labels and in Analyst Notes.",
+            "required": true,
+            "source": "Notes to Financial Statements — Segment Information note, or MD&A revenue disaggregation table. Look for a table whose row or column headers name the reportable segments explicitly.",
+            "outputs": {
+              "segment_1_name": "Exact name of the company's first (typically largest by revenue) reportable segment as written in the filing",
+              "segment_2_name": "Exact name of the second reportable segment",
+              "segment_3_name": "Exact name of the third reportable segment, or 'Other Segments' if more than three are grouped together"
+            },
+            "fallback": "If the company does not disaggregate revenue or OI by segment, set all three names to null and leave all segment fields as __not_found__.",
+            "note": "If the company has more than three segments, group the smallest into segment_3_name as 'Other Segments' and document the grouping in Analyst Notes."
+          }
+        },
+        "extraction_units": {
+          "face": {
+            "description": "Consolidated Statements of Income — the primary income statement face, from revenues to EPS.",
+            "select_prompt": "Pages containing the Consolidated Statements of Income, Statements of Operations, or Statements of Earnings — the full P&L from revenues through net income and EPS lines",
+            "fields": [
+              "total_revenues",
+              "cost_of_revenues",
+              "research_and_development",
+              "sales_and_marketing",
+              "general_and_administrative",
+              "restructuring_and_other_charges",
+              "depreciation_embedded",
+              "amortization_embedded",
+              "operating_income",
+              "total_other_income_net",
+              "income_before_taxes",
+              "provision_for_income_taxes",
+              "net_income",
+              "eps_basic",
+              "eps_diluted",
+              "wtd_avg_shares_basic",
+              "wtd_avg_shares_diluted"
+            ],
+            "instruction": "Extract ALL period columns present simultaneously — do not extract one column and copy it to others. For each period column, independently read the value from that column before moving to the next field. Inline verification: for each period, check that operating_income + total_other_income_net equals income_before_taxes and income_before_taxes - provision_for_income_taxes equals net_income before returning values."
+          },
+          "segments": {
+            "description": "Segment Information note — disaggregated revenue and operating income by reportable segment.",
+            "select_prompt": "Pages containing the Segment Information footnote or MD&A segment table with revenue and operating income broken out by reportable business segment",
+            "fields": [
+              "seg_rev_1",
+              "seg_rev_2",
+              "seg_rev_3",
+              "other_eliminations",
+              "seg_oi_1",
+              "seg_oi_2",
+              "seg_oi_3",
+              "unallocated_corporate"
+            ],
+            "anchor_fields": [
+              "total_revenues",
+              "operating_income"
+            ],
+            "prerequisite": "pre_extraction.segment_name_resolution must complete before this unit runs",
+            "instruction": "The segment revenue table and segment OI table are DIFFERENT tables or different columns within the same note — never mix values between them. Revenue values are typically 2–10x larger than operating income values for the same segment in the same period. After extraction, verify seg_rev_1 + seg_rev_2 + seg_rev_3 + other_eliminations equals the already-extracted total_revenues (anchor), and seg_oi_1 + seg_oi_2 + seg_oi_3 + unallocated_corporate equals the already-extracted operating_income (anchor)."
+          },
+          "other_income": {
+            "description": "Other income (expense), net footnote — component breakdown of non-operating income.",
+            "select_prompt": "Pages containing the 'Other income (expense), net' footnote or equivalent, with a line-by-line breakdown of interest income, interest expense, FX gains, investment gains, and other items",
+            "fields": [
+              "interest_income",
+              "interest_expense",
+              "fx_gains_net",
+              "investment_gains_net",
+              "other_non_operating_net"
+            ],
+            "anchor_fields": [
+              "total_other_income_net"
+            ],
+            "instruction": "Extract component lines from the OI&E footnote. Anchor: interest_income - interest_expense + fx_gains_net + investment_gains_net + other_non_operating_net must equal the total_other_income_net already extracted from the face statement (within 1 unit rounding tolerance). Note: interest_expense is entered as a POSITIVE number and is SUBTRACTED in the formula. If components do not reconcile to the anchor, identify the missing component — do not adjust extracted values. Document any irreconcilable gap in Analyst Notes."
+          },
+          "per_share": {
+            "description": "EPS and weighted average share counts — from the face income statement EPS lines and the EPS computation note.",
+            "select_prompt": "Pages containing the EPS section of the Consolidated Statements of Income and the Earnings Per Share computation note (often titled 'Net Income Per Share' or 'Earnings Per Share')",
+            "fields": [
+              "eps_basic",
+              "eps_diluted",
+              "wtd_avg_shares_basic",
+              "wtd_avg_shares_diluted"
+            ],
+            "anchor_fields": [
+              "net_income"
+            ],
+            "instruction": "Extract EPS values from the face income statement. Extract WEIGHTED AVERAGE share counts from the face income statement (printed immediately below the EPS lines) or the EPS computation note — whichever explicitly labels the count as 'weighted-average'. After extraction, verify: net_income / wtd_avg_shares_basic approximates eps_basic within $0.02, and net_income / wtd_avg_shares_diluted approximates eps_diluted within $0.02. If either consistency check fails, the share count is wrong — the most common cause is using total shares outstanding or issued shares from the balance sheet or cover page instead of the weighted average from the EPS section. Re-extract using only the EPS note source."
+          }
+        },
+        "plausibility_checks": [
+          {
+            "id": "PX1",
+            "name": "Period values are distinct",
+            "description": "For each extracted field with values across multiple period columns, verify that the values are not identical across ALL columns. Values that are identical across every column almost always indicate a column propagation error — one period's values were copied to other columns.",
+            "check": "for each field_key, at least 2 distinct non-null values exist across the period columns (exceptions: computed fields may coincidentally be equal)",
+            "on_failure": "re_extract",
+            "re_extract_hint": "Values are identical across all period columns. This strongly indicates a column propagation error. Re-read the column header dates carefully, then extract each period column independently."
+          },
+          {
+            "id": "PX2",
+            "name": "Revenue units plausibility",
+            "description": "When the stated unit is millions, total revenues for a large-cap company should be between 100 and 1,000,000. Values outside this range indicate a units mismatch.",
+            "check": "total_revenues > 100 AND total_revenues < 1000000 when units = millions",
+            "on_failure": "flag",
+            "flag_hint": "Revenue is implausible for the stated unit. Re-read the units parenthetical on the face income statement (e.g. 'in millions, except per share amounts') and correct the header Units field."
+          },
+          {
+            "id": "PX3",
+            "name": "YoY growth plausibility",
+            "description": "For mature large-cap companies, YoY revenue growth outside -30% to +50% warrants review. A value of exactly 0.0% almost certainly reflects a column propagation error.",
+            "check": "yoy_growth_pct != 0.0 AND abs(yoy_growth_pct) < 50",
+            "on_failure": "flag",
+            "flag_hint": "YoY growth of 0.0% means current-period and prior-year revenues are identical — likely a column propagation error. Growth outside ±50% should be verified against the filing."
+          }
+        ],
+        "cross_checks": [
+          {
+            "id": "X1",
+            "name": "Segment revenue reconciliation",
+            "formula": "seg_rev_1 + seg_rev_2 + seg_rev_3 + other_eliminations == total_revenues",
+            "fields": [
+              "seg_rev_1",
+              "seg_rev_2",
+              "seg_rev_3",
+              "other_eliminations",
+              "total_revenues"
+            ],
+            "tolerance": 1,
+            "condition": "seg_rev_1 != '__not_found__'",
+            "on_failure": "re_extract",
+            "re_extract_targets": [
+              "seg_rev_1",
+              "seg_rev_2",
+              "seg_rev_3",
+              "other_eliminations"
+            ],
+            "re_extract_hint": "Segment revenues do not sum to Total Revenues. Common causes: (1) OI column values used instead of revenue column values — revenues are 2–10x larger than OI for the same segment; (2) a segment row was missed; (3) the Other/Eliminations reconciling item was omitted."
+          },
+          {
+            "id": "X2",
+            "name": "Gross profit calculation",
+            "formula": "total_revenues - cost_of_revenues == gross_profit",
+            "fields": [
+              "total_revenues",
+              "cost_of_revenues",
+              "gross_profit"
+            ],
+            "tolerance": 1,
+            "condition": "cost_of_revenues != '__not_found__'",
+            "on_failure": "re_extract",
+            "re_extract_targets": [
+              "cost_of_revenues"
+            ],
+            "re_extract_hint": "Gross Profit is computed (never extracted), so this failure means Cost of Revenues is wrong. Re-verify the cost line on the face income statement — confirm it is the COGS/cost-of-revenues line and not a subtotal."
+          },
+          {
+            "id": "X3",
+            "name": "Operating income derivation",
+            "formula": "total_revenues - total_operating_expenses == operating_income",
+            "fields": [
+              "total_revenues",
+              "total_operating_expenses",
+              "operating_income"
+            ],
+            "tolerance": 1,
+            "condition": "total_operating_expenses != '__not_found__'",
+            "on_failure": "re_extract",
+            "re_extract_targets": [
+              "cost_of_revenues",
+              "research_and_development",
+              "sales_and_marketing",
+              "general_and_administrative",
+              "restructuring_and_other_charges"
+            ],
+            "re_extract_hint": "Total Operating Expenses is computed from its components. If this check fails, one or more component lines are missing. Re-extract all operating expense lines (CoR, R&D, S&M, G&A, Restructuring) from the face income statement for this specific period column."
+          },
+          {
+            "id": "X4",
+            "name": "Segment OI reconciliation",
+            "formula": "seg_oi_1 + seg_oi_2 + seg_oi_3 + unallocated_corporate == operating_income",
+            "fields": [
+              "seg_oi_1",
+              "seg_oi_2",
+              "seg_oi_3",
+              "unallocated_corporate",
+              "operating_income"
+            ],
+            "tolerance": 1,
+            "condition": "seg_oi_1 != '__not_found__'",
+            "on_failure": "re_extract",
+            "re_extract_targets": [
+              "seg_oi_1",
+              "seg_oi_2",
+              "seg_oi_3",
+              "unallocated_corporate"
+            ],
+            "re_extract_hint": "Segment OI lines do not reconcile to consolidated Operating Income. Verify: (1) values are from the OI column, not the revenue column; (2) the Unallocated/Corporate reconciling line is included (usually negative — it absorbs stock-based compensation, amortization of acquired intangibles, and corporate overhead); (3) the segment note shows a subtotal that equals consolidated OI."
+          },
+          {
+            "id": "X5",
+            "name": "OI&E component reconciliation",
+            "formula": "interest_income - interest_expense + fx_gains_net + investment_gains_net + other_non_operating_net == total_other_income_net",
+            "fields": [
+              "interest_income",
+              "interest_expense",
+              "fx_gains_net",
+              "investment_gains_net",
+              "other_non_operating_net",
+              "total_other_income_net"
+            ],
+            "tolerance": 1,
+            "note": "interest_expense is stored as a POSITIVE number and is SUBTRACTED in this formula per manual rule §5.2.",
+            "condition": "interest_income != '__not_found__'",
+            "on_failure": "re_extract",
+            "re_extract_targets": [
+              "interest_income",
+              "interest_expense",
+              "fx_gains_net",
+              "investment_gains_net",
+              "other_non_operating_net"
+            ],
+            "re_extract_hint": "OI&E components do not reconcile to the face-statement total. Check the OI&E footnote for additional component lines not yet captured (common omissions: equity method investment income, pension non-service costs, early debt extinguishment). The face-statement total is the anchor — do not adjust it, find the missing component."
+          },
+          {
+            "id": "X6",
+            "name": "Pre-tax income derivation",
+            "formula": "operating_income + total_other_income_net == income_before_taxes",
+            "fields": [
+              "operating_income",
+              "total_other_income_net",
+              "income_before_taxes"
+            ],
+            "tolerance": 1,
+            "on_failure": "re_extract",
+            "re_extract_targets": [
+              "operating_income",
+              "total_other_income_net"
+            ],
+            "re_extract_hint": "Operating Income plus Total Other Income does not equal Income Before Taxes. Both are extracted from the face statement — re-verify each value for this period column."
+          },
+          {
+            "id": "X7",
+            "name": "Net income derivation",
+            "formula": "income_before_taxes - provision_for_income_taxes == net_income",
+            "fields": [
+              "income_before_taxes",
+              "provision_for_income_taxes",
+              "net_income"
+            ],
+            "tolerance": 1,
+            "on_failure": "re_extract",
+            "re_extract_targets": [
+              "income_before_taxes",
+              "provision_for_income_taxes",
+              "net_income"
+            ],
+            "re_extract_hint": "Pre-tax income minus tax provision does not equal net income. All three are from the face statement — re-verify each for this period column."
+          },
+          {
+            "id": "X8",
+            "name": "Diluted EPS ≤ Basic EPS",
+            "formula": "eps_diluted <= eps_basic",
+            "fields": [
+              "eps_diluted",
+              "eps_basic"
+            ],
+            "tolerance": 0,
+            "condition": "net_income > 0",
+            "on_failure": "flag",
+            "flag_hint": "In an income period, diluted EPS must be less than or equal to basic EPS. If diluted exceeds basic, re-verify both from the face income statement EPS section."
+          },
+          {
+            "id": "X9",
+            "name": "Diluted shares ≥ Basic shares",
+            "formula": "wtd_avg_shares_diluted >= wtd_avg_shares_basic",
+            "fields": [
+              "wtd_avg_shares_diluted",
+              "wtd_avg_shares_basic"
+            ],
+            "tolerance": 0,
+            "condition": "net_income > 0",
+            "on_failure": "re_extract",
+            "re_extract_targets": [
+              "wtd_avg_shares_diluted"
+            ],
+            "re_extract_hint": "Diluted shares are less than basic shares in an income period, which is invalid. In income periods, dilutive securities increase the denominator. Re-verify diluted shares from the EPS note."
+          },
+          {
+            "id": "X10",
+            "name": "Basic EPS consistency",
+            "formula": "abs(eps_basic * wtd_avg_shares_basic - net_income) <= net_income * 0.01",
+            "fields": [
+              "eps_basic",
+              "wtd_avg_shares_basic",
+              "net_income"
+            ],
+            "note": "1% tolerance accounts for EPS rounding in the filing.",
+            "on_failure": "re_extract",
+            "re_extract_targets": [
+              "wtd_avg_shares_basic"
+            ],
+            "re_extract_hint": "Basic EPS × Basic Shares does not approximate Net Income. The share count is almost certainly wrong. Re-extract WEIGHTED AVERAGE BASIC shares from the face income statement (printed immediately below the EPS lines) or EPS computation note. DO NOT use: total shares outstanding, issued shares, shares from the balance sheet, or shares from the cover page — these are not weighted averages and will be materially different."
+          },
+          {
+            "id": "X10b",
+            "name": "Diluted EPS consistency",
+            "formula": "abs(eps_diluted * wtd_avg_shares_diluted - net_income) <= net_income * 0.01",
+            "fields": [
+              "eps_diluted",
+              "wtd_avg_shares_diluted",
+              "net_income"
+            ],
+            "note": "1% tolerance accounts for EPS rounding in the filing.",
+            "on_failure": "re_extract",
+            "re_extract_targets": [
+              "wtd_avg_shares_diluted"
+            ],
+            "re_extract_hint": "Diluted EPS × Diluted Shares does not approximate Net Income. Re-extract WEIGHTED AVERAGE DILUTED shares from the EPS computation note, labeled 'Weighted-average shares outstanding — Diluted' or 'Number of shares used in per share calculation — Diluted'. DO NOT use: total shares outstanding, issued shares, shares from the balance sheet, or shares from the cover page. The balance sheet total and cover page figures are NOT weighted averages — they are typically 5–10% larger and will consistently produce a wrong answer."
+          }
+        ],
+        "fields": [
+          {
+            "name": "Segment Revenue — [1]",
+            "field_key": "seg_rev_1",
+            "type_hint": "number",
+            "section": "segments",
+            "label_instruction": "Replace '[1]' with the value of segment_1_name from pre_extraction.segment_name_resolution in the output label.",
+            "description": "Revenue from the company's first (and typically largest) reportable segment. SOURCE: Segment Information note (revenue table or revenue column) or MD&A revenue disaggregation table. NEVER use the operating income column in the Segment Information note — segment revenue and segment operating income appear in different tables or different columns within the same note; revenue values are typically 2–10x larger than operating income values for the same segment.",
+            "fallback_rule": "If the filing does not disaggregate segment revenue, return __not_found__.",
+            "sign_convention": "positive",
+            "cross_check_ref": "X1",
+            "manual_ref": "§1.1"
+          },
+          {
+            "name": "Segment Revenue — [2]",
+            "field_key": "seg_rev_2",
+            "type_hint": "number",
+            "section": "segments",
+            "label_instruction": "Replace '[2]' with segment_2_name from pre_extraction.segment_name_resolution.",
+            "description": "Revenue from the company's second reportable segment. Same sourcing rule as [1]: Segment Information note (revenue column) or MD&A revenue table only. NEVER use operating income column values.",
+            "fallback_rule": "If the filing does not disaggregate segment revenue, return __not_found__.",
+            "sign_convention": "positive",
+            "cross_check_ref": "X1",
+            "manual_ref": "§1.2"
+          },
+          {
+            "name": "Segment Revenue — [3]",
+            "field_key": "seg_rev_3",
+            "type_hint": "number",
+            "section": "segments",
+            "label_instruction": "Replace '[3]' with segment_3_name from pre_extraction.segment_name_resolution.",
+            "description": "Revenue from the company's third reportable segment, or a grouped 'Other Segments' total if more than three segments exist. Same sourcing rule as [1]: Segment Information note (revenue column) or MD&A revenue table only.",
+            "fallback_rule": "If the filing does not disaggregate segment revenue, return __not_found__.",
+            "sign_convention": "positive",
+            "cross_check_ref": "X1",
+            "manual_ref": "§1.3"
+          },
+          {
+            "name": "Other / Eliminations",
+            "field_key": "other_eliminations",
+            "type_hint": "number",
+            "section": "segments",
+            "description": "Reconciling amount in the segment revenue table that does not belong to a named segment. Includes intercompany revenue eliminations, corporate revenues not allocated to segments, and currency hedging gains/losses on revenues when reported as a separate reconciling line. Often small or zero.",
+            "sign_convention": "signed — positive if it adds to consolidated revenue (e.g. hedging gains), negative if it reduces consolidated revenue (e.g. intercompany eliminations)",
+            "cross_check_ref": "X1",
+            "manual_ref": "§1.4"
+          },
+          {
+            "name": "Total Revenues",
+            "field_key": "total_revenues",
+            "type_hint": "number",
+            "section": "face",
+            "description": "Consolidated total revenues from the face of the Consolidated Statements of Income. Use the line labeled 'Revenues', 'Total revenues', 'Net revenues', or 'Net sales'. For companies reporting gross revenues with face-statement deductions (returns, allowances, excise taxes), use the net figure. Revenues from discontinued operations are excluded.",
+            "sign_convention": "positive",
+            "cross_check_ref": "X1",
+            "manual_ref": "§1.5"
+          },
+          {
+            "name": "YoY Growth (%)",
+            "field_key": "yoy_growth_pct",
+            "type_hint": "number",
+            "section": "face",
+            "computed": true,
+            "formula": "(current_total_revenues / prior_year_same_period_total_revenues - 1) * 100",
+            "computed_guard": {
+              "required_inputs": [
+                "total_revenues (current period)",
+                "total_revenues (prior year same period)"
+              ],
+              "rule": "If either period's total_revenues is __not_found__ or zero, return __not_found__. Compare Q1-to-Q1, Q2-to-Q2 — never sequential quarters across years."
+            },
+            "description": "Year-over-year percentage change in Total Revenues. Computed — never extract. Round to one decimal place.",
+            "manual_ref": "§1.6"
+          },
+          {
+            "name": "Cost of Revenues",
+            "field_key": "cost_of_revenues",
+            "type_hint": "number",
+            "section": "face",
+            "description": "Direct or indirect expenditure incurred in producing or delivering goods and services, as reported on the face income statement. Technology/SaaS inclusions: hosting infrastructure, content delivery, support costs, amortization of capitalized software used in delivery. Media inclusions: content rights amortization, film production costs, television program costs. Retail inclusions: cost of merchandise sold, warehousing, inbound freight. Restructuring and non-recurring charges are excluded (captured in Restructuring and Other Charges). D&A may be embedded here — see supplemental D&A fields.",
+            "sign_convention": "positive",
+            "cross_check_ref": "X2, X3",
+            "manual_ref": "§2.1"
+          },
+          {
+            "name": "Gross Profit",
+            "field_key": "gross_profit",
+            "type_hint": "number",
+            "section": "face",
+            "computed": true,
+            "formula": "total_revenues - cost_of_revenues",
+            "computed_guard": {
+              "required_inputs": [
+                "total_revenues",
+                "cost_of_revenues"
+              ],
+              "rule": "If cost_of_revenues is __not_found__, return __not_found__."
+            },
+            "description": "Total Revenues minus Cost of Revenues. Computed — never extract even if the filing reports this line.",
+            "cross_check_ref": "X2",
+            "manual_ref": "§2.2"
+          },
+          {
+            "name": "Gross Margin (%)",
+            "field_key": "gross_margin_pct",
+            "type_hint": "number",
+            "section": "face",
+            "computed": true,
+            "formula": "gross_profit / total_revenues * 100",
+            "computed_guard": {
+              "required_inputs": [
+                "gross_profit",
+                "total_revenues"
+              ],
+              "rule": "If gross_profit is __not_found__, return __not_found__."
+            },
+            "description": "Gross Profit divided by Total Revenues. Round to one decimal place. Computed — never extract.",
+            "manual_ref": "§2.3"
+          },
+          {
+            "name": "Research and Development",
+            "field_key": "research_and_development",
+            "type_hint": "number",
+            "section": "face",
+            "description": "Research, development, and innovation expense as labeled on the face income statement. For technology, pharmaceutical, and manufacturing companies this is typically a separately disclosed operating expense line. Excludes capitalized development costs. If R&D is presented as a sub-line within COGS rather than a separate operating expense, return __not_found__ and note the treatment.",
+            "sign_convention": "positive",
+            "fallback_rule": "If R&D is embedded in COGS and not separately disclosed on the face statement, return __not_found__.",
+            "cross_check_ref": "X3",
+            "manual_ref": "§2.4"
+          },
+          {
+            "name": "Sales and Marketing",
+            "field_key": "sales_and_marketing",
+            "type_hint": "number",
+            "section": "face",
+            "description": "Selling, marketing, advertising, and customer acquisition expense as labeled on the face income statement. Includes sales force compensation and commissions, advertising spend, promotional costs, and brand spending. NOTE: If the company presents a single combined 'Selling, general and administrative' (SG&A) line without a face-statement split, enter the combined SG&A total here and leave General and Administrative blank. Do not attempt to split SG&A from footnotes unless the filing provides an explicit breakdown on the face statement.",
+            "sign_convention": "positive",
+            "fallback_rule": "If company presents a single SG&A line, enter the combined figure here and return __not_found__ for General and Administrative.",
+            "cross_check_ref": "X3",
+            "manual_ref": "§2.5"
+          },
+          {
+            "name": "General and Administrative",
+            "field_key": "general_and_administrative",
+            "type_hint": "number",
+            "section": "face",
+            "description": "Corporate overhead, administrative, legal, finance, HR, and executive compensation expense as labeled on the face income statement. Leave blank if the company presents a combined SG&A line (enter the combined amount in Sales and Marketing instead).",
+            "sign_convention": "positive",
+            "fallback_rule": "If company presents a single combined SG&A line, return __not_found__.",
+            "cross_check_ref": "X3",
+            "manual_ref": "§2.6"
+          },
+          {
+            "name": "Restructuring and Other Charges",
+            "field_key": "restructuring_and_other_charges",
+            "type_hint": "number",
+            "section": "face",
+            "description": "Charges separately disclosed on the face income statement that are non-recurring in nature. Includes: restructuring charges (severance, facility closure costs), goodwill or long-lived asset impairment, litigation settlements recognized as operating charges, merger and integration costs, and gain/loss on disposal of a business segment if above the operating income line. Only enter amounts that appear as a distinct line on the face statement — do not reallocate from other line items. Restructuring reversals (credits) are entered as negative.",
+            "sign_convention": "positive for charges; negative for reversals",
+            "fallback_rule": "Return __not_found__ if no such charge was separately disclosed on the face statement in this period.",
+            "cross_check_ref": "X3",
+            "manual_ref": "§2.7"
+          },
+          {
+            "name": "Depreciation (Expense) [If not broken out]",
+            "field_key": "depreciation_embedded",
+            "type_hint": "number",
+            "section": "face",
+            "required": false,
+            "description": "Supplemental field. Populate ONLY if: (a) depreciation is embedded within Cost of Revenues and NOT separately presented on the face income statement, AND (b) the filing separately discloses the COGS-embedded component (PP&E note or cash flow reconciliation). Purpose: allows reconstruction of cash-cost gross profit for comparability. Do not populate if depreciation is already a standalone face-statement line.",
+            "sign_convention": "positive",
+            "fallback_rule": "Return __not_found__ if depreciation is separately disclosed as a standalone line, or if the filing does not separately disclose the COGS-embedded component.",
+            "manual_ref": "§D&A 1"
+          },
+          {
+            "name": "Amortization (Expense) [If not broken out]",
+            "field_key": "amortization_embedded",
+            "type_hint": "number",
+            "section": "face",
+            "required": false,
+            "description": "Supplemental field. Populate ONLY if amortization of intangibles is embedded within Cost of Revenues and NOT separately presented on the face income statement, AND the filing separately discloses the COGS-embedded component (intangible assets note or business combinations note).",
+            "sign_convention": "positive",
+            "fallback_rule": "Return __not_found__ if amortization is separately disclosed as a standalone line, or if the filing does not separately disclose the COGS-embedded component.",
+            "manual_ref": "§D&A 2"
+          },
+          {
+            "name": "Total Operating Expenses",
+            "field_key": "total_operating_expenses",
+            "type_hint": "number",
+            "section": "face",
+            "computed": true,
+            "formula": "cost_of_revenues + research_and_development + sales_and_marketing + general_and_administrative + restructuring_and_other_charges",
+            "computed_guard": {
+              "required_inputs": [
+                "cost_of_revenues",
+                "research_and_development",
+                "sales_and_marketing",
+                "general_and_administrative"
+              ],
+              "optional_inputs": [
+                "restructuring_and_other_charges"
+              ],
+              "rule": "If ANY required_input is __not_found__, return __not_found__ — do not compute a partial sum. A partial sum that omits operating expense lines is not a meaningful Total Operating Expenses and will produce a silently wrong cross-check. Optional inputs default to 0 when __not_found__."
+            },
+            "description": "Sum of ALL operating cost lines: Cost of Revenues + R&D + Sales and Marketing + G&A + Restructuring (plus any other separately disclosed operating cost lines). Equals Total Revenues minus Operating Income. Computed — never extract the face-statement subtotal directly.",
+            "cross_check_ref": "X3",
+            "manual_ref": "§2.8"
+          },
+          {
+            "name": "Operating Income (Loss)",
+            "field_key": "operating_income",
+            "type_hint": "number",
+            "section": "face",
+            "description": "Income (or loss) from operations as reported on the face of the Consolidated Statements of Income, before interest, other non-operating items, and income taxes. Use the line labeled 'Income from operations', 'Operating income', or 'Operating profit (loss)'. Extract directly from the filing — do not calculate.",
+            "sign_convention": "positive for income; negative for loss",
+            "cross_check_ref": "X3, X4, X6",
+            "manual_ref": "§3.1"
+          },
+          {
+            "name": "Operating Margin (%)",
+            "field_key": "operating_margin_pct",
+            "type_hint": "number",
+            "section": "face",
+            "computed": true,
+            "formula": "operating_income / total_revenues * 100",
+            "computed_guard": {
+              "required_inputs": [
+                "operating_income",
+                "total_revenues"
+              ],
+              "rule": "If either is __not_found__, return __not_found__."
+            },
+            "description": "Operating Income divided by Total Revenues. Negative in loss periods. Round to one decimal place. Computed — never extract.",
+            "manual_ref": "§3.2"
+          },
+          {
+            "name": "Segment OI — [1]",
+            "field_key": "seg_oi_1",
+            "type_hint": "number",
+            "section": "segments",
+            "label_instruction": "Replace '[1]' with segment_1_name from pre_extraction.segment_name_resolution.",
+            "description": "Operating income (or loss) attributed to the first reportable segment. SOURCE: Notes to Financial Statements — Segment Information note only (operating income by segment column/table). NEVER use revenue figures here. The segment's OI follows the company's stated segment accounting policies, which may differ from consolidated GAAP OI (e.g. stock-based compensation is commonly excluded from segment profit and captured instead in Unallocated/Corporate). Use the same segment ordering as Segment Revenue [1].",
+            "sign_convention": "positive for income; negative for loss",
+            "cross_check_ref": "X4",
+            "manual_ref": "§4.1"
+          },
+          {
+            "name": "Segment OI — [2]",
+            "field_key": "seg_oi_2",
+            "type_hint": "number",
+            "section": "segments",
+            "label_instruction": "Replace '[2]' with segment_2_name from pre_extraction.segment_name_resolution.",
+            "description": "Operating income (or loss) attributed to the second reportable segment. SOURCE: Segment Information note only. Same rules as Segment OI [1]. Use the same segment ordering as Segment Revenue [2].",
+            "sign_convention": "positive for income; negative for loss",
+            "cross_check_ref": "X4",
+            "manual_ref": "§4.2"
+          },
+          {
+            "name": "Segment OI — [3]",
+            "field_key": "seg_oi_3",
+            "type_hint": "number",
+            "section": "segments",
+            "label_instruction": "Replace '[3]' with segment_3_name from pre_extraction.segment_name_resolution.",
+            "description": "Operating income (or loss) attributed to the third reportable segment, or grouped 'Other Segments'. SOURCE: Segment Information note only. Typically negative for early-stage or investment-stage segments. Use the same segment ordering as Segment Revenue [3].",
+            "sign_convention": "positive for income; negative for loss",
+            "cross_check_ref": "X4",
+            "manual_ref": "§4.3"
+          },
+          {
+            "name": "Unallocated / Corporate",
+            "field_key": "unallocated_corporate",
+            "type_hint": "number",
+            "section": "segments",
+            "description": "Reconciling amount between the sum of segment operating incomes and consolidated operating income, as reported in the Segment Information note reconciliation table. Typically includes: corporate overhead not charged to segments, stock-based compensation excluded from segment profit, amortization of acquired intangibles not allocated to segments, and restructuring charges held at corporate level. SOURCE: Segment Information note reconciliation table — look for a line labeled 'Unallocated corporate costs', 'Corporate and other', 'Reconciling items', or similar. Must be included so that seg_oi_1 + seg_oi_2 + seg_oi_3 + unallocated_corporate equals consolidated Operating Income.",
+            "sign_convention": "typically negative (net cost burden); enter as a signed number",
+            "cross_check_ref": "X4",
+            "manual_ref": "§4.4"
+          },
+          {
+            "name": "Interest Income",
+            "field_key": "interest_income",
+            "type_hint": "number",
+            "section": "other_income",
+            "description": "Interest earned on cash, cash equivalents, short-term investments, and notes receivable. SOURCE: Face income statement (if separately disclosed) or the 'Other income (expense), net' footnote. Includes all interest-type income regardless of balance sheet classification.",
+            "sign_convention": "positive",
+            "cross_check_ref": "X5",
+            "manual_ref": "§5.1"
+          },
+          {
+            "name": "Interest Expense",
+            "field_key": "interest_expense",
+            "type_hint": "number",
+            "section": "other_income",
+            "description": "Interest paid or accrued on long-term debt, bonds, revolving credit facilities, capital/finance leases, and similar obligations. SOURCE: Face income statement or OI&E footnote. The filing may present this as a negative figure — strip the sign and enter the absolute value. This field is entered as a positive number representing the magnitude of expense and is SUBTRACTED in the OI&E reconciliation formula (X5): interest_income - interest_expense + fx + gains + other = total_other_income.",
+            "sign_convention": "positive — always enter as absolute value (magnitude of expense), even if the filing shows it as a negative number",
+            "cross_check_ref": "X5",
+            "manual_ref": "§5.2"
+          },
+          {
+            "name": "FX Gains (Losses), Net",
+            "field_key": "fx_gains_net",
+            "type_hint": "number",
+            "section": "other_income",
+            "description": "Net foreign currency transaction gains or losses. Includes realized and unrealized FX on monetary assets and liabilities, and gains/losses on FX derivative contracts not designated as hedges. Exclude revenue-hedging gains/losses already captured in Other/Eliminations (§1.4). Positive for net gain; negative for net loss.",
+            "sign_convention": "signed — positive for gain, negative for loss",
+            "cross_check_ref": "X5",
+            "manual_ref": "§5.3"
+          },
+          {
+            "name": "Gains (Losses) on Investments, Net",
+            "field_key": "investment_gains_net",
+            "type_hint": "number",
+            "section": "other_income",
+            "description": "Net realized and unrealized gains or losses on equity securities, debt investments, venture investments, and other financial assets held at fair value. Includes mark-to-market changes on equity securities (ASC 321/IFRS 9), realized gains on sale of investments, and investment impairment charges. Can be large and volatile for companies with significant investment portfolios. Alternative labels in the OI&E footnote: 'Net gain on equity securities', 'Gain (loss) on equity securities, net', 'Net unrealized gain on investments', 'Net gain (loss) on financial instruments'. Positive for net gain; negative for net loss.",
+            "sign_convention": "signed — positive for gain, negative for loss",
+            "cross_check_ref": "X5",
+            "manual_ref": "§5.4"
+          },
+          {
+            "name": "Other Non-Operating, Net",
+            "field_key": "other_non_operating_net",
+            "type_hint": "number",
+            "section": "other_income",
+            "description": "All remaining non-operating items not captured in rows 5.1–5.4. Includes: equity method investment income/loss, pension non-service costs, early debt extinguishment gains or losses, and other miscellaneous non-operating items. SOURCE: 'Other income (expense), net' footnote — the residual 'Other' line after interest, FX, and investment gains are separated out. Positive for net income contribution; negative for net expense. If a material item is included here, note it in Analyst Notes.",
+            "sign_convention": "signed — positive for net income, negative for net expense",
+            "cross_check_ref": "X5",
+            "manual_ref": "§5.5"
+          },
+          {
+            "name": "Total Other Income (Expense), Net",
+            "field_key": "total_other_income_net",
+            "type_hint": "number",
+            "section": "other_income",
+            "description": "Total non-operating income or expense as reported on the face of the Consolidated Statements of Income. SOURCE: Face statement line labeled 'Other income (expense), net', 'Non-operating income (expense)', or equivalent. This is the anchor value for the OI&E section — it is extracted from the face statement and all component fields (5.1–5.5) must reconcile to it. Positive when net non-operating contribution is income; negative when it is a net expense.",
+            "sign_convention": "signed — positive for net income, negative for net expense",
+            "cross_check_ref": "X5, X6",
+            "manual_ref": "§5.6"
+          },
+          {
+            "name": "Income Before Income Taxes",
+            "field_key": "income_before_taxes",
+            "type_hint": "number",
+            "section": "face",
+            "description": "Pre-tax income or loss as reported on the face of the Consolidated Statements of Income. Use the line labeled 'Income before income taxes', 'Income (loss) before provision for income taxes', or equivalent. Positive for pre-tax income; negative for pre-tax loss.",
+            "sign_convention": "positive for income; negative for loss",
+            "cross_check_ref": "X6, X7",
+            "manual_ref": "§6.1"
+          },
+          {
+            "name": "Provision for Income Taxes",
+            "field_key": "provision_for_income_taxes",
+            "type_hint": "number",
+            "section": "face",
+            "description": "Total income tax expense or benefit for the period as reported on the face income statement. Includes current plus deferred tax. Positive for tax expense (normal case); negative for a net tax benefit period.",
+            "sign_convention": "positive for expense; negative for benefit",
+            "cross_check_ref": "X7",
+            "manual_ref": "§6.2"
+          },
+          {
+            "name": "Effective Tax Rate (%)",
+            "field_key": "effective_tax_rate_pct",
+            "type_hint": "number",
+            "section": "face",
+            "computed": true,
+            "formula": "provision_for_income_taxes / income_before_taxes * 100",
+            "computed_guard": {
+              "required_inputs": [
+                "provision_for_income_taxes",
+                "income_before_taxes"
+              ],
+              "rule": "If income_before_taxes is zero or __not_found__, return __not_found__. Negative if provision is a benefit on a profitable year. Quarterly ETRs may differ significantly from the full-year rate due to discrete tax items — this is expected."
+            },
+            "description": "Tax provision divided by pre-tax income. Round to one decimal place. Computed — never extract.",
+            "manual_ref": "§6.3"
+          },
+          {
+            "name": "Net Income (Loss)",
+            "field_key": "net_income",
+            "type_hint": "number",
+            "section": "face",
+            "description": "Final bottom line of the Consolidated Statements of Income. If the filing presents both 'Net income' and 'Net income attributable to [Company] shareholders' (after deducting noncontrolling interests), use the PARENT COMPANY figure ('attributable to shareholders') — this is consistent with the EPS denominator. If noncontrolling interests are absent or immaterial, both figures will be identical.",
+            "sign_convention": "positive for income; negative for loss",
+            "cross_check_ref": "X7, X10, X10b",
+            "manual_ref": "§7.1"
+          },
+          {
+            "name": "Net Margin (%)",
+            "field_key": "net_margin_pct",
+            "type_hint": "number",
+            "section": "face",
+            "computed": true,
+            "formula": "net_income / total_revenues * 100",
+            "computed_guard": {
+              "required_inputs": [
+                "net_income",
+                "total_revenues"
+              ],
+              "rule": "If either is __not_found__, return __not_found__."
+            },
+            "description": "Net Income divided by Total Revenues. Negative in loss periods. Round to one decimal place. Computed — never extract.",
+            "manual_ref": "§7.2"
+          },
+          {
+            "name": "EPS — Basic ($)",
+            "field_key": "eps_basic",
+            "type_hint": "number",
+            "section": "per_share",
+            "description": "Basic earnings (or loss) per share as reported in the EPS section of the income statement or EPS note. For multi-class share structures, use the EPS attributable to ordinary/common shareholders. Units: currency per share, two decimal places.",
+            "cross_check_ref": "X8, X10",
+            "manual_ref": "§8.1"
+          },
+          {
+            "name": "EPS — Diluted ($)",
+            "field_key": "eps_diluted",
+            "type_hint": "number",
+            "section": "per_share",
+            "description": "Diluted earnings (or loss) per share reflecting the potential dilutive impact of options, warrants, RSUs, convertible instruments, and similar securities. In loss periods, dilutive securities are excluded (anti-dilution rule) and Diluted EPS equals Basic EPS. Must be ≤ Basic EPS in income periods. Units: currency per share, two decimal places.",
+            "cross_check_ref": "X8, X10b",
+            "manual_ref": "§8.2"
+          },
+          {
+            "name": "Wtd. Avg. Shares — Basic (MM)",
+            "field_key": "wtd_avg_shares_basic",
+            "type_hint": "number",
+            "section": "per_share",
+            "description": "Weighted average number of common shares outstanding used to calculate basic EPS, expressed in millions. SOURCE: Face income statement (immediately below the EPS lines) or EPS computation note, labeled 'Weighted-average shares outstanding — Basic' or 'Number of shares used in per share calculation — Basic'. Convert to millions if the filing reports in thousands or whole shares. DO NOT use: total shares outstanding, shares issued, or shares from the balance sheet — these are NOT weighted averages and are typically 5–10% higher than the weighted average, producing a consistently wrong EPS cross-check.",
+            "sign_convention": "positive",
+            "cross_check_ref": "X9, X10",
+            "manual_ref": "§8.3"
+          },
+          {
+            "name": "Wtd. Avg. Shares — Diluted (MM)",
+            "field_key": "wtd_avg_shares_diluted",
+            "type_hint": "number",
+            "section": "per_share",
+            "description": "Weighted average diluted share count used to calculate diluted EPS, expressed in millions. Includes the dilutive effect of in-the-money options, unvested RSUs, and convertible instruments using the treasury stock method or if-converted method. Must be ≥ Basic shares in income periods; equals Basic shares in loss periods (anti-dilution). SOURCE: Face income statement (immediately below EPS lines) or EPS computation note, labeled 'Weighted-average shares outstanding — Diluted'. DO NOT use: total shares outstanding, shares issued, or shares from the balance sheet — these are NOT weighted averages and will consistently produce an EPS cross-check failure. The balance sheet and cover page figures are typically 5–10% larger than the weighted average diluted count.",
+            "sign_convention": "positive",
+            "cross_check_ref": "X9, X10b",
+            "manual_ref": "§8.4"
+          }
+        ]
+      },
+      "task_id": null
+    },
+    "rules": {
+      "$type": "DocumentHandle",
+      "source": "D:\\projects\\trellis\\examples\\data\\spreading_manual_income_statement.md",
+      "format": "text",
+      "pages": [
+        {
+          "$type": "Page",
+          "number": 1,
+          "text": "# Income Statement Spreading Manual\n## General Reference — Applicable to All Companies and Industries\n\n**Manual Version:** 1.0  \n**Applies to Template:** Income Statement Spread (10-column quarterly/annual layout)  \n**Audience:** Credit analysts, equity analysts, and automated LLM extraction systems\n\n---\n\n## How to Use This Manual\n\nThis manual defines how to populate every field in the Income Statement Spread template. Rules are general and apply across all companies, industries, reporting currencies, and filing jurisdictions. Where treatment differs by industry or circumstance, explicit guidance is given within the rule.\n\nRules are written to be **deterministic and reproducible**: two analysts — or two automated extraction passes — applying this manual to the same source filing must produce identical outputs.\n\n---\n\n## General Rules Applicable to All Sections\n\n| Rule | Description |\n|---|---|\n| **G1. Source hierarchy** | Extract values in this priority order: (1) the face of the Consolidated Statements of Income (Operations); (2) Notes to Financial Statements (revenue disaggregation note, segment information note); (3) Management's Discussion and Analysis (MD&A) revenue and segment tables. Always prefer the lowest-numbered source that contains the required figure. |\n| **G2. Units** | Use the unit convention stated on the face of the income statement (e.g., USD millions, EUR thousands). Record values as plain numbers without currency symbols or formatting. Apply consistent rounding throughout: if the filing reports in millions, round all values to the nearest whole million. |\n| **G3. Reporting currency** | Use the currency of the primary financial statements. Where the filing presents figures in a functional currency different from the presentation currency, use the presentation currency. Note any currency translation effects in the Analyst Notes section. |\n| **G4. Period columns** | The template has ten columns: Q1, Q2, Q3, Q4, FY for two consecutive fiscal years. L…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {}
+        }
+      ],
+      "page_count": 1,
+      "is_scanned": false,
+      "source_url": null,
+      "metadata": {}
+    },
+    "period_end": "2025-03-31",
+    "section_filter": "per_share"
+  },
+  "output": {
+    "EPS — Basic ($)": "2.84",
+    "EPS — Diluted ($)": "2.81",
+    "Wtd. Avg. Shares — Basic (MM)": "12",
+    "Wtd. Avg. Shares — Diluted (MM)": "12"
+  },
+  "error": null
+}

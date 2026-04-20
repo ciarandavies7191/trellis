@@ -1,0 +1,77 @@
+# ─────────────────────────────────────────────
+# Extraction in isolation
+#
+# Purpose: test extraction of "Segment Revenue — [1]" (seg_rev_1) without
+# running the full plan.  No template population, no compute/validate/finalize
+# steps — just fetch → select → extract → export raw JSON.
+#
+# Hardcoded: Alphabet Q1 2025 (GOOGL, period_end 2025-03-31).
+# ─────────────────────────────────────────────
+pipeline:
+  id: debug_seg_rev_1
+  goal: >
+    Fetch the Alphabet Q1 2025 10-Q from SEC EDGAR, select the segment
+    revenue pages, and extract the segments section fields (seg_rev_1,
+    seg_rev_2, seg_rev_3, other_eliminations) using the spreading manual
+    as rules.  Write raw JSON to outputs/ — no template, no derived fields.
+
+  tasks:
+
+    # ── 1. Load schema and manual in parallel ────────────────────────────────
+    - id: load_schema
+      tool: load_schema
+      inputs:
+        source: "examples/data/income_statement_schema.json"
+
+    - id: ingest_manual
+      tool: ingest_document
+      inputs:
+        path: "examples/data/spreading_manual_income_statement.md"
+
+    # ── 2. Fetch and ingest the 10-Q filing ──────────────────────────────────
+    - id: fetch_filing
+      tool: fetch_data
+      inputs:
+        source: sec_edgar
+        ticker: "GOOGL"
+        period_end: "2025-03-31"
+        period_type: quarterly
+        count: 1
+
+    - id: ingest_filing
+      tool: ingest_document
+      inputs:
+        path: "{{fetch_filing.output}}"
+
+    # ── 3. Select segment pages only ─────────────────────────────────────────
+    - id: select_segments
+      tool: select
+      inputs:
+        document: "{{ingest_filing.output}}"
+        prompt: >
+          Select only the pages containing disaggregated revenue by business
+          segment (the revenue disaggregation table, typically in a Revenue
+          footnote or Note to Financial Statements). This is the table showing
+          revenue broken out by Google Services, Google Cloud, Other Bets, etc.
+          Also include any page showing operating income by segment (Segment
+          Information footnote).
+          Exclude: the consolidated income statement face, balance sheet,
+          cash flow statement, cover pages, and risk factors.
+
+    # ── 4. Extract segments section — raw, no post-processing ────────────────
+    - id: extract_segments
+      tool: extract_fields
+      inputs:
+        document: "{{select_segments.output}}"
+        schema: "{{load_schema.output}}"
+        rules: "{{ingest_manual.output}}"
+        period_end: "2025-03-31"
+        section_filter: "segments"
+
+    # ── 5. Export raw JSON result ─────────────────────────────────────────────
+    - id: export_result
+      tool: export
+      inputs:
+        data: "{{extract_segments.output}}"
+        format: json
+        filename: "extract_fields"

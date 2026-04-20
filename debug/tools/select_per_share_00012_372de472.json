@@ -1,0 +1,2298 @@
+{
+  "tool": "select",
+  "task_id": "select_per_share",
+  "invocation": 12,
+  "timestamp": "2026-04-20T18:19:41.989533",
+  "inputs": {
+    "document": {
+      "$type": "DocumentHandle",
+      "source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204424000053/goog-20240331.htm",
+      "format": "text",
+      "pages": [
+        {
+          "$type": "Page",
+          "number": 1,
+          "text": "UNITED STATES\n\nSECURITIES AND EXCHANGE COMMISSION\n\nWashington, D.C. 20549\n\n________________________________________________________________________________________\n\nFORM 10-Q\n\n________________________________________________________________________________________\n\n(Mark One)\n\n☒ QUARTERLY REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 2,
+          "text": "☒ | QUARTERLY REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 3,
+          "text": "For the quarterly period ended March 31, 2024\n\nOR ☐ TRANSITION REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 4,
+          "text": "☐ | TRANSITION REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 5,
+          "text": "For the transition period from _______ to _______\n\nCommission file number: 001-37580\n\n________________________________________________________________________________________\n\nAlphabet Inc.\n\n(Exact name of registrant as specified in its charter)\n\n________________________________________________________________________________________ Delaware 61-1767919 (State or other jurisdiction of incorporation or organization) (I.R.S. Employer Identification Number)",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 6,
+          "text": "Delaware | 61-1767919\n(State or other jurisdiction of incorporation or organization) | (I.R.S. Employer Identification Number)",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 7,
+          "text": "1600 Amphitheatre Parkway\n\nMountain View , CA 94043\n\n(Address of principal executive offices, including zip code)\n\n( 650 ) 253-0000\n\n(Registrant's telephone number, including area code) Securities registered pursuant to Section 12(b) of the Act: Title of each class Trading Symbol(s) Name of each exchange on which registered Class A Common Stock, $0.001 par value GOOGL Nasdaq Stock Market LLC (Nasdaq Global Select Market) Class C Capital Stock, $0.001 par value GOOG Nasdaq Stock Market LLC (Nasdaq Global Select Market)",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 8,
+          "text": "Securities registered pursuant to Section 12(b) of the Act:\nTitle of each class | Trading Symbol(s) | Name of each exchange on which registered\nClass A Common Stock, $0.001 par value | GOOGL | Nasdaq Stock Market LLC\n |  | (Nasdaq Global Select Market)\nClass C Capital Stock, $0.001 par value | GOOG | Nasdaq Stock Market LLC\n |  | (Nasdaq Global Select Market)",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 9,
+          "text": "________________________________________________________________________________________\n\nIndicate by check mark whether the registrant: (1) has filed all reports required to be filed by Section 13 or 15(d) of the Securities Exchange Act of 1934 during the preceding 12 months (or for such shorter period that the registrant was required to file such reports), and (2) has been subject to such filing requirements for the past 90 days. Yes ☒ No ☐\n\nIndicate by check mark whether the registrant has submitted electronically every Interactive Data File required to be submitted pursuant to Rule 405 of Regulation S-T (§232.405 of this chapter) during the preceding 12 months (or for such shorter period that the registrant was required to submit such files). Yes ☒ No ☐\n\nIndicate by check mark whether the registrant is a large accelerated filer, an accelerated filer, a non-accelerated filer, a smaller reporting company, or an emerging growth company. See the definitions of “large accelerated filer,” “accelerated filer,” “smaller reporting company,” and \"emerging growth company\" in Rule 12b-2 of the Exchange Act.\n\nLarge accelerated filer ☒ Accelerated filer ☐ Non-accelerated filer ☐ Smaller reporting company ☐ Emerging growth company ☐",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 10,
+          "text": "Large accelerated filer | ☒ |  | Accelerated filer | ☐\nNon-accelerated filer | ☐ |  | Smaller reporting company | ☐\nEmerging growth company | ☐ |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 11,
+          "text": "If an emerging growth company, indicate by check mark if the registrant has elected not to use the extended transition period for complying with any new or revised financial accounting standards provided pursuant to Section 13(a) of the Exchange Act. ☐\n\nIndicate by check mark whether the registrant is a shell company (as defined in Rule 12b-2 of the Exchange Act).    Yes ☐ No ☒\n\nAs of April 18, 2024, there we re 5,874 million shares of Alphabet’s Class A stock outstanding, 867 million shares of Alphabet's Class B stock outstanding, and 5,617 million shares of Alphabet's Class C stock outstanding.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 12,
+          "text": "Table of Contents Alphabet Inc.\n\nTable of Contents Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 13,
+          "text": "Table of Contents | Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 14,
+          "text": "Alphabet Inc.\n\nForm 10-Q\n\nFor the Quarterly Period Ended March 31, 2024\n\nTABLE OF CONTENTS Page No. Note About Forward-Looking Statements 3 PART I. FINANCIAL INFORMATION Item 1 Financial Statements 5 Consolidated Balance Sheets - December 31, 2023 and March 31, 2024 5 Consolidated Statements of Income - Three Months Ended March 31 , 2023 and 2024 6 Consolidated Statements of Comprehensive Income - Three Months Ended March 31 , 2023 and 2024 7 Consolidated Statements of Stockholders' Equity - Three Months Ended March 31 , 2023 and 2024 8 Consolidated Statements of Cash Flows - Three Months Ended March 31 , 2023 and 2024 9 Notes to Consolidated Financial Statements 10 Item 2 Management’s Discussion and Analysis of Financial Condition and Results of Operations 29 Item 3 Quantitative and Qualitative Disclosures About Market Risk 42 Item 4 Controls and Procedures 42 PART II. OTHER INFORMATION Item 1 Legal Proceedings 43 Item 1A Risk Factors 43 Item 2 Unregistered Sales of Equity Securities and Use of Proceeds 44 Item 5 Other Information 44 Item 6 Exhibits 45 Signatures 46",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 15,
+          "text": " |  | Page No.\nNote About Forward-Looking Statements | 3\nPART I. FINANCIAL INFORMATION\nItem 1 | Financial Statements | 5\n | Consolidated Balance Sheets - December 31, 2023 and March 31, 2024 | 5\n | Consolidated Statements of Income - Three Months Ended March 31 , 2023 and 2024 | 6\n | Consolidated Statements of Comprehensive Income - Three Months Ended March 31 , 2023 and 2024 | 7\n | Consolidated Statements of Stockholders' Equity - Three Months Ended March 31 , 2023 and 2024 | 8\n | Consolidated Statements of Cash Flows - Three Months Ended March 31 , 2023 and 2024 | 9\n | Notes to Consolidated Financial Statements | 10\nItem 2 | Management’s Discussion and Analysis of Financial Condition and Results of Operations | 29\nItem 3 | Quantitative and Qualitative Disclosures About Market Risk | 42\nItem 4 | Controls and Procedures | 42\nPART II. OTHER INFORMATION\nItem 1 | Legal Proceedings | 43\nItem 1A | Risk Factors | 43\nItem 2 | Unregistered Sales of Equity Securities and Use of Proceeds | 44\nItem 5 | Other Information | 44\nItem 6 | Exhibits | 45\nSignatures | 46",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 16,
+          "text": "2\n\n2\n\n2\n\nTable of Contents Alphabet Inc.\n\nTable of Contents Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 17,
+          "text": "Table of Contents | Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 18,
+          "text": "Note About Forward-Looking Statements\n\nThis Quarterly Report on Form 10-Q contains forward-looking statements within the meaning of the Private Securities Litigation Reform Act of 1995. These include, among other things, statements regarding:\n\n• the growth of our business and revenues and our expectations about the factors that influence our success and trends in our business;\n\n• fluctuations in our revenues and margins and various factors contributing to such fluctuations;\n\n• our expectation that the continuing shift from an offline to online world will continue to benefit our business;\n\n• our expectation that the portion of our revenues that we derive beyond advertising will continue to increase and may affect our margins;\n\n• our expectation that our traffic acquisition costs (TAC) and the associated TAC rate will fluctuate, which could affect our overall margins;\n\n• our expectation that our monetization trends will fluctuate, which could affect our revenues and margins;\n\n• fluctuations in paid clicks and cost-per-click as well as impressions and cost-per-impression, and various factors contributing to such fluctuations;\n\n• our expectation that we will continue to periodically review, refine, and update our methodologies for monitoring, gathering, and counting the number of paid clicks and impressions;\n\n• our expectation that our results will be affected by our performance in international markets as users in developing economies increasingly come online;\n\n• our expectation that our foreign exchange risk management program will not fully offset our net exposure to fluctuations in foreign currency exchange rates;\n\n• the expected variability of gains and losses related to hedging activities under our foreign exchange risk management program;\n\n• the amount and timing of revenue recognition from customer contracts with commitments for performance obligations, including our estimate of the remaining amount of commitments and when we expect to recognize revenue;\n\n• our …",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 19,
+          "text": "Table of Contents | Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 20,
+          "text": "• the expected timing, amount, and effect of Alphabet Inc.'s share repurchases and dividends;\n\n• our long-term sustainability and diversity goals;\n\nas well as other statements regarding our future operations, financial condition and prospects, and business strategies. Forward-looking statements may appear throughout this report and other documents we file with the Securities and Exchange Commission (SEC), including without limitation, the following sections: Part I, Item 2, \"Management's Discussion and Analysis of Financial Condition and Results of Operations\" in this Quarterly Report on Form 10-Q and Part I, Item 1A, “Risk Factors” in our Annual Report on Form 10-K for the fiscal year ended December 31, 2023, as updated in this Quarterly Report on Form 10-Q. Forward-looking statements generally can be identified by words such as \"anticipates,\" \"believes,\" \"could,\" \"estimates,\" \"expects,\" \"intends,\" \"may,\" \"plans,\" \"predicts,\" \"projects,\" \"will be,\" \"will continue,\" \"will likely result,\" and similar expressions. These forward-looking statements are based on current expectations and assumptions that are subject to risks and uncertainties, which could cause our actual results to differ materially from those reflected in the forward-looking statements. Factors that could cause or contribute to such differences include, but are not limited to, those discussed in this Quarterly Report on Form 10-Q; the risks discussed in Part I, Item 1A, \"Risk Factors\" in our Annual Report on Form 10-K for the fiscal year ended December 31, 2023, as updated in this Quarterly Report on Form 10-Q; the trends discussed in Part II, Item 7, \"Management's Discussion and Analysis of Financial Condition and Results of Operations\" in our Annual Report on Form 10-K for the fiscal year ended December 31, 2023; and those discussed in other documents we file with the SEC. We undertake no obligation to revise or publicly release the results of any revision to these forward-looking statements, except a…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 21,
+          "text": "Table of Contents | Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 22,
+          "text": "PART I.    FINANCIAL INFORMATION\n\nITEM 1. FINANCIAL STATEMENTS\n\nAlphabet Inc.\n\nCONSOLIDATED BALANCE SHEETS\n\n(in millions, except par value per share amounts) As of December 31, 2023 As of March 31, 2024 (unaudited) Assets Current assets: Cash and cash equivalents $ 24,048 $ 24,493 Marketable securities 86,868 83,597 Total cash, cash equivalents, and marketable securities 110,916 108,090 Accounts receivable, net 47,964 44,552 Other current assets 12,650 12,829 Total current assets 171,530 165,471 Non-marketable securities 31,008 33,994 Deferred income taxes 12,169 11,687 Property and equipment, net 134,345 143,182 Operating lease assets 14,091 13,768 Goodwill 29,198 29,183 Other non-current assets 10,051 10,065 Total assets $ 402,392 $ 407,350 Liabilities and Stockholders’ Equity Current liabilities: Accounts payable $ 7,493 $ 6,198 Accrued compensation and benefits 15,140 9,703 Accrued expenses and other current liabilities 46,168 48,603 Accrued revenue share 8,876 8,520 Deferred revenue 4,137 3,973 Total current liabilities 81,814 76,997 Long-term debt 13,253 13,228 Deferred revenue, non-current 911 921 Income taxes payable, non-current 8,474 9,234 Deferred income taxes 485 486 Operating lease liabilities 12,460 11,957 Other long-term liabilities 1,616 1,683 Total liabilities 119,013 114,506 Commitments and Contingencies (Note 8) Stockholders’ equity: Preferred stock, $ 0.001 par value per share, 100 shares authorized; no shares issued and outstanding 0 0 Class A, Class B, and Class C stock and additional paid-in capital, $ 0.001 par value per share: 300,000 shares authorized (Class A 180,000 , Class B 60,000 , Class C 60,000 ); 12,460 (Class A 5,899 , Class B 870 , Class C 5,691 ) a nd 12,381 (Class A 5,879 , Class B 867 , Class C 5,635 ) shares issued and outstanding 76,534 77,913 Accumulated other comprehensive income (loss) ( 4,402 ) ( 4,839 ) Retained earnings 211,247 219,770 Total stockholders’ equity 283,379 292,844 Total liabilities and stockholders’ equity…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 23,
+          "text": " | As of December 31, 2023 |  | As of March 31, 2024\n |  |  | (unaudited)\nAssets |  |  | \nCurrent assets: |  |  | \nCash and cash equivalents | $ | 24,048 |  |  | $ | 24,493 | \nMarketable securities | 86,868 |  |  | 83,597 | \nTotal cash, cash equivalents, and marketable securities | 110,916 |  |  | 108,090 | \nAccounts receivable, net | 47,964 |  |  | 44,552 | \nOther current assets | 12,650 |  |  | 12,829 | \nTotal current assets | 171,530 |  |  | 165,471 | \nNon-marketable securities | 31,008 |  |  | 33,994 | \nDeferred income taxes | 12,169 |  |  | 11,687 | \nProperty and equipment, net | 134,345 |  |  | 143,182 | \nOperating lease assets | 14,091 |  |  | 13,768 | \nGoodwill | 29,198 |  |  | 29,183 | \nOther non-current assets | 10,051 |  |  | 10,065 | \nTotal assets | $ | 402,392 |  |  | $ | 407,350 | \nLiabilities and Stockholders’ Equity |  |  | \nCurrent liabilities: |  |  | \nAccounts payable | $ | 7,493 |  |  | $ | 6,198 | \nAccrued compensation and benefits | 15,140 |  |  | 9,703 | \nAccrued expenses and other current liabilities | 46,168 |  |  | 48,603 | \nAccrued revenue share | 8,876 |  |  | 8,520 | \nDeferred revenue | 4,137 |  |  | 3,973 | \nTotal current liabilities | 81,814 |  |  | 76,997 | \nLong-term debt | 13,253 |  |  | 13,228 | \nDeferred revenue, non-current | 911 |  |  | 921 | \nIncome taxes payable, non-current | 8,474 |  |  | 9,234 | \nDeferred income taxes | 485 |  |  | 486 | \nOperating lease liabilities | 12,460 |  |  | 11,957 | \nOther long-term liabilities | 1,616 |  |  | 1,683 | \nTotal liabilities | 119,013 |  |  | 114,506 | \nCommitments and Contingencies (Note 8) |  |  | \nStockholders’ equity: |  |  | \nPreferred stock, $ 0.001 par value per share, 100 shares authorized; no shares issued and outstanding | 0 |  |  | 0 | \nClass A, Class B, and Class C stock and additional paid-in capital, $ 0.001 par value per share: 300,000 shares authorized (Class A 180,000 , Class B 60,000 , Class C 60,000 ); 12,460 (Class A 5,899 , Class B 870 , Class C 5,691 ) a nd 12,381 …",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 24,
+          "text": "See accompanying notes.\n\n5\n\n5\n\n5\n\nTable of Contents Alphabet Inc.\n\nTable of Contents Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 25,
+          "text": "Table of Contents | Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 26,
+          "text": "Alphabet Inc.\n\nCONSOLIDATED STATEMENTS OF INCOME\n\n(in millions, except per share amounts; unaudited) Three Months Ended March 31, 2023 2024 Revenues $ 69,787 $ 80,539 Costs and expenses: Cost of revenues 30,612 33,712 Research and development 11,468 11,903 Sales and marketing 6,533 6,426 General and administrative 3,759 3,026 Total costs and expenses 52,372 55,067 Income from operations 17,415 25,472 Other income (expense), net 790 2,843 Income before income taxes 18,205 28,315 Provision for income taxes 3,154 4,653 Net income $ 15,051 $ 23,662 Basic net income per share of Class A, Class B, and Class C stock $ 1.18 $ 1.91 Diluted net income per share of Class A, Class B, and Class C stock $ 1.17 $ 1.89",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 27,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nRevenues | $ | 69,787 |  |  | $ | 80,539 |  |  |  |  | \nCosts and expenses: |  |  |  |  |  |  | \nCost of revenues | 30,612 |  |  | 33,712 |  |  |  |  | \nResearch and development | 11,468 |  |  | 11,903 |  |  |  |  | \nSales and marketing | 6,533 |  |  | 6,426 |  |  |  |  | \nGeneral and administrative | 3,759 |  |  | 3,026 |  |  |  |  | \nTotal costs and expenses | 52,372 |  |  | 55,067 |  |  |  |  | \nIncome from operations | 17,415 |  |  | 25,472 |  |  |  |  | \nOther income (expense), net | 790 |  |  | 2,843 |  |  |  |  | \nIncome before income taxes | 18,205 |  |  | 28,315 |  |  |  |  | \nProvision for income taxes | 3,154 |  |  | 4,653 |  |  |  |  | \nNet income | $ | 15,051 |  |  | $ | 23,662 |  |  |  |  | \nBasic net income per share of Class A, Class B, and Class C stock | $ | 1.18 |  |  | $ | 1.91 |  |  |  |  | \nDiluted net income per share of Class A, Class B, and Class C stock | $ | 1.17 |  |  | $ | 1.89 |  |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 28,
+          "text": "See accompanying notes.\n\n6\n\n6\n\n6\n\nTable of Contents Alphabet Inc.\n\nTable of Contents Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 29,
+          "text": "Table of Contents | Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 30,
+          "text": "Alphabet Inc.\n\nCONSOLIDATED STATEMENTS OF COMPREHENSIVE INCOME\n\n(in millions; unaudited) Three Months Ended March 31, 2023 2024 Net income $ 15,051 $ 23,662 Other comprehensive income (loss): Change in foreign currency translation adjustment, net of income tax benefit (expense) of $ 47 and $( 18 ) 596 ( 503 ) Available-for-sale investments: Change in net unrealized gains (losses) 866 ( 360 ) Less: reclassification adjustment for net (gains) losses included in net income 292 311 Net change, net of income tax benefit (expense) of $( 330 ) and $ 14 1,158 ( 49 ) Cash flow hedges: Change in net unrealized gains (losses) ( 74 ) 186 Less: reclassification adjustment for net (gains) losses included in net income ( 77 ) ( 71 ) Net change, net of income tax benefit (expense) of $ 30 and $( 23 ) ( 151 ) 115 Other comprehensive income (loss) 1,603 ( 437 ) Comprehensive income $ 16,654 $ 23,225",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 31,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nNet income | $ | 15,051 |  |  | $ | 23,662 |  |  |  |  | \nOther comprehensive income (loss): |  |  |  |  |  |  | \nChange in foreign currency translation adjustment, net of income tax benefit (expense) of $ 47 and $( 18 ) | 596 |  |  | ( 503 ) |  |  |  |  | \nAvailable-for-sale investments: |  |  |  |  |  |  | \nChange in net unrealized gains (losses) | 866 |  |  | ( 360 ) |  |  |  |  | \nLess: reclassification adjustment for net (gains) losses included in net income | 292 |  |  | 311 |  |  |  |  | \nNet change, net of income tax benefit (expense) of $( 330 ) and $ 14 | 1,158 |  |  | ( 49 ) |  |  |  |  | \nCash flow hedges: |  |  |  |  |  |  | \nChange in net unrealized gains (losses) | ( 74 ) |  |  | 186 |  |  |  |  | \nLess: reclassification adjustment for net (gains) losses included in net income | ( 77 ) |  |  | ( 71 ) |  |  |  |  | \nNet change, net of income tax benefit (expense) of $ 30 and $( 23 ) | ( 151 ) |  |  | 115 |  |  |  |  | \nOther comprehensive income (loss) | 1,603 |  |  | ( 437 ) |  |  |  |  | \nComprehensive income | $ | 16,654 |  |  | $ | 23,225 |  |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 32,
+          "text": "See accompanying notes.\n\n7\n\n7\n\n7\n\nTable of Contents Alphabet Inc.\n\nTable of Contents Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 33,
+          "text": "Table of Contents | Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 34,
+          "text": "Alphabet Inc.\n\nCONSOLIDATED STATEMENTS OF STOCKHOLDERS’ EQUITY\n\n(in millions; unaudited)\n\nThree Months Ended March 31, 2023 Class A, Class B, Class C Stock and Additional Paid-In Capital Accumulated Other Comprehensive Income (Loss) Retained Earnings Total Stockholders’ Equity Shares Amount Balance as of December 31, 2022 12,849 $ 68,184 $ ( 7,603 ) $ 195,563 $ 256,144 Stock issued 30 0 0 0 0 Stock-based compensation expense 0 5,313 0 0 5,313 Tax withholding related to vesting of restricted stock units and other 0 ( 2,093 ) 0 0 ( 2,093 ) Repurchases of stock ( 157 ) ( 1,135 ) 0 ( 13,989 ) ( 15,124 ) Net income 0 0 0 15,051 15,051 Other comprehensive income (loss) 0 0 1,603 0 1,603 Balance as of March 31, 2023 12,722 $ 70,269 $ ( 6,000 ) $ 196,625 $ 260,894",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 35,
+          "text": " | Three Months Ended March 31, 2023\n | Class A, Class B, Class C Stock and Additional Paid-In Capital |  | Accumulated Other Comprehensive Income (Loss) |  | Retained Earnings |  | Total Stockholders’ Equity\n | Shares |  | Amount | \nBalance as of December 31, 2022 | 12,849 |  |  | $ | 68,184 |  |  | $ | ( 7,603 ) |  |  | $ | 195,563 |  |  | $ | 256,144 | \nStock issued | 30 |  |  | 0 |  |  | 0 |  |  | 0 |  |  | 0 | \nStock-based compensation expense | 0 |  |  | 5,313 |  |  | 0 |  |  | 0 |  |  | 5,313 | \nTax withholding related to vesting of restricted stock units and other | 0 |  |  | ( 2,093 ) |  |  | 0 |  |  | 0 |  |  | ( 2,093 ) | \nRepurchases of stock | ( 157 ) |  |  | ( 1,135 ) |  |  | 0 |  |  | ( 13,989 ) |  |  | ( 15,124 ) | \nNet income | 0 |  |  | 0 |  |  | 0 |  |  | 15,051 |  |  | 15,051 | \nOther comprehensive income (loss) | 0 |  |  | 0 |  |  | 1,603 |  |  | 0 |  |  | 1,603 | \nBalance as of March 31, 2023 | 12,722 |  |  | $ | 70,269 |  |  | $ | ( 6,000 ) |  |  | $ | 196,625 |  |  | $ | 260,894 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 36,
+          "text": "Three Months Ended March 31, 2024 Class A, Class B, Class C Stock and Additional Paid-In Capital Accumulated Other Comprehensive Income (Loss) Retained Earnings Total Stockholders’ Equity Shares Amount Balance as of December 31, 2023 12,460 $ 76,534 $ ( 4,402 ) $ 211,247 $ 283,379 Stock issued 32 0 0 0 0 Stock-based compensation expense 0 5,293 0 0 5,293 Tax withholding related to vesting of restricted stock units and other 0 ( 2,996 ) 0 0 ( 2,996 ) Repurchases of stock ( 111 ) ( 918 ) 0 ( 15,139 ) ( 16,057 ) Net income 0 0 0 23,662 23,662 Other comprehensive income (loss) 0 0 ( 437 ) 0 ( 437 ) Balance as of March 31, 2024 12,381 $ 77,913 $ ( 4,839 ) $ 219,770 $ 292,844",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 37,
+          "text": " | Three Months Ended March 31, 2024\n | Class A, Class B, Class C Stock and Additional Paid-In Capital |  | Accumulated Other Comprehensive Income (Loss) |  | Retained Earnings |  | Total Stockholders’ Equity\n | Shares |  | Amount | \nBalance as of December 31, 2023 | 12,460 |  |  | $ | 76,534 |  |  | $ | ( 4,402 ) |  |  | $ | 211,247 |  |  | $ | 283,379 | \nStock issued | 32 |  |  | 0 |  |  | 0 |  |  | 0 |  |  | 0 | \nStock-based compensation expense | 0 |  |  | 5,293 |  |  | 0 |  |  | 0 |  |  | 5,293 | \nTax withholding related to vesting of restricted stock units and other | 0 |  |  | ( 2,996 ) |  |  | 0 |  |  | 0 |  |  | ( 2,996 ) | \nRepurchases of stock | ( 111 ) |  |  | ( 918 ) |  |  | 0 |  |  | ( 15,139 ) |  |  | ( 16,057 ) | \nNet income | 0 |  |  | 0 |  |  | 0 |  |  | 23,662 |  |  | 23,662 | \nOther comprehensive income (loss) | 0 |  |  | 0 |  |  | ( 437 ) |  |  | 0 |  |  | ( 437 ) | \nBalance as of March 31, 2024 | 12,381 |  |  | $ | 77,913 |  |  | $ | ( 4,839 ) |  |  | $ | 219,770 |  |  | $ | 292,844 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 38,
+          "text": "See accompanying notes.\n\n8\n\n8\n\n8\n\nTable of Contents Alphabet Inc.\n\nTable of Contents Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 39,
+          "text": "Table of Contents | Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 40,
+          "text": "Alphabet Inc.\n\nCONSOLIDATED STATEMENTS OF CASH FLOWS\n\n(in millions; unaudited) Three Months Ended March 31, 2023 2024 Operating activities Net income $ 15,051 $ 23,662 Adjustments: Depreciation of property and equipment 2,635 3,413 Stock-based compensation expense 5,284 5,264 Deferred income taxes ( 1,854 ) 419 Loss (gain) on debt and equity securities, net ( 84 ) ( 1,781 ) Other 1,104 334 Changes in assets and liabilities, net of effects of acquisitions: Accounts receivable, net 4,454 3,167 Income taxes, net 4,069 3,011 Other assets ( 746 ) ( 1,000 ) Accounts payable ( 1,105 ) ( 2,124 ) Accrued expenses and other liabilities ( 4,496 ) ( 5,054 ) Accrued revenue share ( 602 ) ( 322 ) Deferred revenue ( 201 ) ( 141 ) Net cash provided by operating activities 23,509 28,848 Investing activities Purchases of property and equipment ( 6,289 ) ( 12,012 ) Purchases of marketable securities ( 14,227 ) ( 20,684 ) Maturities and sales of marketable securities 18,327 24,985 Purchases of non-marketable securities ( 626 ) ( 1,206 ) Maturities and sales of non-marketable securities 36 313 Acquisitions, net of cash acquired, and purchases of intangible assets ( 42 ) ( 61 ) Other investing activities ( 125 ) 101 Net cash used in investing activities ( 2,946 ) ( 8,564 ) Financing activities Net payments related to stock-based award activities ( 1,989 ) ( 2,929 ) Repurchases of stock ( 14,557 ) ( 15,696 ) Proceeds from issuance of debt, net of costs 6,927 1,982 Repayments of debt ( 6,952 ) ( 3,079 ) Proceeds from sale of interest in consolidated entities, net 3 8 Net cash used in financing activities ( 16,568 ) ( 19,714 ) Effect of exchange rate changes on cash and cash equivalents 50 ( 125 ) Net increase (decrease) in cash and cash equivalents 4,045 445 Cash and cash equivalents at beginning of period 21,879 24,048 Cash and cash equivalents at end of period $ 25,924 $ 24,493",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 41,
+          "text": " | Three Months Ended\n | March 31,\n | 2023 |  | 2024\nOperating activities |  |  | \nNet income | $ | 15,051 |  |  | $ | 23,662 | \nAdjustments: |  |  | \nDepreciation of property and equipment | 2,635 |  |  | 3,413 | \nStock-based compensation expense | 5,284 |  |  | 5,264 | \nDeferred income taxes | ( 1,854 ) |  |  | 419 | \nLoss (gain) on debt and equity securities, net | ( 84 ) |  |  | ( 1,781 ) | \nOther | 1,104 |  |  | 334 | \nChanges in assets and liabilities, net of effects of acquisitions: |  |  | \nAccounts receivable, net | 4,454 |  |  | 3,167 | \nIncome taxes, net | 4,069 |  |  | 3,011 | \nOther assets | ( 746 ) |  |  | ( 1,000 ) | \nAccounts payable | ( 1,105 ) |  |  | ( 2,124 ) | \nAccrued expenses and other liabilities | ( 4,496 ) |  |  | ( 5,054 ) | \nAccrued revenue share | ( 602 ) |  |  | ( 322 ) | \nDeferred revenue | ( 201 ) |  |  | ( 141 ) | \nNet cash provided by operating activities | 23,509 |  |  | 28,848 | \nInvesting activities |  |  | \nPurchases of property and equipment | ( 6,289 ) |  |  | ( 12,012 ) | \nPurchases of marketable securities | ( 14,227 ) |  |  | ( 20,684 ) | \nMaturities and sales of marketable securities | 18,327 |  |  | 24,985 | \nPurchases of non-marketable securities | ( 626 ) |  |  | ( 1,206 ) | \nMaturities and sales of non-marketable securities | 36 |  |  | 313 | \nAcquisitions, net of cash acquired, and purchases of intangible assets | ( 42 ) |  |  | ( 61 ) | \nOther investing activities | ( 125 ) |  |  | 101 | \nNet cash used in investing activities | ( 2,946 ) |  |  | ( 8,564 ) | \nFinancing activities |  |  | \nNet payments related to stock-based award activities | ( 1,989 ) |  |  | ( 2,929 ) | \nRepurchases of stock | ( 14,557 ) |  |  | ( 15,696 ) | \nProceeds from issuance of debt, net of costs | 6,927 |  |  | 1,982 | \nRepayments of debt | ( 6,952 ) |  |  | ( 3,079 ) | \nProceeds from sale of interest in consolidated entities, net | 3 |  |  | 8 | \nNet cash used in financing activities | ( 16,568 ) |  |  | ( 19,714 ) | \nEffect of exchange rat…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 42,
+          "text": "See accompanying notes.\n\n9\n\n9\n\n9\n\nTable of Contents Alphabet Inc.\n\nTable of Contents Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 43,
+          "text": "Table of Contents | Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 44,
+          "text": "Alphabet Inc.\n\nNOTES TO CONSOLIDATED FINANCIAL STATEMENTS\n\n(Unaudited)\n\nNote 1. Summary of Significant Accounting Policies\n\nNature of Operations\n\nGoogle was incorporated in California in September 1998 and re-incorporated in the State of Delaware in August 2003. In 2015, we implemented a holding company reorganization, and as a result, Alphabet Inc. (\"Alphabet\") became the successor issuer to Google.\n\nWe generate revenues by delivering relevant, cost-effective online advertising; cloud-based solutions that provide enterprise customers with infrastructure and platform services as well as communication and collaboration tools; sales of other products and services, such as fees received for subscription-based products, apps and in-app purchases, and devices.\n\nBasis of Consolidation\n\nThe consolidated financial statements of Alphabet include the accounts of Alphabet and entities consolidated under the variable interest and voting models. Intercompany balances and transactions have been eliminated.\n\nUnaudited Interim Financial Information\n\nThese unaudited interim consolidated financial statements have been prepared in accordance with generally accepted accounting principles in the United States (GAAP), and in our opinion, include all adjustments of a normal recurring nature necessary for fair financial statement presentation. Interim results are not necessarily indicative of the results to be expected for the full year ending December 31, 2024. We have made estimates and assumptions that affect the amounts reported and disclosed in the financial statements and the accompanying notes. Actual results could differ materially from these estimates.\n\nThese consolidated financial statements and other information presented in this Form 10-Q should be read in conjunction with the consolidated financial statements and the related notes included in our Annual Report on Form 10-K for the fiscal year ended December 31, 2023 filed with the SEC.\n\nRecent Accounting Pronouncements\n\nIn Nov…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 45,
+          "text": "Table of Contents | Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 46,
+          "text": "Note 2. Revenues\n\nDisaggregated Revenues\n\nThe following table presents revenues disaggregated by type (in millions): Three Months Ended March 31, 2023 2024 Google Search & other $ 40,359 $ 46,156 YouTube ads 6,693 8,090 Google Network 7,496 7,413 Google advertising 54,548 61,659 Google subscriptions, platforms, and devices 7,413 8,739 Google Services total 61,961 70,398 Google Cloud 7,454 9,574 Other Bets 288 495 Hedging gains (losses) 84 72 Total revenues $ 69,787 $ 80,539",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 47,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nGoogle Search & other | $ | 40,359 |  |  | $ | 46,156 |  |  |  |  | \nYouTube ads | 6,693 |  |  | 8,090 |  |  |  |  | \nGoogle Network | 7,496 |  |  | 7,413 |  |  |  |  | \nGoogle advertising | 54,548 |  |  | 61,659 |  |  |  |  | \nGoogle subscriptions, platforms, and devices | 7,413 |  |  | 8,739 |  |  |  |  | \nGoogle Services total | 61,961 |  |  | 70,398 |  |  |  |  | \nGoogle Cloud | 7,454 |  |  | 9,574 |  |  |  |  | \nOther Bets | 288 |  |  | 495 |  |  |  |  | \nHedging gains (losses) | 84 |  |  | 72 |  |  |  |  | \nTotal revenues | $ | 69,787 |  |  | $ | 80,539 |  |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 48,
+          "text": "The following table presents revenues disaggregated by geography, based on the addresses of our customers (in millions): Three Months Ended March 31, 2023 2024 United States $ 32,864 47 % $ 38,737 48 % EMEA (1) 21,078 30 23,788 30 APAC (1) 11,681 17 13,289 16 Other Americas (1) 4,080 6 4,653 6 Hedging gains (losses) 84 0 72 0 Total revenues $ 69,787 100 % $ 80,539 100 %",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 49,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nUnited States | $ | 32,864 |  |  | 47 | % |  | $ | 38,737 |  |  | 48 | % |  |  |  |  |  |  |  | \nEMEA (1) | 21,078 |  |  | 30 |  |  | 23,788 |  |  | 30 |  |  |  |  |  |  |  |  | \nAPAC (1) | 11,681 |  |  | 17 |  |  | 13,289 |  |  | 16 |  |  |  |  |  |  |  |  | \nOther Americas (1) | 4,080 |  |  | 6 |  |  | 4,653 |  |  | 6 |  |  |  |  |  |  |  |  | \nHedging gains (losses) | 84 |  |  | 0 |  |  | 72 |  |  | 0 |  |  |  |  |  |  |  |  | \nTotal revenues | $ | 69,787 |  |  | 100 | % |  | $ | 80,539 |  |  | 100 | % |  |  |  |  |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 50,
+          "text": "(1) Regions represent Europe, the Middle East, and Africa (EMEA); Asia-Pacific (APAC); and Canada and Latin America (\"Other Americas\").\n\nRevenue Backlog\n\nAs of March 31, 2024, we had $ 72.5 billion of remaining performance obligations (“revenue backlog”), primarily related to Google Cloud. Our revenue backlog represents commitments in customer contracts for future services that have not yet been recognized as revenue. The estimated revenue backlog and timing of revenue recognition for these commitments is largely driven by our ability to deliver in accordance with relevant contract terms and when our customers utilize services. We expect to recognize approximately half of the revenue backlog as revenues over the next 24 months with the remaining to be recognized thereafter. Revenue backlog includes related deferred revenue currently recorded as well as amounts that will be invoiced in future periods, and excludes contracts with an original expected term of one year or less and cancellable contracts.\n\nDeferred Revenues\n\nWe record deferred revenues when cash payments are received or due in advance of our performance, including amounts which are refundable. Deferred revenues primarily relate to Google Cloud and Google subscriptions, platforms, and devices. Total deferred revenue as of December 31, 2023 was $ 5.0 billion, of which $ 2.4 billion was recognized as revenues during the three months ended March 31, 2024.\n\nNote 3. Financial Instruments\n\nFair Value Measurements\n\nInvestments Measured at Fair Value on a Recurring Basis\n\nCash, cash equivalents, and marketable equity securities are measured at fair value and classified within Level 1 and Level 2 in the fair value hierarchy, because we use quoted prices for identical assets in active markets\n\n11\n\n11\n\n11\n\nTable of Contents Alphabet Inc.\n\nTable of Contents Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 51,
+          "text": "Table of Contents | Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 52,
+          "text": "or inputs that are based upon quoted prices for similar instruments in active markets.\n\nDebt securities are measured at fair value and classified within Level 2 in the fair value hierarchy, because we use quoted market prices to the extent available or alternative pricing sources and models utilizing market observable inputs to determine fair value. For certain marketable debt securities, we have elected the fair value option for which changes in fair value are recorded in OI&E. The fair value option was elected for these securities to align with the unrealized gains and losses from related derivative contracts.\n\nThe following tables summarize our cash, cash equivalents, and marketable securities measured at fair value on a recurring basis (in millions):\n\nAs of December 31, 2023 Fair Value Hierarchy Adjusted Cost Gross Unrealized Gains Gross Unrealized Losses Fair Value Cash and Cash Equivalents Marketable Securities Fair value changes recorded in other comprehensive income Time deposits Level 2 $ 2,628 $ 0 $ 0 $ 2,628 $ 2,628 $ 0 Government bonds Level 2 38,106 233 ( 679 ) 37,660 1,993 35,667 Corporate debt securities Level 2 22,457 112 ( 637 ) 21,932 0 21,932 Mortgage-backed and asset-backed securities Level 2 17,243 88 ( 634 ) 16,697 0 16,697 Total investments with fair value change reflected in other comprehensive income (1) $ 80,434 $ 433 $ ( 1,950 ) $ 78,917 $ 4,621 $ 74,296 Fair value adjustments recorded in net income Money market funds Level 1 $ 6,480 $ 6,480 $ 0 Current marketable equity securities (2) Level 1 4,282 0 4,282 Mutual funds Level 2 311 0 311 Government bonds Level 2 1,952 347 1,605 Corporate debt securities Level 2 3,782 91 3,691 Mortgage-backed and asset-backed securities Level 2 2,683 0 2,683 Total investments with fair value change recorded in net income $ 19,490 $ 6,918 $ 12,572 Cash 0 12,509 0 Total $ 80,434 $ 433 $ ( 1,950 ) $ 98,407 $ 24,048 $ 86,868",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 53,
+          "text": " |  |  |  | As of December 31, 2023\n |  | Fair Value Hierarchy |  | Adjusted Cost |  | Gross Unrealized Gains |  | Gross Unrealized Losses |  | Fair Value |  | Cash and Cash Equivalents |  | Marketable Securities\nFair value changes recorded in other comprehensive income |  |  |  |  |  |  |  |  |  |  |  |  |  | \nTime deposits |  | Level 2 |  | $ | 2,628 |  |  | $ | 0 |  |  | $ | 0 |  |  | $ | 2,628 |  |  | $ | 2,628 |  |  | $ | 0 | \nGovernment bonds |  | Level 2 |  | 38,106 |  | 233 |  |  | ( 679 ) |  |  | 37,660 |  |  | 1,993 |  |  | 35,667 | \nCorporate debt securities |  | Level 2 |  | 22,457 |  | 112 |  |  | ( 637 ) |  |  | 21,932 |  |  | 0 |  |  | 21,932 | \nMortgage-backed and asset-backed securities |  | Level 2 |  | 17,243 |  | 88 |  |  | ( 634 ) |  |  | 16,697 |  |  | 0 |  |  | 16,697 | \nTotal investments with fair value change reflected in other comprehensive income (1) |  |  |  | $ | 80,434 |  |  | $ | 433 |  |  | $ | ( 1,950 ) |  |  | $ | 78,917 |  |  | $ | 4,621 |  |  | $ | 74,296 | \nFair value adjustments recorded in net income |  |  |  |  |  |  |  |  |  |  |  |  |  | \nMoney market funds |  | Level 1 |  |  |  |  |  |  |  | $ | 6,480 |  |  | $ | 6,480 |  |  | $ | 0 | \nCurrent marketable equity securities (2) |  | Level 1 |  |  |  |  |  |  |  | 4,282 |  |  | 0 |  |  | 4,282 | \nMutual funds |  | Level 2 |  |  |  |  |  |  |  | 311 |  |  | 0 |  |  | 311 | \nGovernment bonds |  | Level 2 |  |  |  |  |  |  |  | 1,952 |  |  | 347 |  |  | 1,605 | \nCorporate debt securities |  | Level 2 |  |  |  |  |  |  |  | 3,782 |  |  | 91 |  |  | 3,691 | \nMortgage-backed and asset-backed securities |  | Level 2 |  |  |  |  |  |  |  | 2,683 |  |  | 0 |  |  | 2,683 | \nTotal investments with fair value change recorded in net income |  |  |  |  |  |  |  |  |  | $ | 19,490 |  |  | $ | 6,918 |  |  | $ | 12,572 | \nCash |  |  |  |  |  |  |  |  |  | 0 |  |  | 12,509 |  |  | 0 | \nTotal |  |  |  | $ | 80,434 |  |  | $ | 433 |  |  | $ | ( 1,950 ) |  |  | $ | 98,407 |  |  | $ | 24,048 |  |  …",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 54,
+          "text": "(1) Represents gross unrealized gains and losses for debt securities recorded to accumulated other comprehensive income (AOCI).\n\n(2) The long-term portion of marketable equity securities (subject to long-term lock-up restrictions) of $ 1.4 billion as of December 31, 2023 is included within other non-current assets.\n\n12\n\n12\n\n12\n\nTable of Contents Alphabet Inc.\n\nTable of Contents Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 55,
+          "text": "Table of Contents | Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 56,
+          "text": "As of March 31, 2024 Fair Value Hierarchy Adjusted Cost Gross Unrealized Gains Gross Unrealized Losses Fair Value Cash and Cash Equivalents Marketable Securities Fair value changes recorded in other comprehensive income Time deposits Level 2 $ 2,812 $ 0 $ 0 $ 2,812 $ 2,812 $ 0 Government bonds Level 2 36,336 88 ( 595 ) 35,829 2,724 33,105 Corporate debt securities Level 2 22,085 64 ( 546 ) 21,603 0 21,603 Mortgage-backed and asset-backed securities Level 2 17,018 47 ( 642 ) 16,423 0 16,423 Total investments with fair value change reflected in other comprehensive income (1) $ 78,251 $ 199 $ ( 1,783 ) $ 76,667 $ 5,536 $ 71,131 Fair value adjustments recorded in net income Money market funds Level 1 $ 6,890 $ 6,890 $ 0 Current marketable equity securities (2) Level 1 3,998 0 3,998 Mutual funds Level 2 278 0 278 Government bonds Level 2 1,965 158 1,807 Corporate debt securities Level 2 3,772 80 3,692 Mortgage-backed and asset-backed securities Level 2 2,691 0 2,691 Total investments with fair value change recorded in net income $ 19,594 $ 7,128 $ 12,466 Cash 0 11,829 0 Total $ 78,251 $ 199 $ ( 1,783 ) $ 96,261 $ 24,493 $ 83,597",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 57,
+          "text": " |  |  |  | As of March 31, 2024\n |  | Fair Value Hierarchy |  | Adjusted Cost |  | Gross Unrealized Gains |  | Gross Unrealized Losses |  | Fair Value |  | Cash and Cash Equivalents |  | Marketable Securities\nFair value changes recorded in other comprehensive income |  |  |  |  |  |  |  |  |  |  |  |  |  | \nTime deposits |  | Level 2 |  | $ | 2,812 |  |  | $ | 0 |  |  | $ | 0 |  |  | $ | 2,812 |  |  | $ | 2,812 |  |  | $ | 0 | \nGovernment bonds |  | Level 2 |  | 36,336 |  |  | 88 |  |  | ( 595 ) |  |  | 35,829 |  |  | 2,724 |  |  | 33,105 | \nCorporate debt securities |  | Level 2 |  | 22,085 |  |  | 64 |  |  | ( 546 ) |  |  | 21,603 |  |  | 0 |  |  | 21,603 | \nMortgage-backed and asset-backed securities |  | Level 2 |  | 17,018 |  |  | 47 |  |  | ( 642 ) |  |  | 16,423 |  |  | 0 |  |  | 16,423 | \nTotal investments with fair value change reflected in other comprehensive income (1) |  |  |  | $ | 78,251 |  |  | $ | 199 |  |  | $ | ( 1,783 ) |  |  | $ | 76,667 |  |  | $ | 5,536 |  |  | $ | 71,131 | \nFair value adjustments recorded in net income |  |  |  |  |  |  |  |  |  |  |  |  |  | \nMoney market funds |  | Level 1 |  |  |  |  |  |  |  | $ | 6,890 |  |  | $ | 6,890 |  |  | $ | 0 | \nCurrent marketable equity securities (2) |  | Level 1 |  |  |  |  |  |  |  | 3,998 |  |  | 0 |  |  | 3,998 | \nMutual funds |  | Level 2 |  |  |  |  |  |  |  | 278 |  | 0 |  |  | 278\nGovernment bonds |  | Level 2 |  |  |  |  |  |  |  | 1,965 |  | 158 |  |  | 1,807\nCorporate debt securities |  | Level 2 |  |  |  |  |  |  |  | 3,772 |  | 80 |  |  | 3,692\nMortgage-backed and asset-backed securities |  | Level 2 |  |  |  |  |  |  |  | 2,691 |  | 0 |  |  | 2,691\nTotal investments with fair value change recorded in net income |  |  |  |  |  |  |  |  |  | $ | 19,594 |  |  | $ | 7,128 |  |  | $ | 12,466 | \nCash |  |  |  |  |  |  |  |  |  | 0 |  |  | 11,829 |  |  | 0 | \nTotal |  |  |  | $ | 78,251 |  |  | $ | 199 |  |  | $ | ( 1,783 ) |  |  | $ | 96,261 |  |  | $ | 24,493 |  |  | $ | 83,597 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 58,
+          "text": "(1) Represents gross unrealized gains and losses for debt securities recorded to AOCI.\n\n(2) The long-term portion of marketable equity securities (subject to long-term lock-up restrictions) of $ 1.4 billion as of March 31, 2024 is included within other non-current assets.\n\nInvestments Measured at Fair Value on a Nonrecurring Basis\n\nOur non-marketable equity securities are investments in privately held companies without readily determinable market values. The carrying value of our non-marketable equity securities is adjusted to fair value upon observable transactions for identical or similar investments of the same issuer or impairment. Non-marketable equity securities that have been remeasured during the period based on observable transactions are classified within Level 2 or Level 3 in the fair value hierarchy. Non-marketable equity securities that have been remeasured due to impairment are classified within Level 3. Our valuation methods include option pricing models, market comparable approach, and common stock equivalent method, which may include a combination of the observable transaction price at the transaction date and other unobservable inputs including volatility, expected time to exit, risk free rate, and the rights, and obligations of the securities we hold. These inputs significantly vary based on investment type.\n\nAs of March 31, 2024, the carrying value of our non-marketable equity securities was $ 31.4 billion, of which $ 13.6 billion were remeasured at fair value during the three months ended March 31, 2024 and primarily classified within Level 2 of the fair value hierarchy at the time of measurement.\n\n13\n\n13\n\n13\n\nTable of Contents Alphabet Inc.\n\nTable of Contents Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 59,
+          "text": "Table of Contents | Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 60,
+          "text": "Debt Securities\n\nThe following table summarizes the estimated fair value of investments in available-for-sale marketable debt securities by effective contractual maturity dates (in millions):\n\nAs of March 31, 2024 Due in 1 year or less $ 8,551 Due in 1 year through 5 years 42,755 Due in 5 years through 10 years 13,972 Due after 10 years 14,043 Total $ 79,321",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 61,
+          "text": " | As of March 31, 2024\nDue in 1 year or less | $ | 8,551 | \nDue in 1 year through 5 years | 42,755 | \nDue in 5 years through 10 years | 13,972 | \nDue after 10 years | 14,043 | \nTotal | $ | 79,321 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 62,
+          "text": "The following tables present fair values and gross unrealized losses recorded to AOCI, aggregated by investment category and the length of time that individual securities have been in a continuous loss position (in millions):\n\nAs of December 31, 2023 Less than 12 Months 12 Months or Greater Total Fair Value Unrealized Loss Fair Value Unrealized Loss Fair Value Unrealized Loss Government bonds $ 1,456 $ ( 22 ) $ 13,897 $ ( 657 ) $ 15,353 $ ( 679 ) Corporate debt securities 827 ( 5 ) 15,367 ( 592 ) 16,194 ( 597 ) Mortgage-backed and asset-backed securities 2,945 ( 26 ) 7,916 ( 608 ) 10,861 ( 634 ) Total $ 5,228 $ ( 53 ) $ 37,180 $ ( 1,857 ) $ 42,408 $ ( 1,910 )",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 63,
+          "text": " | As of December 31, 2023\n | Less than 12 Months |  | 12 Months or Greater |  | Total\n | Fair Value |  | Unrealized Loss |  | Fair Value |  | Unrealized Loss |  | Fair Value |  | Unrealized Loss\nGovernment bonds | $ | 1,456 |  |  | $ | ( 22 ) |  |  | $ | 13,897 |  |  | $ | ( 657 ) |  |  | $ | 15,353 |  |  | $ | ( 679 ) | \nCorporate debt securities | 827 |  |  | ( 5 ) |  |  | 15,367 |  |  | ( 592 ) |  |  | 16,194 |  |  | ( 597 ) | \nMortgage-backed and asset-backed securities | 2,945 |  |  | ( 26 ) |  |  | 7,916 |  |  | ( 608 ) |  |  | 10,861 |  |  | ( 634 ) | \nTotal | $ | 5,228 |  |  | $ | ( 53 ) |  |  | $ | 37,180 |  |  | $ | ( 1,857 ) |  |  | $ | 42,408 |  |  | $ | ( 1,910 ) | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 64,
+          "text": "As of March 31, 2024 Less than 12 Months 12 Months or Greater Total Fair Value Unrealized Loss Fair Value Unrealized Loss Fair Value Unrealized Loss Government bonds $ 14,539 $ ( 116 ) $ 9,276 $ ( 479 ) $ 23,815 $ ( 595 ) Corporate debt securities 2,653 ( 8 ) 13,022 ( 494 ) 15,675 ( 502 ) Mortgage-backed and asset-backed securities 4,895 ( 79 ) 6,851 ( 563 ) 11,746 ( 642 ) Total $ 22,087 $ ( 203 ) $ 29,149 $ ( 1,536 ) $ 51,236 $ ( 1,739 )",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 65,
+          "text": " | As of March 31, 2024\n | Less than 12 Months |  | 12 Months or Greater |  | Total\n | Fair Value |  | Unrealized Loss |  | Fair Value |  | Unrealized Loss |  | Fair Value |  | Unrealized Loss\nGovernment bonds | $ | 14,539 |  |  | $ | ( 116 ) |  |  | $ | 9,276 |  |  | $ | ( 479 ) |  |  | $ | 23,815 |  |  | $ | ( 595 ) | \nCorporate debt securities | 2,653 |  |  | ( 8 ) |  |  | 13,022 |  |  | ( 494 ) |  |  | 15,675 |  |  | ( 502 ) | \nMortgage-backed and asset-backed securities | 4,895 |  |  | ( 79 ) |  |  | 6,851 |  |  | ( 563 ) |  |  | 11,746 |  |  | ( 642 ) | \nTotal | $ | 22,087 |  |  | $ | ( 203 ) |  |  | $ | 29,149 |  |  | $ | ( 1,536 ) |  |  | $ | 51,236 |  |  | $ | ( 1,739 ) | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 66,
+          "text": "We determine realized gains or losses on the sale or extinguishment of debt securities on a specific identification method. The following table summarizes gains and losses for debt securities, reflected as a component of OI&E (in millions):\n\nThree Months Ended March 31, 2023 2024 Unrealized gain (loss) on fair value option debt securities $ 145 $ ( 46 ) Gross realized gain on debt securities 57 68 Gross realized loss on debt securities ( 492 ) ( 480 ) (Increase) decrease in allowance for credit losses ( 3 ) ( 4 ) Total gain (loss) on debt securities recognized in other income (expense), net $ ( 293 ) $ ( 462 )",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 67,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nUnrealized gain (loss) on fair value option debt securities | $ | 145 |  |  | $ | ( 46 ) |  |  |  |  | \nGross realized gain on debt securities | 57 |  |  | 68 |  |  |  |  | \nGross realized loss on debt securities | ( 492 ) |  |  | ( 480 ) |  |  |  |  | \n(Increase) decrease in allowance for credit losses | ( 3 ) |  |  | ( 4 ) |  |  |  |  | \nTotal gain (loss) on debt securities recognized in other income (expense), net | $ | ( 293 ) |  |  | $ | ( 462 ) |  |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 68,
+          "text": "14\n\n14\n\n14\n\nTable of Contents Alphabet Inc.\n\nTable of Contents Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 69,
+          "text": "Table of Contents | Alphabet Inc.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 70,
+          "text": "Equity Investments\n\nThe carrying value of equity securities is measured as the total initial cost plus the cumulative net gain (loss). Gains and losses, including impairments, are included as a component of OI&E in the Consolidated Statements of Income. See Note 6 for further details on OI&E.\n\nThe carrying values for marketable and non-marketable equity securities are summarized below (in millions): As of December 31, 2023 As of March 31, 2024 Marketable Equity Securities Non-Marketable Equity Securities Total Marketable Equity Securities Non-Marketable Equity Securities Total Total initial cost $ 5,418 $ 17,616 $ 23,034 $ 5,083 $ 18,505 $ 23,588 Cumulative net gain (loss) (1) 555 11,150 11,705 570 12,925 13,495 Carrying value $ 5,973 $ 28,766 $ 34,739 $ 5,653 $ 31,430 $ 37,083",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 71,
+          "text": " | As of December 31, 2023 |  | As of March 31, 2024\n | Marketable Equity Securities |  | Non-Marketable Equity Securities |  | Total |  | Marketable Equity Securities |  | Non-Marketable Equity Securities |  | Total\nTotal initial cost | $ | 5,418 |  |  | $ | 17,616 |  |  | $ | 23,034 |  |  | $ | 5,083 |  |  | $ | 18,505 |  |  | $ | 23,588 | \nCumulative net gain (loss) (1) | 555 |  |  | 11,150 |  |  | 11,705 |  |  | 570 |  |  | 12,925 |  |  | 13,495 | \nCarrying value | $ | 5,973 |  |  | $ | 28,766 |  |  | $ | 34,739 |  |  | $ | 5,653 |  |  | $ | 31,430 |  |  | $ | 37,083 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 72,
+          "text": "(1) Non-marketable equity securities cumulative net gain (loss) is comprised of $ 18.1 billion gains and $ 6.9 billion losses (including impairments) as of December 31, 2023 and $ 20.6 billion gains and $ 7.7 billion losses (including impairments) as of March 31, 2024.\n\nGains and Losses on Marketable and Non-marketable Equity Securities\n\nGains and losses (including impairments), net, for marketable and non-marketable equity securities included in OI&E are summarized below (in millions):\n\nThree Months Ended March 31, 2023 2024 Realized net gain (loss) on equity securities sold during the period $ 105 $ 95 Unrealized net gain (loss) on marketable equity securities 51 164 Unrealized net gain (loss) on non-marketable equity securities (1) 221 1,984 Total gain (loss) on equity securities in other income (expense), net $ 377 $ 2,243",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 73,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nRealized net gain (loss) on equity securities sold during the period | $ | 105 |  |  | $ | 95 |  |  |  |  | \nUnrealized net gain (loss) on marketable equity securities | 51 |  |  | 164 |  |  |  |  | \nUnrealized net gain (loss) on non-marketable equity securities (1) | 221 |  |  | 1,984 |  |  |  |  | \nTotal gain (loss) on equity securities in other income (expense), net | $ | 377 |  |  | $ | 2,243 |  |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 74,
+          "text": "(1) Unrealized gain (loss) on non-marketable equity securities accounted for under the measurement alternative is comprised of $ 915 million and $ 2.8 billion of upward adjustments and $ 694 million and $ 814 million of downward adjustments (including impairments) for the three months ended March 31, 2023 and 2024 , respectively.\n\nIn the table above, realized net gain (loss) on equity securities sold during the period reflects the difference between the sale proceeds and the carrying value of the equity securities at the beginning of the period or the purchase date, if later.\n\nCumulative net gains (losses) on equity securities sold during the period, which is summarized in the following table (in millions), represents the total net gains (losses) recognized after the initial purchase date of the equity security sold during the period. While these net gains (losses) may have been reflected in periods prior to the period of sale, we believe they are important supplemental information as they reflect the economic net gains (losses) on the securities sold during the period. Cumulative net gains (losses) are calculated as the difference between the sale price and the initial purchase price for the equity security sold during the period.\n\nEquity Securities Sold Three Months Ended March 31, 2023 2024 Total sale price $ 312 $ 1,090 Total initial cost 211 661 Cumulative net gains (losses) $ 101 $ 429",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 75,
+          "text": " | Equity Securities Sold\n | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nTotal sale price | $ | 312 |  |  | $ | 1,090 |  |  |  |  | \nTotal initial cost | 211 |  |  | 661 |  |  |  |  | \nCumulative net gains (losses) | $ | 101 |  |  | $ | 429 |  |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 76,
+          "text": "Equity Securities Accounted for Under the Equity Method\n\nAs of December 31, 2023 and March 31, 2024, equity securities accounted for under the equity method had a carrying value of approximately $ 1.7 billion and $ 2.0 billion, respectively. Our share of gains and losses, including impairments, are included as a component of OI&E, in the Consolidated Statements of Income. See Note 6 for further details on OI&E.\n\n15\n\n15\n\n15\n\nDerivative Financial Instruments\n\nWe use derivative instruments to manage risks relating to our ongoing business operations. The primary risk managed is foreign exchange risk. We use foreign currency contracts to reduce the risk that our cash flows, earnings, and investment in foreign subsidiaries will be adversely affected by foreign currency exchange rate fluctuations. We also enter into derivative instruments to partially offset our exposure to other risks and enhance investment returns.\n\nWe recognize derivative instruments in the Consolidated Balance Sheets at fair value and classify the derivatives primarily within Level 2 in the fair value hierarchy. We present our collar contracts (an option strategy comprised of a combination of purchased and written options) at net fair values and present all other derivatives at gross fair values. The accounting treatment for derivatives is based on the intended use and hedge designation.\n\nCash Flow Hedges\n\nWe designate foreign currency forward and option contracts (including collars) as cash flow hedges to hedge certain forecasted revenue transactions denominated in currencies other than the United States (U.S.) dollar. These contracts have maturities of 24 months or les s.\n\nCash flow hedge amounts included in the assessment of hedge effectiveness are deferred in AOCI and subsequently reclassified to revenue when the hedged item is recognized in earnings. We exclude forward points and time value from our assessment of hedge effectiveness and amortize them on a straight-line basis over the life of the h…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 77,
+          "text": " | As of December 31, 2023 |  | As of March 31, 2024\nDerivatives designated as hedging instruments: |  | \nForeign exchange contracts |  |  | \nCash flow hedges | $ | 18,039 |  |  | $ | 17,726 | \nFair value hedges | $ | 2,065 |  |  | $ | 1,847 | \nNet investment hedges | $ | 9,472 |  |  | $ | 9,321 | \nDerivatives not designated as hedging instruments: |  | \nForeign exchange contracts (1) | $ | 39,722 |  |  | $ | 107,978 | \nOther contracts | $ | 10,818 |  |  | $ | 10,902 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 78,
+          "text": "(1) The gross notional amounts of these derivative instruments as of March 31, 2024 reflect a rollover in timing of settlement into our second quarter as a result of a holiday market closure.\n\nThe fair values of outstanding derivative instruments were as follows (in millions): As of December 31, 2023 As of March 31, 2024 Assets (1) Liabilities (2) Assets (1) Liabilities (2) Derivatives designated as hedging instruments: Foreign exchange contracts $ 205 $ 242 $ 150 $ 125 Derivatives not designated as hedging instruments: Foreign exchange contracts 134 156 317 221 Other contracts 114 47 164 40 Total derivatives not designated as hedging instruments 248 203 481 261 Total $ 453 $ 445 $ 631 $ 386",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 79,
+          "text": " | As of December 31, 2023 |  | As of March 31, 2024\n | Assets (1) |  | Liabilities (2) |  | Assets (1) |  | Liabilities (2)\nDerivatives designated as hedging instruments: |  |  |  |  |  |  | \nForeign exchange contracts | $ | 205 |  |  | $ | 242 |  |  | $ | 150 |  |  | $ | 125 | \nDerivatives not designated as hedging instruments: |  |  |  |  |  |  | \nForeign exchange contracts | 134 |  | 156 |  | 317 |  | 221\nOther contracts | 114 |  | 47 |  | 164 |  | 40\nTotal derivatives not designated as hedging instruments | 248 |  |  | 203 |  |  | 481 |  |  | 261 | \nTotal | $ | 453 |  |  | $ | 445 |  |  | $ | 631 |  |  | $ | 386 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 80,
+          "text": "(1) Derivative assets are recorded as other current and non-current assets in the Consolidated Balance Sheets.\n\n(2) Derivative liabilities are recorded as accrued expenses and other liabilities, current and non-current in the Consolidated Balance Sheets.\n\nThe gains (losses) on derivatives in cash flow hedging and net investment hedging relationships recognized in other comprehensiv e income (OCI) are summarized below (in millions): Three Months Ended March 31, 2023 2024 Derivatives in cash flow hedging relationship: Foreign exchange contracts Amount included in the assessment of effectiveness $ ( 138 ) $ 155 Amount excluded from the assessment of effectiveness 47 58 Derivatives in net investment hedging relationship: Foreign exchange contracts Amount included in the assessment of effectiveness ( 215 ) 82 Total $ ( 306 ) $ 295",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 81,
+          "text": " | Three Months Ended | \n | March 31, | \n | 2023 |  | 2024 |  |  | \nDerivatives in cash flow hedging relationship: |  |  |  |  |  | \nForeign exchange contracts |  |  |  |  |  | \nAmount included in the assessment of effectiveness | $ | ( 138 ) |  |  | $ | 155 |  |  |  | \nAmount excluded from the assessment of effectiveness | 47 |  |  | 58 |  |  |  | \nDerivatives in net investment hedging relationship: |  |  |  |  |  | \nForeign exchange contracts |  |  |  |  |  | \nAmount included in the assessment of effectiveness | ( 215 ) |  |  | 82 |  |  |  | \nTotal | $ | ( 306 ) |  |  | $ | 295 |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 82,
+          "text": "17\n\n17\n\n17\n\nThe table below presents the gains (losses) of our derivatives on the Consolidated Statements of Income: (in millions): Three Months Ended March 31, 2024 2023 2024 Revenues Other income (expense), net Revenues Other income (expense), net Total amounts in the Consolidated Statements of Income $ 69,787 $ 790 $ 80,539 $ 2,843 Effect of cash flow hedges: Foreign exchange contracts Amount reclassified from AOCI to income $ 88 $ 0 $ 74 $ 0 Amount excluded from the assessment of effectiveness (amortized) ( 4 ) 0 ( 2 ) 0 Effect of fair value hedges: Foreign exchange contracts Hedged items 0 32 0 ( 16 ) Derivatives designated as hedging instruments 0 ( 32 ) 0 15 Amount excluded from the assessment of effectiveness 0 5 0 3 Effect of net investment hedges: Foreign exchange contracts Amount excluded from the assessment of effectiveness 0 51 0 36 Effect of non designated hedges: Foreign exchange contracts 0 30 0 21 Other contracts 0 3 0 76 Total gains (losses) $ 84 $ 89 $ 72 $ 135",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 83,
+          "text": " | Three Months Ended March 31, 2024\n | 2023 |  | 2024\n | Revenues |  | Other income (expense), net |  | Revenues |  | Other income (expense), net\nTotal amounts in the Consolidated Statements of Income | $ | 69,787 |  |  | $ | 790 |  |  | $ | 80,539 |  |  | $ | 2,843 | \nEffect of cash flow hedges: |  |  |  |  |  |  | \nForeign exchange contracts |  |  |  |  |  |  | \nAmount reclassified from AOCI to income | $ | 88 |  |  | $ | 0 |  |  | $ | 74 |  |  | $ | 0 | \nAmount excluded from the assessment of effectiveness (amortized) | ( 4 ) |  |  | 0 |  |  | ( 2 ) |  |  | 0 | \nEffect of fair value hedges: |  |  |  |  |  |  | \nForeign exchange contracts |  |  |  |  |  |  | \nHedged items | 0 |  |  | 32 |  |  | 0 |  |  | ( 16 ) | \nDerivatives designated as hedging instruments | 0 |  |  | ( 32 ) |  |  | 0 |  |  | 15 | \nAmount excluded from the assessment of effectiveness | 0 |  |  | 5 |  |  | 0 |  |  | 3 | \nEffect of net investment hedges: |  |  |  |  |  |  | \nForeign exchange contracts |  |  |  |  |  |  | \nAmount excluded from the assessment of effectiveness | 0 |  |  | 51 |  |  | 0 |  |  | 36 | \nEffect of non designated hedges: |  |  |  |  |  |  | \nForeign exchange contracts | 0 |  |  | 30 |  |  | 0 |  |  | 21 | \nOther contracts | 0 |  |  | 3 |  |  | 0 |  |  | 76 | \nTotal gains (losses) | $ | 84 |  |  | $ | 89 |  |  | $ | 72 |  |  | $ | 135 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 84,
+          "text": "Offsetting of Derivatives\n\nWe enter into master netting arrangements and collateral security arrangements to reduce credit risk. Cash collateral received related to derivative instruments under our collateral security arrangements are included in other current assets with a corresponding liability . Cash and non-cash collateral pledged related to derivative instruments under our collateral security arrangements are included in other current assets.\n\nThe gross amounts of derivative instruments subject to master netting arrangements with various counterparties, and cash and non-cash collateral received and pledged under such agreements were as follows (in millions):\n\nAs of December 31, 2023 Gross Amounts Not Offset in the Consolidated Balance Sheets, but Have Legal Rights to Offset Gross Amounts Recognized Gross Amounts Offset in the Consolidated Balance Sheets Net Amounts Presented in the Consolidated Balance Sheets Financial Instruments (1) Cash and Non-Cash Collateral Received or Pledged Net Amounts Derivatives assets $ 535 $ ( 82 ) $ 453 $ ( 213 ) $ ( 75 ) $ 165 Derivatives liabilities $ 527 $ ( 82 ) $ 445 $ ( 213 ) $ ( 16 ) $ 216",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 85,
+          "text": " | As of December 31, 2023\n |  |  |  |  |  |  | Gross Amounts Not Offset in the Consolidated Balance Sheets, but Have Legal Rights to Offset |  | \n | Gross Amounts Recognized |  | Gross Amounts Offset in the Consolidated Balance Sheets |  | Net Amounts Presented in the Consolidated Balance Sheets |  | Financial Instruments (1) |  | Cash and Non-Cash Collateral Received or Pledged |  | Net Amounts\nDerivatives assets | $ | 535 |  |  | $ | ( 82 ) |  |  | $ | 453 |  |  | $ | ( 213 ) |  |  | $ | ( 75 ) |  |  | $ | 165 | \nDerivatives liabilities | $ | 527 |  |  | $ | ( 82 ) |  |  | $ | 445 |  |  | $ | ( 213 ) |  |  | $ | ( 16 ) |  |  | $ | 216 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 86,
+          "text": "18\n\n18\n\n18\n\nAs of March 31, 2024 Gross Amounts Not Offset in the Consolidated Balance Sheets, but Have Legal Rights to Offset Gross Amounts Recognized Gross Amounts Offset in the Consolidated Balance Sheets Net Amounts Presented in the Consolidated Balance Sheets Financial Instruments (1) Cash and Non-Cash Collateral Received or Pledged Net Amounts Derivatives assets $ 705 $ ( 74 ) $ 631 $ ( 179 ) $ ( 264 ) $ 188 Derivatives liabilities $ 460 $ ( 74 ) $ 386 $ ( 179 ) $ ( 9 ) $ 198",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 87,
+          "text": " | As of March 31, 2024\n |  |  |  |  |  |  | Gross Amounts Not Offset in the Consolidated Balance Sheets, but Have Legal Rights to Offset |  | \n | Gross Amounts Recognized |  | Gross Amounts Offset in the Consolidated Balance Sheets |  | Net Amounts Presented in the Consolidated Balance Sheets |  | Financial Instruments (1) |  | Cash and Non-Cash Collateral Received or Pledged |  | Net Amounts\nDerivatives assets | $ | 705 |  |  | $ | ( 74 ) |  |  | $ | 631 |  |  | $ | ( 179 ) |  |  | $ | ( 264 ) |  |  | $ | 188 | \nDerivatives liabilities | $ | 460 |  |  | $ | ( 74 ) |  |  | $ | 386 |  |  | $ | ( 179 ) |  |  | $ | ( 9 ) |  |  | $ | 198 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 88,
+          "text": "(1) The balances as of December 31, 2023 and March 31, 2024 were related to derivatives allowed to be net settled in accordance with our master netting agreements.\n\nNote 4. Variable Interest Entities (VIE)\n\nConsolidated VIEs\n\nWe consolidate VIEs in which we hold a variable interest and are the primary beneficiary. The results of operations and financial position of these VIEs are included in our consolidated financial statements.\n\nFor certain consolidated VIEs, their assets are not available to us, and their creditors do not have recourse to us. As of December 31, 2023 and March 31, 2024, assets that can only be used to settle obligations of these VIEs were $ 4.9 billion and $ 4.1 billion, respectively, and the liabilities for which creditors only have recourse to the VIEs were $ 2.5 billion and $ 2.2 billion, respectively. We may continue to fund ongoing operations of certain VIEs that are included within Other Bets.\n\nTotal noncontrolling interests (NCI) in our consolidated subsidiaries were $ 3.4 billion and $ 3.2 billion as of December 31, 2023 and March 31, 2024, respectively, of which $ 1.1 billion and $ 1.0 billion is redeemable noncontrolling interest (RNCI) as of December 31, 2023 and March 31, 2024, respectively. NCI and RNCI are included within additional paid-in capital. Net loss attributable to noncontrolling interests was not material for an y period presented and is included within the \"other\" component of OI&E. See Note 6 for further details on OI&E.\n\nUnconsolidated VIEs\n\nWe have investments in VIEs in which we are not the primary beneficiary. These VIEs include private companies that are primarily early stage companies and certain renewable energy entities in which activities involve power generation using renewable sources.\n\nWe have determined that the governance structures of these entities do not allow us to direct the activities that would significantly affect their economic performance. Therefore, we are not the primary beneficiary, and the resu…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 89,
+          "text": " |  | Maturity |  | Coupon Rate |  | Effective Interest Rate |  | As of December 31, 2023 |  | As of March 31, 2024\nDebt |  |  |  |  |  |  |  |  |  | \n2016-2020 Notes issuances |  | 2025 - 2060 |  | 0.45 % - 2.25 % |  | 0.57 % - 2.33 % |  | $ | 13,000 |  |  | $ | 12,000 | \nFuture finance lease payments, net and other (1) |  |  |  |  |  |  |  | 1,746 |  |  | 1,672 | \nTotal debt |  |  |  |  |  |  |  | 14,746 |  |  | 13,672 | \nUnamortized discount and debt issuance costs |  |  |  |  |  |  |  | ( 130 ) |  |  | ( 127 ) | \nLess: Current portion of long-term notes (2) |  |  |  |  |  |  |  | ( 1,000 ) |  |  | 0 | \nLess: Current portion of future finance lease payments, net and other current debt (1)(2) |  |  |  |  |  |  |  | ( 363 ) |  |  | ( 317 ) | \nTotal long-term debt |  |  |  |  |  |  |  | $ | 13,253 |  |  | $ | 13,228 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 90,
+          "text": "(1) Future finance lease payments are net of imputed interest.\n\n(2) Total current portion of long-term debt is included within other accrued expenses and current liabilities. See Note 6 for further details.\n\nThe notes in the table above are fixed-rate senior unsecured obligations and rank equally with each other. We may redeem the notes at any time in whole or in part at specified redemption prices. The effective interest rates are based on proceeds received with interest payable semi-annually.\n\nThe total estimated fair value of the outstanding notes was approximately $ 10.3 billion and $ 9.0 billion as of December 31, 2023 and March 31, 2024, respectively. The fair value was determined based on observable market prices of identical instruments in less active markets and is categorized accordingly as Level 2 in the fair value hierarchy.\n\nCredit Facility\n\nAs of March 31, 2024, we had $ 10.0 billion of revolving credit facilities, of which $ 4.0 billion expires in April 2024 and $ 6.0 billion expires in April 2028. In April 2024, we entered into a new $ 4.0 billion revolving credit facility expiring in April 2025. The interest rates for all credit facilities are determined based on a formula using certain market rates, as well as our progress toward the achievement of certain sustainability goals. No amoun ts were outstanding under the credit facilities as of December 31, 2023 and March 31, 2024.\n\nNote 6. Supplemental Financial Statement Information\n\nAccounts Receivable\n\nThe allowance for credit losses on accounts receivable was $ 771 million and $ 745 million as of December 31, 2023 and March 31, 2024, respectively.\n\nProperty and Equipment, Net\n\nProperty and equipment, net, co nsisted of the following (in millions): As of December 31, 2023 As of March 31, 2024 Land and buildings $ 74,083 $ 77,421 Information technology assets 80,594 85,976 Construction in progress 35,229 37,679 Leasehold improvements 11,425 11,576 Furniture and fixtures 472 534 Property and equipment…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 91,
+          "text": " | As of December 31, 2023 |  | As of March 31, 2024\nLand and buildings | $ | 74,083 |  |  | $ | 77,421 | \nInformation technology assets | 80,594 |  |  | 85,976 | \nConstruction in progress | 35,229 |  |  | 37,679 | \nLeasehold improvements | 11,425 |  |  | 11,576 | \nFurniture and fixtures | 472 |  |  | 534 | \nProperty and equipment, gross | 201,803 |  |  | 213,186 | \nLess: accumulated depreciation | ( 67,458 ) |  |  | ( 70,004 ) | \nProperty and equipment, net | $ | 134,345 |  |  | $ | 143,182 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 92,
+          "text": "20\n\n20\n\n20\n\nAccrued Expenses and Other Current Liabilities\n\nAccrued expenses and other current liabilities consisted of the following (in millions): As of December 31, 2023 As of March 31, 2024 European Commission fines (1) $ 9,525 $ 9,475 Accrued purchases of property and equipment 4,679 5,666 Accrued customer liabilities 4,140 4,355 Current operating lease liabilities 2,791 2,874 Income taxes payable, net 2,748 4,926 Other accrued expenses and current liabilities 22,285 21,307 Accrued expenses and other current liabilities $ 46,168 $ 48,603",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 93,
+          "text": " | As of December 31, 2023 |  | As of March 31, 2024\nEuropean Commission fines (1) | $ | 9,525 |  |  | $ | 9,475 | \nAccrued purchases of property and equipment | 4,679 |  |  | 5,666 | \nAccrued customer liabilities | 4,140 |  |  | 4,355 | \nCurrent operating lease liabilities | 2,791 |  |  | 2,874 | \nIncome taxes payable, net | 2,748 |  |  | 4,926 | \nOther accrued expenses and current liabilities | 22,285 |  |  | 21,307 | \nAccrued expenses and other current liabilities | $ | 46,168 |  |  | $ | 48,603 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 94,
+          "text": "(1) While each European Commission (EC) decision is under appeal, the fines are included in accrued expenses and other current liabilities on our Consolidated Balance Sheets, as we provided bank guarantees (in lieu of a cash payment) for the fines. Amounts include the effects of foreign exchange and interest. See Note 8 for further details.\n\nAccumulated Other Comprehensive Income (Loss)\n\nComponents of AOCI, net of income tax, were as follows (in millions): Foreign Currency Translation Adjustments Unrealized Gains (Losses) on Available-for-Sale Investments Unrealized Gains (Losses) on Cash Flow Hedges Total Balance as of December 31, 2022 $ ( 4,142 ) $ ( 3,477 ) $ 16 $ ( 7,603 ) Other comprehensive income (loss) before reclassifications 596 866 ( 121 ) 1,341 Amounts excluded from the assessment of hedge effectiveness recorded in AOCI 0 0 47 47 Amounts reclassified from AOCI 0 292 ( 77 ) 215 Other comprehensive income (loss) 596 1,158 ( 151 ) 1,603 Balance as of March 31, 2023 $ ( 3,546 ) $ ( 2,319 ) $ ( 135 ) $ ( 6,000 )",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 95,
+          "text": " | Foreign Currency Translation Adjustments |  | Unrealized Gains (Losses) on Available-for-Sale Investments |  | Unrealized Gains (Losses) on Cash Flow Hedges |  | Total\nBalance as of December 31, 2022 | $ | ( 4,142 ) |  |  | $ | ( 3,477 ) |  |  | $ | 16 |  |  | $ | ( 7,603 ) | \nOther comprehensive income (loss) before reclassifications | 596 |  |  | 866 |  |  | ( 121 ) |  |  | 1,341 | \nAmounts excluded from the assessment of hedge effectiveness recorded in AOCI | 0 |  |  | 0 |  |  | 47 |  |  | 47 | \nAmounts reclassified from AOCI | 0 |  |  | 292 |  |  | ( 77 ) |  |  | 215 | \nOther comprehensive income (loss) | 596 |  |  | 1,158 |  |  | ( 151 ) |  |  | 1,603 | \nBalance as of March 31, 2023 | $ | ( 3,546 ) |  |  | $ | ( 2,319 ) |  |  | $ | ( 135 ) |  |  | $ | ( 6,000 ) | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 96,
+          "text": "Foreign Currency Translation Adjustments Unrealized Gains (Losses) on Available-for-Sale Investments Unrealized Gains (Losses) on Cash Flow Hedges Total Balance as of December 31, 2023 $ ( 3,407 ) $ ( 965 ) $ ( 30 ) $ ( 4,402 ) Other comprehensive income (loss) before reclassifications ( 503 ) ( 360 ) 128 ( 735 ) Amounts excluded from the assessment of hedge effectiveness recorded in AOCI 0 0 58 58 Amounts reclassified from AOCI 0 311 ( 71 ) 240 Other comprehensive income (loss) ( 503 ) ( 49 ) 115 ( 437 ) Balance as of March 31, 2024 $ ( 3,910 ) $ ( 1,014 ) $ 85 $ ( 4,839 )",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 97,
+          "text": " | Foreign Currency Translation Adjustments |  | Unrealized Gains (Losses) on Available-for-Sale Investments |  | Unrealized Gains (Losses) on Cash Flow Hedges |  | Total\nBalance as of December 31, 2023 | $ | ( 3,407 ) |  |  | $ | ( 965 ) |  |  | $ | ( 30 ) |  |  | $ | ( 4,402 ) | \nOther comprehensive income (loss) before reclassifications | ( 503 ) |  |  | ( 360 ) |  |  | 128 |  |  | ( 735 ) | \nAmounts excluded from the assessment of hedge effectiveness recorded in AOCI | 0 |  |  | 0 |  |  | 58 |  |  | 58 | \nAmounts reclassified from AOCI | 0 |  |  | 311 |  |  | ( 71 ) |  |  | 240 | \nOther comprehensive income (loss) | ( 503 ) |  |  | ( 49 ) |  |  | 115 |  |  | ( 437 ) | \nBalance as of March 31, 2024 | $ | ( 3,910 ) |  |  | $ | ( 1,014 ) |  |  | $ | 85 |  |  | $ | ( 4,839 ) | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 98,
+          "text": "21\n\n21\n\n21\n\nThe effects on net income of amounts reclassified from AOCI were as follows (in millions): Three Months Ended March 31, AOCI Components Location 2023 2024 Unrealized gains (losses) on available-for-sale investments Other income (expense), net $ ( 374 ) $ ( 399 ) Benefit (provision) for income taxes 82 88 Net of income tax ( 292 ) ( 311 ) Unrealized gains (losses) on cash flow hedges Foreign exchange contracts Revenue 88 74 Interest rate contracts Other income (expense), net 2 1 Benefit (provision) for income taxes ( 13 ) ( 4 ) Net of income tax 77 71 Total amount reclassified, net of income tax $ ( 215 ) $ ( 240 )",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 99,
+          "text": " |  |  |  | Three Months Ended |  | \n |  |  |  | March 31, |  | \nAOCI Components |  | Location |  | 2023 |  | 2024 |  |  |  | \nUnrealized gains (losses) on available-for-sale investments |  |  |  |  |  |  |  | \n |  | Other income (expense), net |  | $ | ( 374 ) |  |  | $ | ( 399 ) |  |  |  |  | \n |  | Benefit (provision) for income taxes |  | 82 |  |  | 88 |  |  |  |  | \n |  | Net of income tax |  | ( 292 ) |  |  | ( 311 ) |  |  |  |  | \nUnrealized gains (losses) on cash flow hedges |  |  |  |  |  |  |  | \nForeign exchange contracts |  | Revenue |  | 88 |  |  | 74 |  |  |  |  | \nInterest rate contracts |  | Other income (expense), net |  | 2 |  |  | 1 |  |  |  |  | \n |  | Benefit (provision) for income taxes |  | ( 13 ) |  |  | ( 4 ) |  |  |  |  | \n |  | Net of income tax |  | 77 |  |  | 71 |  |  |  |  | \nTotal amount reclassified, net of income tax |  | $ | ( 215 ) |  |  | $ | ( 240 ) |  |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 100,
+          "text": "Other Income (Expense), Net\n\nComponents of OI&E were as follows (in millions): Three Months Ended March 31, 2023 2024 Interest income $ 797 $ 1,061 Interest expense (1) ( 80 ) ( 94 ) Foreign currency exchange gain (loss), net ( 210 ) ( 238 ) Gain (loss) on debt securities, net ( 293 ) ( 462 ) Gain (loss) on equity securities, net 377 2,243 Performance fees 118 104 Income (loss) and impairment from equity method investments, net ( 51 ) ( 26 ) Other 132 255 Other income (expense), net $ 790 $ 2,843",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 101,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nInterest income | $ | 797 |  |  | $ | 1,061 |  |  |  |  | \nInterest expense (1) | ( 80 ) |  |  | ( 94 ) |  |  |  |  | \nForeign currency exchange gain (loss), net | ( 210 ) |  |  | ( 238 ) |  |  |  |  | \nGain (loss) on debt securities, net | ( 293 ) |  |  | ( 462 ) |  |  |  |  | \nGain (loss) on equity securities, net | 377 |  |  | 2,243 |  |  |  |  | \nPerformance fees | 118 |  |  | 104 |  |  |  |  | \nIncome (loss) and impairment from equity method investments, net | ( 51 ) |  |  | ( 26 ) |  |  |  |  | \nOther | 132 |  |  | 255 |  |  |  |  | \nOther income (expense), net | $ | 790 |  |  | $ | 2,843 |  |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 102,
+          "text": "(1) Interest expense is net of interest capitalized of $ 40 million and $ 43 million for the three months ended March 31, 2023 and 2024, respectively .\n\nNote 7. Goodwill\n\nGoodwill\n\nChanges in the carrying amount of goodwill for the three months ended March 31, 2024 were as follows (in millions):\n\nGoogle Services Google Cloud Other Bets Total Balance as of December 31, 2023 $ 21,118 $ 7,199 $ 881 $ 29,198 Acquisitions 9 0 0 9 Foreign currency translation and other adjustments ( 22 ) ( 2 ) 0 ( 24 ) Balance as of March 31, 2024 $ 21,105 $ 7,197 $ 881 $ 29,183",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 103,
+          "text": " | Google Services |  | Google Cloud |  | Other Bets |  | Total\nBalance as of December 31, 2023 | $ | 21,118 |  |  | $ | 7,199 |  |  | $ | 881 |  |  | $ | 29,198 | \nAcquisitions | 9 |  |  | 0 |  |  | 0 |  |  | 9 | \nForeign currency translation and other adjustments | ( 22 ) |  |  | ( 2 ) |  |  | 0 |  |  | ( 24 ) | \nBalance as of March 31, 2024 | $ | 21,105 |  |  | $ | 7,197 |  |  | $ | 881 |  |  | $ | 29,183 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 104,
+          "text": "Note 8. Commitments and Contingencies\n\nCommitments\n\nWe have content licensing agreements with future fixed or minimum guaranteed commitments of $ 10.1 billion as of March 31, 2024, of which the majority is paid quarterly through the first quarter of 2030.\n\n22\n\n22\n\n22\n\nIndemnifications\n\nIn the normal course of business, including to facilitate transactions in our services and products and corporate activities, we indemnify certain parties, including advertisers, Google Network partners, distribution partners, customers of Google Cloud offerings, lessors, and service providers with respect to certain matters. We have agreed to defend and/or hold certain parties harmless against losses arising from a breach of representations or covenants, or out of intellectual property infringement or other claims made against certain parties. Several of these agreements limit the time within which an indemnification claim can be made and the amount of the claim. In addition, we have entered into indemnification agreements with our officers and directors, and our bylaws contain similar indemnification obligations to our agents.\n\nIt is not possible to make a reasonable estimate of the maximum potential amount under these indemnification agreements due to the unique facts and circumstances involved in each particular agreement. Additionally, the payments we have made under such agreements have not had a material adverse effect on our results of operations, cash flows, or financial position. However, to the extent that valid indemnification cl aims arise in the future, future payments by us could be significant and could have a material adverse effect on our results of operations or cash flows in a particular period.\n\nAs of March 31, 2024, we did not have any material indemnification claims that were probable or reasonably possible.\n\nLegal Matters\n\nWe record a liability when we believe that it is probable that a loss has been incurred, and the amount can be reasonably estimated. If we d…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 105,
+          "text": "• On December 16, 2020, a number of state Attorneys General filed an antitrust complaint in the U.S. District Court for the Eastern District of Texas, alleging that Google violated U.S. antitrust laws as well as state deceptive trade laws relating to its advertising technology, and a trial is scheduled for March 2025. Additionally, on January 24, 2023, the DOJ, along with a number of state Attorneys General, filed an antitrust complaint in the U.S. District Court for the Eastern District of Virginia alleging that Google’s digital advertising technology products violate U.S. antitrust laws, and on April 17, 2023, a number of additional state Attorneys General joined the complaint. A trial is scheduled for September 2024. The EC, the CMA, and the ACCC each opened a formal investigation into Google's advertising technology business practices on June 22, 2021, May 25, 2022, and June 29, 2022, respectively. On June 14, 2023, the EC issued a Statement of Objections (SO) informing Google of its preliminary view that Google violated European antitrust laws relating to its advertising technology. We responded to the SO on December 1, 2023.\n\n• In May 2022, the EC and the CMA each opened investigations into Google Play’s business practices. Korean regulators are investigating Google Play's billing practices, including a formal review in May 2022 of Google's compliance with the new app store billing regulations.\n\nWe believe we have strong arguments against these claims and will defend ourselves vig orously. We continue to cooperate with federal and state regulators in the U.S., the EC, and other regulators around the world.\n\nPrivacy Matters\n\nWe are subject to a number of privacy-related laws and regulations, and we currently are party to a number of privacy investigations and lawsuits ongoing in multiple jurisdictions. For example, there are ongoing investigations and litigation in the U.S. and the European Union, including those relating to our collection and use of location i…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 106,
+          "text": " | Three Months Ended March 31, 2024 |  | \n | Shares |  | Amount |  |  |  | \nClass A share repurchases | 23 |  |  | $ | 3,350 |  |  |  |  | \nClass C share repurchases | 88 |  |  | 12,707 |  |  |  |  | \nTotal share repurchases (1) | 111 |  |  | $ | 16,057 |  |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 107,
+          "text": "(1) Shares repurchased include unsettled repurchases as of March 31, 2024.\n\nClass A and Class C shares are repurchased in a manner deemed in the best interest of the company and its stockholders, taking into account the economic cost and prevailing market conditions, including the relative trading prices and volumes of the Class A and Class C shares. Repurchases are executed from time to time, subject to general business and market conditions and other investment opportunities, through open market purchases or privately negotiated transactions, including through Rule 10b5-1 plans. The repurchase program does not have an expiration date.\n\n25\n\n25\n\n25\n\nDividends\n\nOn April 25, 2024, the Board of Directors of Alphabet declared a cash dividend of $ 0.20 per share to be paid on June 17, 2024, to stockholders of record as of June 10, 2024, on each of the company’s Class A, Class B, and Class C shares.\n\nThe company intends to pay quarterly cash dividends in the future, subject to review and approval by the company’s Board of Directors in its sole discretion. In connection with the cash dividend (and any future dividend the company’s Board of Directors may declare from time to time), the company will also award dividend equivalent units to holders of all unvested stock units in accordance with the Alphabet Inc. Amended and Restated 2021 Stock Plan and pursuant to each holder’s outstanding stock unit grant agreements, as amended.\n\nNote 10. Net Income Per Share\n\nThe following table sets forth the computation of basic and diluted net income per share of Class A, Class B, and Class C stock (in millions, except per share amounts):\n\nThree Months Ended March 31, 2023 2024 Class A Class B Class C Class A Class B Class C Basic net income per share: Numerator Allocation of undistributed earnings $ 7,006 $ 1,040 $ 7,005 $ 11,213 $ 1,656 $ 10,793 Denominator Number of shares used in per share computation 5,949 883 5,949 5,883 869 5,663 Basic net income per share $ 1.18 $ 1.18 $ 1.18 $ 1.…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 108,
+          "text": " | Three Months Ended March 31,\n | 2023 |  | 2024\n | Class A |  | Class B |  | Class C |  | Class A |  | Class B |  | Class C\nBasic net income per share: |  |  |  |  |  |  |  |  |  |  | \nNumerator |  |  |  |  |  |  |  |  |  |  | \nAllocation of undistributed earnings | $ | 7,006 |  |  | $ | 1,040 |  |  | $ | 7,005 |  |  | $ | 11,213 |  |  | $ | 1,656 |  |  | $ | 10,793 | \nDenominator |  |  |  |  |  |  |  |  |  |  | \nNumber of shares used in per share computation | 5,949 |  |  | 883 |  |  | 5,949 |  |  | 5,883 |  |  | 869 |  |  | 5,663 | \nBasic net income per share | $ | 1.18 |  |  | $ | 1.18 |  |  | $ | 1.18 |  |  | $ | 1.91 |  |  | $ | 1.91 |  |  | $ | 1.91 | \nDiluted net income per share: |  |  |  |  |  |  |  |  |  |  | \nNumerator |  |  |  |  |  |  |  |  |  |  | \nAllocation of undistributed earnings for basic computation | $ | 7,006 |  |  | $ | 1,040 |  |  | $ | 7,005 |  |  | $ | 11,213 |  |  | $ | 1,656 |  |  | $ | 10,793 | \nReallocation of undistributed earnings as a result of conversion of Class B to Class A shares | 1,040 |  |  | 0 |  |  | 0 |  |  | 1,656 |  |  | 0 |  |  | 0 | \nReallocation of undistributed earnings | ( 27 ) |  |  | ( 4 ) |  |  | 27 |  |  | ( 115 ) |  |  | ( 15 ) |  |  | 115 | \nAllocation of undistributed earnings | $ | 8,019 |  |  | $ | 1,036 |  |  | $ | 7,032 |  |  | $ | 12,754 |  |  | $ | 1,641 |  |  | $ | 10,908 | \nDenominator |  |  |  |  |  |  |  |  |  |  | \nNumber of shares used in basic computation | 5,949 |  |  | 883 |  |  | 5,949 |  |  | 5,883 |  |  | 869 |  |  | 5,663 | \nWeighted-average effect of dilutive securities |  |  |  |  |  |  |  |  |  |  | \nAdd: |  |  |  |  |  |  |  |  |  |  | \nConversion of Class B to Class A shares outstanding | 883 |  |  | 0 |  |  | 0 |  |  | 869 |  |  | 0 |  |  | 0 | \nRestricted stock units and other contingently issuable shares | 0 |  |  | 0 |  |  | 42 |  |  | 0 |  |  | 0 |  |  | 112 | \nNumber of shares used in per share computation | 6,832 |  |  | 883 |  |  | 5,991 |  |  | 6,752 |  |  | 869 |  |  | 5,77…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 109,
+          "text": "For the periods presented above, the net income per share amounts are the same for Class A, Class B, and Class C stock because the holders of each class are entitled to equal per share dividends or distributions in liquidation in accordance with the Amended and Restated Certificate of Incorporation of Alphabet Inc.\n\nNote 11. Compensation Plans\n\nStock-Based Compensation\n\nFor the three months ended March 31, 2023 and 2024, total stock based compensation (SBC) expense was $ 5.3 billion, including amounts associated with awards we expect to settle in Alphabet stock of $ 5.1 billion, for both periods.\n\n26\n\n26\n\n26\n\nStock-Based Award Activities\n\nThe following table summarizes the activities for unvested Alphabet restricted stock units (RSUs) for the three months ended March 31, 2024 (in millions, except per share amounts): Number of Shares Weighted- Average Grant-Date Fair Value Unvested as of December 31, 2023 338 $ 104.93 Granted 159 $ 133.43 Vested ( 49 ) $ 107.61 Forfeited/canceled ( 8 ) $ 106.64 Unvested as of March 31, 2024 440 $ 114.91",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 110,
+          "text": " | Number of Shares |  | Weighted- Average Grant-Date Fair Value\nUnvested as of December 31, 2023 | 338 |  |  | $ | 104.93 | \nGranted | 159 |  |  | $ | 133.43 | \nVested | ( 49 ) |  |  | $ | 107.61 | \nForfeited/canceled | ( 8 ) |  |  | $ | 106.64 | \nUnvested as of March 31, 2024 | 440 |  |  | $ | 114.91 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 111,
+          "text": "As of March 31, 2024, there was $ 48.7 billion of unrecognized compensation cost related to unvested RSUs. This amount is expected to be recognized over a weighted-average period of 2.9 years.\n\nNote 12. Income Taxes\n\nThe following table presents provision for income taxes (in millions, except for effective tax rate):\n\nThree Months Ended March 31, 2023 2024 Income before provision for income taxes $ 18,205 $ 28,315 Provision for income taxes $ 3,154 $ 4,653 Effective tax rate 17.3 % 16.4 %",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 112,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nIncome before provision for income taxes | $ | 18,205 |  |  | $ | 28,315 |  |  |  |  | \nProvision for income taxes | $ | 3,154 |  |  | $ | 4,653 |  |  |  |  | \nEffective tax rate | 17.3 | % |  | 16.4 | % |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 113,
+          "text": "We are subject to income taxes in the U.S. and foreign jurisdictions. Significant judgment is required in evaluating our uncertain tax positions and determining our provision for income taxes. The total amount of gross unrecognized tax benefits was $ 9.4 billion and $ 10.2 billion, of which $ 7.4 billion and $ 8.1 billion, if recognized, would affect our effective tax rate, as of December 31, 2023 and March 31, 2024, respectively.\n\nNote 13. Information about Segments and Geographic Areas\n\nWe report our segment results as Google Services, Google Cloud, and Other Bets:\n\n• Google Services includes products and services such as ads, Android, Chrome, devices, Google Maps, Google Play, Search, and YouTube. Google Services generates revenues primarily from advertising; fees received for consumer subscription-based products such as YouTube TV, YouTube Music and Premium, and NFL Sunday Ticket, as well as Google One; the sale of apps and in-app purchases and devices.\n\n• Google Cloud includes infrastructure and platform services, collaboration tools, and other services for enterprise customers. Google Cloud generates revenues primarily from consumption-based fees and subscriptions received for Google Cloud Platform services, Google Workspace communication and collaboration tools, and other enterprise services.\n\n• Other Bets is a combination of multiple operating segments that are not individually material. Revenues from Other Bets are generated primarily from the sale of healthcare-related services and internet services.\n\nRevenues, certain costs, such as costs associated with content and traffic acquisition, certain engineering activities, and devices, as well as certain operating expenses are directly attributable to our segments. Due to the integrated nature of Alphabet, other costs and expenses, such as technical infrastructure and office facilities, are managed centrally at a consolidated level. These costs, including the associated depreciation and impairment, are allocat…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 114,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nRevenues: |  |  |  |  |  |  | \nGoogle Services | $ | 61,961 |  |  | $ | 70,398 |  |  |  |  | \nGoogle Cloud | 7,454 |  |  | 9,574 |  |  |  |  | \nOther Bets | 288 |  |  | 495 |  |  |  |  | \nHedging gains (losses) | 84 |  |  | 72 |  |  |  |  | \nTotal revenues | $ | 69,787 |  |  | $ | 80,539 |  |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 115,
+          "text": "Three Months Ended March 31, 2023 2024 Operating income (loss): Google Services $ 21,737 $ 27,897 Google Cloud 191 900 Other Bets ( 1,225 ) ( 1,020 ) Alphabet-level activities ( 3,288 ) ( 2,305 ) Total income from operations $ 17,415 $ 25,472",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 116,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nOperating income (loss): |  |  |  |  |  |  | \nGoogle Services | $ | 21,737 |  |  | $ | 27,897 |  |  |  |  | \nGoogle Cloud | 191 |  |  | 900 |  |  |  |  | \nOther Bets | ( 1,225 ) |  |  | ( 1,020 ) |  |  |  |  | \nAlphabet-level activities | ( 3,288 ) |  |  | ( 2,305 ) |  |  |  |  | \nTotal income from operations | $ | 17,415 |  |  | $ | 25,472 |  |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 117,
+          "text": "See Note 2 for information relating to revenues by geography.\n\nThe following table presents long-lived assets by geographic area, which includes property and equipment, net and operating lease assets (in millions): As of December 31, 2023 As of March 31, 2024 Long-lived assets: United States $ 110,053 $ 117,085 International 38,383 39,865 Total long-lived assets $ 148,436 $ 156,950",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 118,
+          "text": " | As of December 31, 2023 |  | As of March 31, 2024\nLong-lived assets: |  |  | \nUnited States | $ | 110,053 |  |  | $ | 117,085 | \nInternational | 38,383 |  |  | 39,865 | \nTotal long-lived assets | $ | 148,436 |  |  | $ | 156,950 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 119,
+          "text": "28\n\n28\n\n28\n\nITEM 2. MANAGEMENT’S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULTS OF OPERATIONS\n\nPlease read the following discussion and analysis of our financial condition and results of operations together with \"Note About Forward-Looking Statements\" and our consolidated financial statements and related notes included under Item 1 of this Quarterly Report on Form 10-Q as well as our Annual Report on Form 10-K for the fiscal year ended December 31, 2023, including Part I, Item 1A \"Risk Factors,\" as updated in this Quarterly Report on Form 10-Q.\n\nUnderstanding Alphabet’s Financial Results\n\nAlphabet is a collection of businesses — the largest of which is Google. We report Google in two segments, Google Services and Google Cloud; we also report all non-Google businesses collectively as Other Bets. For further details on our segments, see Note 13 of the Notes to Consolidated Financial Statements included in Item 1 of this Quarterly Report on Form 10-Q.\n\nRevenues and Monetization Metrics\n\nWe generate revenues by delivering relevant, cost-effective online advertising; cloud-based solutions that provide enterprise customers of all sizes with infrastructure and platform services as well as communication and collaboration tools; sales of other products and services, such as fees received for subscription-based products, apps and in-app purchases, and devices. For additional information on how we recognize revenue, see Note 1 of the Notes to Consolidated Financial Statements included in Part II, Item 8 in our Annual Report on Form 10-K for the fiscal year ended December 31, 2023.\n\nIn addition to the long-term trends and their financial effect on our business discussed in \"Trends in Our Business and Financial Effect\" in Part II, Item 7 of our Annual Report on Form 10-K for the fiscal year ended December 31, 2023, fluctuations in our revenues have been and may continue to be affected by a combination of factors, including:\n\n• changes in foreign currency exchange rat…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 120,
+          "text": "Our cost structure has two components: cost of revenues and operating expenses. Our operating expenses include costs related to R&D, sales and marketing, and general and administrative functions. Certain of our costs and expenses, including those associated with the operation of our technical infrastructure as well as components of our operating expenses, are generally less variable in nature and may not correlate to changes in revenue. Additionally, fluctuations in compensation expenses may not directly correlate with changes in headcount, in particular due to annual SBC awards that generally vest over four years.\n\nCost of Revenues\n\nCost of revenues is comprised of TAC and other costs of revenues.\n\n• TAC includes:\n\n◦ amounts paid to our distribution partners who make available our search access points and services. Our distribution partners include browser providers, mobile carriers, original equipment manufacturers, and software developers; and\n\n◦ amounts paid to Google Network partners primarily for ads displayed on their properties.\n\n• Other cost of revenues primarily includes:\n\n◦ compensation expense related to our data centers and other operations such as content review and customer and product support;\n\n◦ content acquisition costs, which are payments to content providers from whom we license video and other content for distribution on YouTube and Google Play (we pay fees to these content providers based on revenues generated or a flat fee);\n\n◦ depreciation expense related to our technical infrastructure; and\n\n◦ inventory and other costs related to the devices we sell.\n\nTAC as a percentage of revenues generated from ads placed on Google Network properties are significantly higher than TAC as a percentage of revenues generated from ads placed on Google Search & other properties, because most of the advertiser revenues from ads served on Google Network properties are paid as TAC to our Google Network partners.\n\nOperating Expenses\n\nOperating expenses are generall…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 121,
+          "text": " |  | Three Months Ended |  |  |  | \n | March 31, |  |  |  | \n |  | 2023 |  | 2024 |  | $ Change |  | % Change\nConsolidated revenues |  | $ | 69,787 |  |  | $ | 80,539 |  |  | $ | 10,752 |  |  | 15 | %\nChange in consolidated constant currency revenues (1) |  |  |  |  |  |  |  | 16 | %\nCost of revenues |  | $ | 30,612 |  |  | $ | 33,712 |  |  | $ | 3,100 |  |  | 10 | %\nOperating expenses |  | $ | 21,760 |  |  | $ | 21,355 |  |  | $ | -405 |  |  | -2 | %\nOperating income |  | $ | 17,415 |  |  | $ | 25,472 |  |  | $ | 8,057 |  |  | 46 | %\nOperating margin |  | 25 | % |  | 32 | % |  |  |  | 7 | %\nOther income (expense), net |  | $ | 790 |  |  | $ | 2,843 |  |  | $ | 2,053 |  |  | 260 | %\nNet Income |  | $ | 15,051 |  |  | $ | 23,662 |  |  | $ | 8,611 |  |  | 57 | %\nDiluted EPS |  | $ | 1.17 |  |  | $ | 1.89 |  |  | $ | 0.72 |  |  | 62 | %",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 122,
+          "text": "(1) See \"Use of Non-GAAP Constant Currency Measures\" below for details relating to our use of constant currency information.\n\n• Revenues were $80.5 billion, an increase of 15% year over year, primarily driven by an increase in Google Services revenues of $8.4 billion, or 14%, and an increase in Google Cloud revenues of $2.1 billion, or 28%.\n\n• Total constant currency revenues, which exclude the effect of hedging, increased 16% year over year.\n\n• Cost of revenues was $33.7 billion, an increase of 10% year over year, primarily driven by increases in TAC, content acquisition costs, and depreciation expense. These increases were partially offset by decreases in compensation expenses, largely the result of a reduction in employee severance and related charges, and charges related to our office space optimization efforts.\n\n• Operating expenses were $21.4 billion, a decrease of 2% year over year, primarily driven by decreases in charges related to our office space optimization efforts, compensation expenses, largely the result of a reduction in employee severance and related charges, and charges related to legal matters. These decreases were partially offset by an increase in depreciation expense.\n\n32\n\n32\n\n32\n\nOther Information\n\n• On April 25, 2024, the Board of Directors of Alphabet approved the initiation of a cash dividend program, and declared a cash dividend of $0.20 per share that will be paid on June 17, 2024, to stockholders of record as of June 10, 2024, on each of the company’s Class A, Class B, and Class C shares. See Note 9 of the Notes to Consolidated Financial Statements included in Item 8 of this Annual Report on Form 10-Q for additional information.\n\n• R epurchases of Class A and Class C shares were $3.4 billion and $12.7 billion, respectively, totaling $16.1 billion for the three months ended March 31, 2024. In April 2024, the Board of Directors of Alphabet authorized the company to repurchase up to an additional $70.0 billion of its Class A and Class C sh…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 123,
+          "text": " | Three Months Ended\n | March 31,\n | 2023 |  | 2024\nGoogle Search & other | $ | 40,359 |  |  | $ | 46,156 | \nYouTube ads | 6,693 |  |  | 8,090 | \nGoogle Network | 7,496 |  |  | 7,413 | \nGoogle advertising | 54,548 |  |  | 61,659 | \nGoogle subscriptions, platforms, and devices | 7,413 |  |  | 8,739 | \nGoogle Services total | 61,961 |  |  | 70,398 | \nGoogle Cloud | 7,454 |  |  | 9,574 | \nOther Bets | 288 |  |  | 495 | \nHedging gains (losses) | 84 |  |  | 72 | \nTotal revenues | $ | 69,787 |  |  | $ | 80,539 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 124,
+          "text": "Google Services\n\nGoogle advertising revenues\n\nGoogle Search & other\n\nGoogle Search & other revenues increased $5.8 billion from the three months ended March 31, 2023 to the three months ended March 31, 2024. The overall growth was driven by interrelated factors including increases in search queries resulting from growth in user adoption and usage on mobile devices; growth in advertiser spending; and improvements we have made in ad formats and delivery.\n\nYouTube ads\n\nYouTube ads revenues increased $1.4 billion from the three months ended March 31, 2023 to the three months ended March 31, 2024. The growth was driven by our direct response and brand advertising products, both of which benefited from increased spending by our advertisers.\n\n33\n\n33\n\n33\n\nGoogle Network\n\nGoogle Network revenues decreased $83 million from the three months ended March 31, 2023 to the three months ended March 31, 2024 primarily driven by a decrease in AdSense revenues.\n\nMonetization Metrics\n\nThe following table presents changes in monetization metrics for Google Search & other revenues (paid clicks and cost-per-click) and Google Network revenues (impressions and cost-per-impression), expressed as a percentage, from three months ended March 31, 2023 to three months ended March 31, 2024:\n\nGoogle Search & other Paid clicks change 5 % Cost-per-click change 8 % Google Network Impressions change (13) % Cost-per-impression change 14 %",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 125,
+          "text": "Google Search & other | \nPaid clicks change | 5 | %\nCost-per-click change | 8 | %\nGoogle Network | \nImpressions change | -13 | %\nCost-per-impression change | 14 | %",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 126,
+          "text": "Changes in paid clicks and impressions are driven by a number of interrelated factors, including changes in advertiser spending; ongoing product and policy changes; and, as it relates to paid clicks, fluctuations in search queries resulting from changes in user adoption and usage, primarily on mobile devices.\n\nChanges in cost-per-click and cost-per-impression are driven by a number of interrelated factors including changes in device mix, geographic mix, advertiser spending, ongoing product and policy changes, product mix, property mix, and changes in foreign currency exchange rates.\n\nGoogle subscriptions, platforms, and devices\n\nGoogle subscriptions, platforms, and devices revenues increased $1.3 billion from the three months ended March 31, 2023 to the three months ended March 31, 2024, primarily driven by an increase in subscription revenues, largely from growth in the number of paid subscribers for YouTube services.\n\nGoogle Cloud\n\nGoogle Cloud revenues increased $2.1 billion from the three months ended March 31, 2023 to the three months ended March 31, 2024. Growth was primarily driven by Google Cloud Platform followed by Google Workspace offerings. Google Cloud's infrastructure and platform services were the largest drivers of growth in Google Cloud Platform.\n\nRevenues by Geography\n\nThe following table presents revenues by geography as a percentage of revenues, determined based on the addresses of our customers: Three Months Ended March 31, 2023 2024 United States 47 % 48 % EMEA 30 % 30 % APAC 17 % 16 % Other Americas 6 % 6 % Hedging gains (losses) 0 % 0 %",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 127,
+          "text": " | Three Months Ended | \n | March 31, | \n | 2023 |  | 2024 | \nUnited States | 47 | % |  | 48 | % | \nEMEA | 30 | % |  | 30 | % | \nAPAC | 17 | % |  | 16 | % | \nOther Americas | 6 | % |  | 6 | % | \nHedging gains (losses) | 0 | % |  | 0 | % | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 128,
+          "text": "For additional information, see Note 2 of the Notes to Consolidated Financial Statements included in Item 1 of this Quarterly Report on Form 10-Q.\n\nUse of Non-GAAP Constant Currency Information\n\nInternational revenues, which represent a significant portion of our revenues, are generally transacted in multiple currencies and therefore are affected by fluctuations in foreign currency exchange rates.\n\nThe effect of currency exchange rates on our business is an important factor in understanding period-to-period comparisons. We use non-GAAP constant currency revenues (\"constant currency revenues\") and non-GAAP percentage change in constant currency revenues (\"percentage change in constant currency revenues\") for\n\n34\n\n34\n\n34\n\nfinancial and operational decision-making and as a means to evaluate period-to-period comparisons. We believe the presentation of results on a constant currency basis in addition to GAAP results helps improve the ability to understand our performance, because it excludes the effects of foreign currency volatility that are not indicative of our core operating results.\n\nConstant currency information compares results between periods as if exchange rates had remained constant period over period. We define constant currency revenues as revenues excluding the effect of foreign currency exchange rate movements (\"FX Effect\") as well as hedging activities, which are recognized at the consolidated level. We use constant currency revenues to determine the constant currency revenue percentage change on a year-on-year basis. Constant currency revenues are calculated by translating current period revenues using prior year comparable period exchange rates, as well as excluding any hedging effects realized in the current period.\n\nConstant currency revenue percentage change is calculated by determining the change in current period revenues over prior year comparable period revenues where current period foreign currency revenues are translated using prior year compara…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 129,
+          "text": " |  |  |  |  | Three Months Ended March 31, 2024\n |  |  |  |  |  |  |  |  | % Change from Prior Period\n | Three Months Ended March 31, |  | Less FX Effect |  | Constant Currency Revenues |  | As Reported |  | Less Hedging Effect |  | Less FX Effect |  | Constant Currency Revenues\n | 2023 |  | 2024 |  |  |  |  |  | \nUnited States | $ | 32,864 |  |  | $ | 38,737 |  |  | $ | 0 |  |  | $ | 38,737 |  |  | 18 | % |  |  |  | 0 | % |  | 18 | %\nEMEA | 21,078 |  |  | 23,788 |  |  | 204 |  |  | 23,584 |  |  | 13 | % |  |  |  | 1 | % |  | 12 | %\nAPAC | 11,681 |  |  | 13,289 |  |  | -439 |  |  | 13,728 |  |  | 14 | % |  |  |  | -4 | % |  | 18 | %\nOther Americas | 4,080 |  |  | 4,653 |  |  | -152 |  |  | 4,805 |  |  | 14 | % |  |  |  | -4 | % |  | 18 | %\nRevenues, excluding hedging effect | 69,703 |  |  | 80,467 |  |  | -387 |  |  | 80,854 |  |  | 15 | % |  |  |  | -1 | % |  | 16 | %\nHedging gains (losses) | 84 |  |  | 72 |  |  |  |  |  |  |  |  |  |  |  |  | \nTotal revenues (1) | $ | 69,787 |  |  | $ | 80,539 |  |  |  |  | $ | 80,854 |  |  | 15 | % |  | 0 | % |  | -1 | % |  | 16 | %",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 130,
+          "text": "(1) Total constant currency revenues of $80.9 billion for the three months ended March 31, 2024 increased $11.2 billion compared to $69.7 billion in revenues, excluding hedging effect, for the three months ended March 31, 2023.\n\nEMEA revenue growth was favorably affected by changes in foreign currency exchange rates, primarily due to the U.S. dollar weakening relative to the Euro, partially offset by the U.S. dollar strengthening relative to the Turkish lira.\n\nAPAC revenue growth was unfavorably affected by changes in foreign currency exchange rates, primarily due to the U.S. dollar strengthening relative to the Japanese yen.\n\nOther Americas revenue growth was unfavorably affected by changes in foreign currency exchange rates, primarily due to the U.S. dollar strengthening relative to the Argentine peso.\n\n35\n\n35\n\n35\n\nCosts and Expenses\n\nCost of Revenues\n\nThe following table presents cost of revenues, including TAC (in millions, except percentages): Three Months Ended March 31, 2023 2024 TAC $ 11,721 $ 12,946 Other cost of revenues 18,891 20,766 Total cost of revenues $ 30,612 $ 33,712 Total cost of revenues as a percentage of revenues 44 % 42 %",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 131,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nTAC | $ | 11,721 |  |  | $ | 12,946 |  |  |  |  | \nOther cost of revenues | 18,891 |  |  | 20,766 |  |  |  |  | \nTotal cost of revenues | $ | 30,612 |  |  | $ | 33,712 |  |  |  |  | \nTotal cost of revenues as a percentage of revenues | 44 | % |  | 42 | % |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 132,
+          "text": "Cost of revenues increased $3.1 billion from the three months ended March 31, 2023 to the three months ended March 31, 2024 due to an increase in other cost of revenues and TAC of $1.9 billion and $1.2 billion, respectively.\n\nThe increase in TAC from the three months ended March 31, 2023 to the three months ended March 31, 2024 was largely due to an increase in TAC paid to distribution partners, primarily driven by growth in revenues subject to TAC. The TAC rate decreased from 21.5% to 21.0% from the three months ended March 31, 2023 to the three months ended March 31, 2024 primarily due to a revenue mix shift from Google Network properties to Google Search & other properties. The TAC rate on Google Search & other revenues was substantially consistent from the three months ended March 31, 2023 to the three months ended March 31, 2024. The TAC rate on Google Network revenues reflected a slight increase from the three months ended March 31, 2023 to the three months ended March 31, 2024 due to a combination of factors, none of which were individually significant.\n\nThe increase in other cost of revenues from the three months ended March 31, 2023 to the three months ended March 31, 2024 was primarily due to increases in content acquisition costs, largely for YouTube, and depreciation expense. These increases were partially offset by decreases in compensation expenses, largely the result of a reduction in employee severance and related charges of $308 million, and charges related to our office space optimization efforts of $220 million.\n\nResearch and Development\n\nThe following table presents R&D expenses (in millions, except percentages): Three Months Ended March 31, 2023 2024 Research and development expenses $ 11,468 $ 11,903 Research and development expenses as a percentage of revenues 16 % 15 %",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 133,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nResearch and development expenses | $ | 11,468 |  |  | $ | 11,903 |  |  |  |  | \nResearch and development expenses as a percentage of revenues | 16 | % |  | 15 | % |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 134,
+          "text": "R&D expenses increased $435 million from the three months ended March 31, 2023 to the three months ended March 31, 2024, primarily driven by increases in depreciation expense of $308 million and third-party services fees of $253 million, partially offset by a decrease in charges associated with our office space optimization efforts of $247 million. Additionally, a decrease in compensation expenses of $64 million was primarily the result of a reduction in employee severance and related charges of $588 million. This decrease was partially offset by an increase in SBC expense of $320 million, excluding employee severance and related charges.\n\nSales and Marketing\n\nThe following table presents sales and marketing expenses (in millions, except percentages):\n\nThree Months Ended March 31, 2023 2024 Sales and marketing expenses $ 6,533 $ 6,426 Sales and marketing expenses as a percentage of revenues 9 % 8 %",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 135,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nSales and marketing expenses | $ | 6,533 |  |  | $ | 6,426 |  |  |  |  | \nSales and marketing expenses as a percentage of revenues | 9 | % |  | 8 | % |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 136,
+          "text": "Sales and marketing expenses decreased $107 million from the three months ended March 31, 2023 to the three months ended March 31, 2024, primarily driven by a decrease in compensation expenses of $85 million,\n\n36\n\n36\n\n36\n\nlargely the result of a reduction in employee severance and related charges of $228 million, partially offset by a combination of factors, none of which were individually significant.\n\nGeneral and Administrative\n\nThe following table presents general and administrative expenses (in millions, except percentages): Three Months Ended March 31, 2023 2024 General and administrative expenses $ 3,759 $ 3,026 General and administrative expenses as a percentage of revenues 5 % 4 %",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 137,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nGeneral and administrative expenses | $ | 3,759 |  |  | $ | 3,026 |  |  |  |  | \nGeneral and administrative expenses as a percentage of revenues | 5 | % |  | 4 | % |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 138,
+          "text": "General and administrative expenses decreased $733 million from the three months ended March 31, 2023 to the three months ended March 31, 2024, primarily driven by a reduction in charges related to legal matters of $248 million and a combination of factors, none of which were individually significant.\n\nSegment Profitability\n\nThe following table presents segment operating income (loss) (in millions):\n\nThree Months Ended March 31, 2023 2024 Operating income (loss): Google Services $ 21,737 $ 27,897 Google Cloud 191 900 Other Bets (1,225) (1,020) Alphabet-level activities (1) (3,288) (2,305) Total income from operations $ 17,415 $ 25,472",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 139,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nOperating income (loss): |  |  |  |  |  |  | \nGoogle Services | $ | 21,737 |  |  | $ | 27,897 |  |  |  |  | \nGoogle Cloud | 191 |  |  | 900 |  |  |  |  | \nOther Bets | -1225 |  |  | -1020 |  |  |  |  | \nAlphabet-level activities (1) | -3288 |  |  | -2305 |  |  |  |  | \nTotal income from operations | $ | 17,415 |  |  | $ | 25,472 |  |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 140,
+          "text": "(1) In addition to the costs included in Alphabet-level activities, hedging gains (losses) related to revenue were $84 million and $72 million f or the three months ended March 31, 2023 and 2024, respectively . For the three months ended March 31, 2023 and 2024, Alphabet-level activities included substantially all of the charges related to employee severance and our office space optimization efforts. For additional information relating to our segments, see Note 13 of the Notes to Consolidated Financial Statements included in Item 1 of this Quarterly Report on Form 10-Q.\n\nGoogle Services\n\nGoogle Services operating income increased $6.2 billion from the three months ended March 31, 2023 to the three months ended March 31, 2024. The increase in operating income was primarily driven by an increase in revenues, partially offset by increases in TAC and content acquisition costs. Additionally, a reduction in compensation expenses contributed to the increase in operating income.\n\nGoogle Cloud\n\nGoogle Cloud operating income increased $709 million from the three months ended March 31, 2023 to the three months ended March 31, 2024. The increase in operating income was primarily driven by an increase in revenues, partially offset by increases in compensation expenses, largely driven by headcount growth, and usage costs for technical infrastructure assets.\n\nOther Bets\n\nOther Bets operating loss decreased $205 million from the three months ended March 31, 2023 to the three months ended March 31, 2024 primarily due to growth in revenues.\n\n37\n\n37\n\n37\n\nOther Income (Expense), Net\n\nThe following table presents OI&E (in millions):\n\nThree Months Ended March 31, 2023 2024 Interest income $ 797 $ 1,061 Interest expense (80) (94) Foreign currency exchange gain (loss), net (210) (238) Gain (loss) on debt securities, net (293) (462) Gain (loss) on equity securities, net 377 2,243 Performance fees 118 104 Income (loss) and impairment from equity method investments, net (51) (26) Other 132 25…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 141,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nInterest income | $ | 797 |  |  | $ | 1,061 |  |  |  |  | \nInterest expense | -80 |  |  | -94 |  |  |  |  | \nForeign currency exchange gain (loss), net | -210 |  |  | -238 |  |  |  |  | \nGain (loss) on debt securities, net | -293 |  |  | -462 |  |  |  |  | \nGain (loss) on equity securities, net | 377 |  |  | 2,243 |  |  |  |  | \nPerformance fees | 118 |  |  | 104 |  |  |  |  | \nIncome (loss) and impairment from equity method investments, net | -51 |  |  | -26 |  |  |  |  | \nOther | 132 |  |  | 255 |  |  |  |  | \nOther income (expense), net | $ | 790 |  |  | $ | 2,843 |  |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 142,
+          "text": "OI&E increased $2.1 billion from the three months ended March 31, 2023 to the three months ended March 31, 2024. The increase was primarily due to net unrealized gains in non-marketable equity securities due to fair value adjustments related to observable transactions and increased interest income due to interest rates.\n\nFor additional information, see Note 6 of the Notes to Consolidated Financial Statements included in Item 1 of this Quarterly Report on Form 10-Q for further information.\n\nProvision for Income Taxes\n\nThe following table presents provision for income taxes (in millions, except effective tax rate):\n\nThree Months Ended March 31, 2023 2024 Income before provision for income taxes $ 18,205 $ 28,315 Provision for income taxes $ 3,154 $ 4,653 Effective tax rate 17.3 % 16.4 %",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 143,
+          "text": " | Three Months Ended |  | \n | March 31, |  | \n | 2023 |  | 2024 |  |  |  | \nIncome before provision for income taxes | $ | 18,205 |  |  | $ | 28,315 |  |  |  |  | \nProvision for income taxes | $ | 3,154 |  |  | $ | 4,653 |  |  |  |  | \nEffective tax rate | 17.3 | % |  | 16.4 | % |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 144,
+          "text": "The effective tax rate decreased from the three months ended March 31, 2023 to the three months ended March 31, 2024, primarily due to the tax rule change related to U.S. federal foreign tax credits issued by the IRS in July 2023 and an increase in stock-based compensation-related tax benefits, partially offset by a decrease in the U.S. federal Foreign Derived Intangible Income tax deduction and an increase in taxes for certain U.S. jurisdictions.\n\nThe OECD is coordinating negotiations among more than 140 countries with the goal of achieving consensus around substantial changes to international tax policies, including the implementation of a minimum global effective tax rate of 15%. Some countries have already implemented the legislation effective January 1, 2024, and we expect others to follow, however we do not expect a material change to our income tax provision for the 2024 fiscal year. As additional jurisdictions enact such legislation, transitional rules lapse, and other provisions of the minimum tax legislation become effective, we expect our effective tax rate and cash tax payments could increase in future years.\n\nFinancial Condition\n\nCash, Cash Equivalents, and Marketable Securities\n\nAs of March 31, 2024, we had $108.1 billion in cash, cash equivalents, and short-term marketable securities. Cash equivalents and marketable securities are comprised of time deposits, money market funds, highly liquid government bonds, corporate debt securities, mortgage-backed and asset-backed securities, and marketable equity securities.\n\nSources, Uses of Cash and Related Trends\n\nOur principal sources of liquidity are cash, cash equivalents, and marketable securities, as well as the cash flow that we generate from operations. The primary use of capital continues to be to invest for the long-term growth of the business. We regularly evaluate our cash and capital structure, including the size, pace, and form of capital return to stockholders.\n\n38\n\n38\n\n38\n\nThe following table pr…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 145,
+          "text": " | Three Months Ended\n | March 31,\n | 2023 |  | 2024\nNet cash provided by operating activities | $ | 23,509 |  |  | $ | 28,848 | \nNet cash used in investing activities | $ | -2946 |  |  | $ | -8564 | \nNet cash used in financing activities | $ | -16568 |  |  | $ | -19714 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 146,
+          "text": "Cash Provided by Operating Activities\n\nOur largest source of cash provided by operations are advertising revenues generated by Google Search & other properties, Google Network properties, and YouTube properties. In Google Services, we also generate cash through consumer subscriptions and the sale of apps and in-app purchases and devices. In Google Cloud, we generate cash through consumption-based fees and subscriptions for infrastructure, platform, collaboration tools, and other cloud services.\n\nOur primary uses of cash from operating activities include payments to distribution and Google Network partners, to employees for compensation, and to content providers. Other uses of cash from operating activities include payments to suppliers for devices, to tax authorities for income taxes, and other general corporate expenditures.\n\nNet cash provided by operating activities increased from the three months ended March 31, 2023 to the three months ended March 31, 2024 due to the increase in cash received from customers, partially offset by an increase in cash payments for cost of revenues and operating expenses.\n\nCash Used in Investing Activities\n\nCash provided by investing activities consists primarily of maturities and sales of investments in marketable and non-marketable securities. Cash used in investing activities consists primarily of purchases of marketable and non-marketable securities, purchases of property and equipment, and payments for acquisitions.\n\nNet cash used in investing activities increased from the three months ended March 31, 2023 to the three months ended March 31, 2024 primarily due to an increase in purchases of property and equipment.\n\nCash Used in Financing Activities\n\nCash provided by financing activities consists primarily of proceeds from issuance of debt and proceeds from the sale of interests in consolidated entities. Cash used in financing activities consists primarily of repurchases of stock, net payments related to stock-based award activit…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 147,
+          "text": "Three Months Ended March 31, 2024 Shares Amount Class A share repurchases 23 $ 3,350 Class C share repurchases 88 12,707 Total share repurchases (1) 111 $ 16,057 (1) Shares repurchased include unsettled repurchases as of March 31, 2024 .",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 148,
+          "text": " | Three Months Ended March 31, 2024\n | Shares |  | Amount\nClass A share repurchases | 23 |  | $ | 3,350 | \nClass C share repurchases | 88 |  | 12,707 | \nTotal share repurchases (1) | 111 |  | $ | 16,057 | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 149,
+          "text": "For additional information, see Note 9 of the Notes to Consolidated Financial Statements included in Item 1 of this Quarterly Report on Form 10-Q.\n\nDividend Program\n\nOn April 25, 2024, the Board of Directors of Alphabet declared a cash dividend of $0.20 per share to be paid on June 17, 2024, to stockholders of record as of June 10, 2024, on each of the company’s Class A, Class B, and Class C shares.\n\nThe company intends to pay quarterly cash dividends in the future, subject to review and approval by the company’s Board of Directors in its sole discretion. In connection with the cash dividend (and any future dividend the company’s Board of Directors may declare from time to time), the company will also award dividend equivalent units to holders of all unvested stock units in accordance with the Alphabet Inc. Amended and Restated 2021 Stock Plan and pursuant to each holder’s outstanding stock unit grant agreements, as amended.\n\nEuropean Commission Fines\n\nIn 2017, 2018 and 2019, the EC announced decisions that certain actions taken by Google infringed European competition law and imposed fines of €2.4 billion ($2.7 billion as of June 27, 2017), €4.3 billion ($5.1 billion as of June 30, 2018), and €1.5 billion ($1.7 billion as of March 20, 2019), respectively. On September 14, 2022, the General Court reduced the 2018 fine from €4.3 billion to €4.1 billion. We subsequently filed an appeal to the European Court of Justice.\n\nWhile each EC decision is under appeal, we included the fines in accrued expenses and other current liabilities on our Consolidated Balance Sheets as we provided bank guarantees (in lieu of a cash payment) for the fines. For additional information, see Note 8 of the Notes to Consolidated Financial Statements included in Item 1 of this Quarterly Report on Form 10-Q.\n\nTaxes\n\nAs of March 31, 2024, we had income taxes payable of $4.2 billion, of which $2.1 billion was short-term, related to a one-time transition tax payable incurred as a result of the U.S.…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 150,
+          "text": "Our operations and financial results are subject to various risks and uncertainties, including those described in Part I, Item 1A, \"Risk Factors\" in our Annual Report on Form 10-K for the year ended December 31, 2023, which could adversely affect our business, financial condition, results of operations, cash flows, and the trading price of our stock. Below are material changes to our risk factors since our Annual Report on Form 10-K for the year ended December 31, 2023.\n\nRisks Specific to our Company\n\nWe generate a significant portion of our revenues from advertising. Reduced spending by advertisers, a loss of partners, or new and existing technologies that block ads online and/or affect our ability to customize ads could harm our business.\n\nWe generated more than 75% of total revenues from online advertising in 2023. Many of our advertisers, companies that distribute our products and services, digital publishers, and content providers can terminate their contracts with us at any time. These partners may not continue to do business with us if we do not create more value (such as increased numbers of users or customers, new sales leads, increased brand awareness, or more effective monetization) than their available alternatives. Changes to our advertising policies and data privacy practices, such as our initiatives to phase out third-party cookies (which remain subject to review, affecting the timing), as well as changes to other companies’ advertising and/or data privacy practices have in the past, and may in the future, affect the advertising that we are able to provide. In addition, technologies have been developed that make customized ads more difficult, or that block the display of ads altogether, and some providers of online services have integrated these technologies that could potentially impair the availability and functionality of third-party digital advertising. Failing to provide superior value or deliver advertisements effectively and competitively could…",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 151,
+          "text": "Period |  | Total Number of Class A Shares Purchased (in thousands) (1) |  | Total Number of Class C Shares Purchased (in thousands) (1) |  | Average Price Paid per Class A Share (2) |  | Average Price Paid per Class C Share (2) |  | Total Number of Shares Purchased as Part of Publicly Announced Programs (in thousands) (1) |  | Approximate Dollar Value of Shares that May Yet Be Purchased Under the Program (in millions)\nJanuary 1 - 31 |  | 9,717 |  |  | 29,623 |  |  | $ | 145.11 |  |  | $ | 146.28 |  |  | 39,340 |  |  | $ | 30,648 | \nFebruary 1 - 29 |  | 7,568 |  |  | 28,804 |  |  | $ | 143.82 |  |  | $ | 144.75 |  |  | 36,372 |  |  | $ | 25,429 | \nMarch 1 - 31 |  | 5,949 |  |  | 29,230 |  |  | $ | 143.08 |  |  | $ | 143.86 |  |  | 35,179 |  |  | $ | 20,404 | \nTotal |  | 23,234 |  |  | 87,657 |  |  |  |  |  |  | 110,891 |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 152,
+          "text": "(1) Repurchases are being executed from time to time, subject to general business and market conditions and other investment opportunities, through open market purchases or privately negotiated transactions, including through Rule 10b5-1 plans. The repurchase program does not have an expiration date. For additional information related to share repurchases, see Note 9 of the Notes to Consolidated Financial Statements included in Part I, Item 1 of this Quarterly Report on Form 10-Q.\n\n(2) Average price paid per share includes costs associated with the repurchases.\n\nITEM 5. OTHER INFORMATION\n\n10b5-1 Trading Plans\n\nDuring the fiscal quarter ended March 31, 2024, no Section 16 director or officer adopted, modified, or terminated a “Rule 10b5-1 trading arrangement” (as defined in Item 408 of Regulation S-K of the Exchange Act).\n\nThere were no “non-Rule 10b5-1 trading arrangements” (as defined in Item 408 of Regulation S-K of the Exchange Act) adopted, modified or terminated during the fiscal quarter ended March 31, 2024 by our directors and Section 16 officers.\n\nCompensatory Arrangements of Certain Officers\n\nOn April 16, 2024, the Leadership Development, Inclusion and Compensation Committee of the Board of Directors of Alphabet approved the accrual of dividend equivalent units to holders of all unvested stock units, subject to the approval of a dividend declaration by the Board of Directors of the Company (which was approved and announced on April 25, 2024). This approval covers both performance stock unit awards and Google stock unit awards, and applies both to currently outstanding and future equity awards. For the avoidance of doubt, the corresponding amendments to the respective stock unit grant agreements will apply both to currently outstanding grant agreements and all future grant agreements. As stock units are not outstanding shares of stock and thus would not otherwise be entitled to participate in any dividends (including the one referenced above), the crediting …",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 153,
+          "text": "Exhibit Number |  |  | Description |  | Incorporated by reference herein\n |  | Form |  | Date\n10.01 | * | ♦ | Alphabet Inc. Amended and Restated 2021 Stock Plan – Form of Alphabet Restricted Stock Unit Agreement |  |  |  | \n10.02 | * | ♦ | Alphabet Inc. Amended and Restated 2021 Stock Plan – Form of Alphabet CEO Performance Stock Unit Agreement |  |  |  | \n10.03 | * | ♦ | Alphabet Inc. Amended and Restated 2021 Stock Plan – Form of Alphabet Non-CEO Performance Stock Unit Agreement |  |  |  | \n31.01 | * |  | Certification of Chief Executive Officer pursuant to Exchange Act Rules 13a-14(a) and 15d-14(a), as adopted pursuant to Section 302 of the Sarbanes-Oxley Act of 2002 |  |  |  | \n31.02 | * |  | Certification of Chief Financial Officer pursuant to Exchange Act Rules 13a-14(a) and 15d-14(a), as adopted pursuant to Section 302 of the Sarbanes-Oxley Act of 2002 |  |  |  | \n32.01 | ‡ |  | Certifications of Chief Executive Officer and Chief Financial Officer pursuant to 18 U.S.C. Section 1350, as adopted pursuant to Section 906 of the Sarbanes-Oxley Act of 2002 |  |  |  | \n101.INS | * |  | Inline XBRL Instance Document - the instance document does not appear in the Interactive Data File because its XBRL tags are embedded within the Inline XBRL document. |  |  |  | \n101.SCH | * |  | Inline XBRL Taxonomy Extension Schema Document |  |  |  | \n101.CAL | * |  | Inline XBRL Taxonomy Extension Calculation Linkbase Document |  |  |  | \n101.DEF | * |  | Inline XBRL Taxonomy Extension Definition Linkbase Document |  |  |  | \n101.LAB | * |  | Inline XBRL Taxonomy Extension Label Linkbase Document |  |  |  | \n101.PRE | * |  | Inline XBRL Taxonomy Extension Presentation Linkbase Document |  |  |  | \n104 | * |  | Cover Page Interactive Data File (formatted as Inline XBRL and contained in Exhibit 101) |  |  |  | ",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 154,
+          "text": "__________________________ ♦ Indicates management compensatory plan, contract, or arrangement. * Filed herewith. ‡ Furnished herewith.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 155,
+          "text": "♦ | Indicates management compensatory plan, contract, or arrangement.\n* | Filed herewith.\n‡ | Furnished herewith.",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 156,
+          "text": "45\n\n45\n\n45\n\nSIGNATURES\n\nPursuant to the requirements of the Securities Exchange Act of 1934, the registrant has duly caused this report to be signed on its behalf by the undersigned thereunto duly authorized.\n\nALPHABET INC. April 25, 2024 By: /s/    RUTH M. PORAT Ruth M. Porat President and Chief Investment Officer; Chief Financial Officer",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 157,
+          "text": " |  | ALPHABET INC.\nApril 25, 2024 | By: | /s/ RUTH M. PORAT\n |  | Ruth M. Porat\n |  | President and Chief Investment Officer; Chief Financial Officer",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 158,
+          "text": "ALPHABET INC. April 25, 2024 By: /s/    AMIE THUENER O'TOOLE Amie Thuener O'Toole Vice President, Corporate Controller and Principal Accounting Officer",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 159,
+          "text": " |  | ALPHABET INC.\nApril 25, 2024 | By: | /s/ AMIE THUENER O'TOOLE\n |  | Amie Thuener O'Toole\n |  | Vice President, Corporate Controller and Principal Accounting Officer",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "table",
+            "heading": "",
+            "note_label": ""
+          }
+        },
+        {
+          "$type": "Page",
+          "number": 160,
+          "text": "46\n\n46\n\n46",
+          "image_bytes": null,
+          "image_mime": "image/png",
+          "is_scanned": false,
+          "sheet_name": null,
+          "metadata": {
+            "type": "prose",
+            "heading": "",
+            "note_label": ""
+          }
+        }
+      ],
+      "page_count": 160,
+      "is_scanned": false,
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204424000053/goog-20240331.htm",
+      "metadata": {}
+    },
+    "prompt": "Select only the pages containing earnings per share data: Basic EPS, Diluted EPS, weighted average basic shares outstanding, and weighted average diluted shares outstanding. This is usually on the face of the income statement or in a dedicated EPS footnote. Exclude: segment footnotes, other income footnotes, balance sheet, and cover pages.\n"
+  },
+  "output": {
+    "$type": "PageList",
+    "parent_source": "https://www.sec.gov/Archives/edgar/data/1652044/000165204424000053/goog-20240331.htm",
+    "parent_format": "text",
+    "pages": [
+      {
+        "$type": "Page",
+        "number": 108,
+        "text": " | Three Months Ended March 31,\n | 2023 |  | 2024\n | Class A |  | Class B |  | Class C |  | Class A |  | Class B |  | Class C\nBasic net income per share: |  |  |  |  |  |  |  |  |  |  | \nNumerator |  |  |  |  |  |  |  |  |  |  | \nAllocation of undistributed earnings | $ | 7,006 |  |  | $ | 1,040 |  |  | $ | 7,005 |  |  | $ | 11,213 |  |  | $ | 1,656 |  |  | $ | 10,793 | \nDenominator |  |  |  |  |  |  |  |  |  |  | \nNumber of shares used in per share computation | 5,949 |  |  | 883 |  |  | 5,949 |  |  | 5,883 |  |  | 869 |  |  | 5,663 | \nBasic net income per share | $ | 1.18 |  |  | $ | 1.18 |  |  | $ | 1.18 |  |  | $ | 1.91 |  |  | $ | 1.91 |  |  | $ | 1.91 | \nDiluted net income per share: |  |  |  |  |  |  |  |  |  |  | \nNumerator |  |  |  |  |  |  |  |  |  |  | \nAllocation of undistributed earnings for basic computation | $ | 7,006 |  |  | $ | 1,040 |  |  | $ | 7,005 |  |  | $ | 11,213 |  |  | $ | 1,656 |  |  | $ | 10,793 | \nReallocation of undistributed earnings as a result of conversion of Class B to Class A shares | 1,040 |  |  | 0 |  |  | 0 |  |  | 1,656 |  |  | 0 |  |  | 0 | \nReallocation of undistributed earnings | ( 27 ) |  |  | ( 4 ) |  |  | 27 |  |  | ( 115 ) |  |  | ( 15 ) |  |  | 115 | \nAllocation of undistributed earnings | $ | 8,019 |  |  | $ | 1,036 |  |  | $ | 7,032 |  |  | $ | 12,754 |  |  | $ | 1,641 |  |  | $ | 10,908 | \nDenominator |  |  |  |  |  |  |  |  |  |  | \nNumber of shares used in basic computation | 5,949 |  |  | 883 |  |  | 5,949 |  |  | 5,883 |  |  | 869 |  |  | 5,663 | \nWeighted-average effect of dilutive securities |  |  |  |  |  |  |  |  |  |  | \nAdd: |  |  |  |  |  |  |  |  |  |  | \nConversion of Class B to Class A shares outstanding | 883 |  |  | 0 |  |  | 0 |  |  | 869 |  |  | 0 |  |  | 0 | \nRestricted stock units and other contingently issuable shares | 0 |  |  | 0 |  |  | 42 |  |  | 0 |  |  | 0 |  |  | 112 | \nNumber of shares used in per share computation | 6,832 |  |  | 883 |  |  | 5,991 |  |  | 6,752 |  |  | 869 |  |  | 5,77…",
+        "image_bytes": null,
+        "image_mime": "image/png",
+        "is_scanned": false,
+        "sheet_name": null,
+        "metadata": {
+          "type": "table",
+          "heading": "",
+          "note_label": ""
+        }
+      },
+      {
+        "$type": "Page",
+        "number": 109,
+        "text": "For the periods presented above, the net income per share amounts are the same for Class A, Class B, and Class C stock because the holders of each class are entitled to equal per share dividends or distributions in liquidation in accordance with the Amended and Restated Certificate of Incorporation of Alphabet Inc.\n\nNote 11. Compensation Plans\n\nStock-Based Compensation\n\nFor the three months ended March 31, 2023 and 2024, total stock based compensation (SBC) expense was $ 5.3 billion, including amounts associated with awards we expect to settle in Alphabet stock of $ 5.1 billion, for both periods.\n\n26\n\n26\n\n26\n\nStock-Based Award Activities\n\nThe following table summarizes the activities for unvested Alphabet restricted stock units (RSUs) for the three months ended March 31, 2024 (in millions, except per share amounts): Number of Shares Weighted- Average Grant-Date Fair Value Unvested as of December 31, 2023 338 $ 104.93 Granted 159 $ 133.43 Vested ( 49 ) $ 107.61 Forfeited/canceled ( 8 ) $ 106.64 Unvested as of March 31, 2024 440 $ 114.91",
+        "image_bytes": null,
+        "image_mime": "image/png",
+        "is_scanned": false,
+        "sheet_name": null,
+        "metadata": {
+          "type": "prose",
+          "heading": "",
+          "note_label": ""
+        }
+      }
+    ],
+    "selector_prompt": "[explicit pages]",
+    "metadata": {}
+  },
+  "error": null
+}

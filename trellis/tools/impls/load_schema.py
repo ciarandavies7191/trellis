@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+import pathlib
 from typing import Any, Dict
 
 from ..base import BaseTool, ToolInput, ToolOutput
@@ -59,19 +61,25 @@ class LoadSchemaTool(BaseTool):
                     handle.task_id = task_id
                 return handle
 
-        # 3. Dict source: {field_name: type_hint} or {"fields": [...]}
+        # 3. JSON/YAML file path — load enriched FieldDefinition list
+        if isinstance(source, str) and source.lower().endswith((".json", ".yaml", ".yml")):
+            p = pathlib.Path(source)
+            if p.exists():
+                return self._from_schema_file(p, hint=hint, task_id=task_id)
+
+        # 4. Dict source: {field_name: type_hint} or {"fields": [...]}
         if isinstance(source, dict):
             return self._from_dict(source, task_id=task_id)
 
-        # 4. List source: list of field definition dicts
+        # 5. List source: list of field definition dicts
         if isinstance(source, list):
             return self._from_list(source, task_id=task_id)
 
-        # 5. DocumentHandle-like (has .pages or .text attribute) — derive from structure
+        # 6. DocumentHandle-like (has .pages or .text attribute) — derive from structure
         if hasattr(source, "pages") or hasattr(source, "text") or hasattr(source, "metadata"):
             return self._from_document(source, hint=hint, task_id=task_id)
 
-        # 6. String: treat as a simple schema name with a single field (fallback)
+        # 7. String: treat as a simple schema name with a single field (fallback)
         if isinstance(source, str):
             return SchemaHandle(
                 fields=[],
@@ -108,6 +116,56 @@ class LoadSchemaTool(BaseTool):
         ]
         return SchemaHandle(fields=fields, source="dict", raw=data, task_id=task_id)
 
+    def _from_schema_file(self, path: pathlib.Path, hint: str | None, task_id: str | None) -> SchemaHandle:
+        """Load an enriched SchemaHandle from a JSON (or YAML) schema file.
+
+        Expected format::
+
+            {
+              "fields": [
+                {
+                  "name": "Total Revenues",
+                  "type_hint": "number",
+                  "section": "face",
+                  "description": "...",
+                  "sign_convention": null,
+                  "computed": false,
+                  "formula": null,
+                  "manual_ref": "§2.3"
+                },
+                ...
+              ]
+            }
+        """
+        raw_text = path.read_text(encoding="utf-8")
+        if path.suffix.lower() in (".yaml", ".yml"):
+            try:
+                import yaml as _yaml  # type: ignore
+                data = _yaml.safe_load(raw_text)
+            except ImportError:
+                raise ImportError(
+                    "PyYAML is required to load .yaml schema files. "
+                    "Install with: pip install pyyaml"
+                )
+        else:
+            data = json.loads(raw_text)
+
+        if isinstance(data, dict) and "fields" in data:
+            items = data["fields"]
+        elif isinstance(data, list):
+            items = data
+        else:
+            items = []
+
+        handle = self._from_list(items, task_id=task_id)
+        # Override source with the real file path for traceability
+        return SchemaHandle(
+            fields=handle.fields,
+            source=path.name,
+            raw=data,
+            task_id=task_id,
+        )
+
     def _from_list(self, items: list, task_id: str | None) -> SchemaHandle:
         """Derive a SchemaHandle from a list of field definition dicts or strings."""
         fields: list[FieldDefinition] = []
@@ -121,6 +179,13 @@ class LoadSchemaTool(BaseTool):
                         type_hint=item.get("type_hint") or item.get("type"),
                         required=item.get("required", True),
                         description=item.get("description"),
+                        computed=bool(item.get("computed", False)),
+                        formula=item.get("formula"),
+                        sign_convention=item.get("sign_convention"),
+                        section=item.get("section"),
+                        cross_check=item.get("cross_check"),
+                        fallback_rule=item.get("fallback_rule"),
+                        manual_ref=item.get("manual_ref"),
                     )
                 )
             elif isinstance(item, FieldDefinition):

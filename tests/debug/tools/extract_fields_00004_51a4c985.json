@@ -1,0 +1,13 @@
+{
+  "tool": "extract_fields",
+  "invocation": 4,
+  "timestamp": "2026-04-16T16:45:38.917097",
+  "inputs": {
+    "document": "text",
+    "schema": {
+      "revenue": "number"
+    }
+  },
+  "output": null,
+  "error": "TypeError: extract_fields: 'schema' must be a SchemaHandle, got 'dict'."
+}

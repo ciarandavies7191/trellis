@@ -1,0 +1,10 @@
+{
+  "tool": "llm_job",
+  "invocation": 1,
+  "timestamp": "2026-04-16T16:45:39.007635",
+  "inputs": {
+    "prompt": "Say hello"
+  },
+  "output": "hello",
+  "error": null
+}

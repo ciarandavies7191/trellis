@@ -169,6 +169,7 @@ class LLMTool(BaseTool):
         if max_tokens is not None:
             call_kwargs["max_tokens"] = max_tokens
 
+        call_kwargs["num_retries"] = 6
         resp = litellm.completion(**call_kwargs)
         return resp.choices[0].message.content or ""
 
