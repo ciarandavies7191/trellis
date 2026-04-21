@@ -1,143 +1,153 @@
-# ─────────────────────────────────────────────
-# PIPELINE 4: output_generation
-# ─────────────────────────────────────────────
 pipeline:
   id: output_generation
   goal: >
-    Populate the spreading template with validated, derived-field-complete
-    extracted data. Resolve segment names, generate analyst notes from the
-    validated figures, produce a document header, and write JSON and Markdown
-    output files.
+    Compute derived financial metrics for both periods, resolve Alphabet segment
+    names, populate the 10-column income statement template with Q1 2025 and
+    Q1 2024 data, generate analyst notes, and export a completed Markdown spread.
   inputs:
     company: "Alphabet Inc."
-    as_of_period: "2025-03-31"
+    ticker: "GOOGL"
+    period_end: "2025-03-31"
+    template_path: "examples/data/spreading_template_income_statement.md"
 
   tasks:
 
-    # ── 1. Load output schema ─────────────────────────────────────────────────
-    # Use the enriched JSON schema (same source as extraction) so that the
-    # export tool knows which fields are computed vs. extracted.
-    - id: load_output_schema
-      tool: load_schema
+    # ── 1. Load the template and compute derived fields in parallel ────────────
+    # The template is loaded to supply its exact markdown structure for
+    # population. We access .pages.first.text since ingest_document stores
+    # a markdown file as a single TEXT-format page.
+    - id: ingest_template
+      tool: ingest_document
       inputs:
-        source: "examples/data/income_statement_schema.json"
+        path: "{{pipeline.inputs.template_path}}"
 
-    # ── 2. Resolve actual segment names ───────────────────────────────────────
+    # calculate_derived_fields expects a list of period dicts. extracted_current
+    # and extracted_prior are stored as JSON arrays with one element each
+    # (produced by the merge tasks in the extraction pipeline), so passing them
+    # directly as strings to the function's extracted_fields parameter allows
+    # _coerce_list_of_dicts to parse and return the list automatically.
+    - id: compute_derived_current
+      tool: compute
+      inputs:
+        function: calculate_derived_fields
+        extracted_fields: "{{session.extracted_current}}"
+
+    - id: compute_derived_prior
+      tool: compute
+      inputs:
+        function: calculate_derived_fields
+        extracted_fields: "{{session.extracted_prior}}"
+
+    # ── 2. Resolve Alphabet segment names ─────────────────────────────────────
+    # The schema uses generic placeholders [1], [2], [3] for segment positions.
+    # This step maps them to Alphabet's three reportable segments in revenue order.
     - id: resolve_segment_names
       tool: llm_job
       inputs:
-        extracted: "{{session.extracted_fields}}"
-        prompt: >
-          You are given validated financial extraction data for Alphabet Inc.
-          Identify the actual business segment names corresponding to the
-          placeholder labels [1], [2], and [3] used in the extracted data.
+        extracted_current: "{{session.extracted_current}}"
+        prompt: |
+          The extracted data uses placeholder keys like "seg_rev_[1]",
+          "seg_rev_[2]", "seg_rev_[3]" for Alphabet Inc. business segment
+          revenues. Alphabet's three reportable segments are Google Services,
+          Google Cloud, and Other Bets, ordered by descending revenue
+          (Google Services is by far the largest).
 
-          For Alphabet Inc. the segments are:
-            [1] = Google Services
-            [2] = Google Cloud
-            [3] = Other Bets
+          Return a JSON object mapping each placeholder index to the segment name:
+          {"[1]": "Google Services", "[2]": "Google Cloud", "[3]": "Other Bets"}
 
-          Return ONLY a JSON object with exactly these keys:
-            {
-              "[1]": "Google Services",
-              "[2]": "Google Cloud",
-              "[3]": "Other Bets"
-            }
-          Return nothing else.
+          If you can confirm the ordering from the extracted values (e.g. seg_rev_[1]
+          is clearly the largest), use that. Otherwise default to the order above.
+          Return ONLY a valid JSON object — no commentary, no markdown fencing.
+        temperature: 0.0
+        max_tokens: 100
 
-    # ── 3. Apply segment names to the extracted data ──────────────────────────
-    - id: apply_segments
-      tool: compute
+    # ── 3. Populate the income statement template ──────────────────────────────
+    # template_text is accessed as a string via .pages.first.text because
+    # ingest_document ingests markdown as a single TEXT page. Passing it as
+    # a named kwarg injects it as a labelled context block in the llm_job prompt.
+    # data_current / data_prior use .first to unwrap the single-element list
+    # produced by calculate_derived_fields.
+    - id: populate_template
+      tool: llm_job
       inputs:
-        function: apply_segment_names
-        extracted_fields: "{{session.extracted_fields}}"
+        template_text: "{{ingest_template.output.pages.first.text}}"
+        data_current: "{{compute_derived_current.output.first}}"
+        data_prior: "{{compute_derived_prior.output.first}}"
         segment_names: "{{resolve_segment_names.output}}"
+        prompt: |
+          You are populating an income statement spread for Alphabet Inc. (GOOGL).
+          The template_text above shows the exact table structure to fill in.
+          You have field values for two periods only:
+            - data_current  =  Q1 2025  (three months ended 2025-03-31)
+            - data_prior    =  Q1 2024  (three months ended 2024-03-31)
 
-    # ── 4. Generate analyst notes from validated data ─────────────────────────
+          The template has 10 columns in this left-to-right order:
+            Q1 2024 | Q2 2024 | Q3 2024 | Q4 2024 | FY 2024 |
+            Q1 2025 | Q2 2025 | Q3 2025 | Q4 2025 | FY 2025
+
+          Instructions — follow exactly:
+          1. Replace "20__" year placeholders in every column header with the
+             correct year (use 2024 for the first five columns, 2025 for the last
+             five).
+          2. Replace row labels "[1]", "[2]", "[3]" with the actual segment names
+             from segment_names (e.g. "Segment Revenue — Google Services").
+          3. Fill the Q1 2024 column (column 1) with values from data_prior.
+          4. Fill the Q1 2025 column (column 6) with values from data_current.
+          5. Leave Q2 2024, Q3 2024, Q4 2024, FY 2024, Q2 2025, Q3 2025, Q4 2025,
+             and FY 2025 blank — data from those periods is not available.
+          6. Use whole integers for all dollar amounts (in $ Millions as reported).
+          7. Format percentage fields to one decimal place, e.g. "32.5%".
+          8. Replace "__not_found__" with a blank cell (no value).
+          9. Preserve every section header (## Revenue, ## Costs and Expenses, etc.)
+             and all "---" dividers between sections exactly as in the template.
+          10. Do NOT include the document header block (company/ticker/filing info)
+              or the Analyst Notes section — those are added separately.
+
+          Return ONLY the populated section tables from "## Revenue" through
+          "## Per Share Data" with "---" dividers between sections. Nothing else.
+        temperature: 0.0
+        max_tokens: 4000
+
+    # ── 4. Generate analyst notes ──────────────────────────────────────────────
     - id: generate_analyst_notes
       tool: llm_job
       inputs:
-        extracted: "{{apply_segments.output}}"
-        periods: "{{session.periods}}"
-        prompt: >
-          You are a credit analyst completing the documentation section of a
-          financial spread for Alphabet Inc. The data has already been
-          arithmetic-validated. Produce only factual, sourced observations —
-          no qualitative opinions or forward-looking commentary.
+        data_current: "{{compute_derived_current.output.first}}"
+        data_prior: "{{compute_derived_prior.output.first}}"
+        prompt: |
+          Review Alphabet Inc. Q1 2025 vs Q1 2024 income statement data and write
+          up to four concise analyst notes. Prioritise:
+          - Non-recurring items or significant restructuring / impairment charges
+          - Material year-over-year movements (>15% on key line items like revenue,
+            operating income, net income, or individual segments)
+          - Required fields that could not be extracted (__not_found__)
+          - Notable effective tax rate changes or unusual other income items
 
-          Document material items for each period:
-          a) INVESTMENT GAINS: If Gains (Losses) on Investments, Net > $500M
-             in any period, note the amount and state it is non-recurring
-             (equity mark-to-market). Cite as "(per 10-Q/10-K Other income
-             (expense), net footnote)".
-          b) RESTRUCTURING: If Restructuring and Other Charges is present,
-             note the amount and nature.
-          c) SEGMENT TRENDS: Note any segment where revenue or OI grew or
-             declined more than 15% year-over-year. State exact amounts.
-          d) EPS: Confirm diluted EPS and state shares outstanding.
-          e) TAX RATE: Note if effective tax rate differs from ~21% statutory
-             rate by more than 3 percentage points.
+          Return a JSON array (no fencing):
+          [
+            {"period": "Q1 2025", "line_item": "...", "note": "..."},
+            ...
+          ]
+          Return ONLY valid JSON. Limit each note to one clear sentence.
+        temperature: 0.2
+        max_tokens: 600
 
-          Return a JSON object with exactly two keys:
-            "segment_names": {
-              "[1]": "Google Services",
-              "[2]": "Google Cloud",
-              "[3]": "Other Bets"
-            },
-            "notes": [
-              {
-                "period": "period label e.g. Q1 2025",
-                "line_item": "exact template field name",
-                "note": "factual one-sentence finding: amount and source reference"
-              },
-              ...
-            ]
-
-          Rules for "notes":
-          - 4–8 entries covering material items and any cross-check failures
-          - Every note must state a specific dollar amount or percentage
-          - Every note must end with a source reference: "(per 10-Q Note N)"
-          - No qualitative opinions, no forward-looking statements
-
-    # ── 5. Generate document metadata header ─────────────────────────────────
-    - id: generate_metadata
-      tool: llm_job
-      inputs:
-        extracted: "{{apply_segments.output}}"
-        periods: "{{session.periods}}"
-        filings: "{{session.filings}}"
-        company: "{{pipeline.inputs.company}}"
-        as_of_period: "{{pipeline.inputs.as_of_period}}"
-        prompt: >
-          Based on the filing metadata and extracted data, produce a JSON object
-          with the following keys for the document header:
-            company        — the full legal company name (e.g. "Alphabet Inc.")
-            ticker         — exchange ticker (e.g. "GOOGL")
-            as_of_period   — the target period end date (e.g. "2025-03-31")
-            source_filing  — the SEC form type and accession number of the
-                             primary filing (e.g. "10-Q (0001652044-25-000069)")
-            filed          — the filing date of the primary filing (YYYY-MM-DD)
-            currency       — reporting currency (e.g. "USD")
-            units          — unit description (e.g. "$ Millions (unless noted)")
-            audited        — "No" for 10-Q, "Yes" for 10-K
-          Return only the JSON object, no commentary.
-
-    # ── 6. Export outputs ─────────────────────────────────────────────────────
-    - id: produce_json
+    # ── 5. Export the completed spread as Markdown ─────────────────────────────
+    # The export tool prepends the metadata header block, writes the LLM-populated
+    # section tables as the body, and appends the Analyst Notes table — producing
+    # a complete Markdown document matching the spreading template structure.
+    - id: export_spread
       tool: export
       inputs:
-        data: "{{apply_segments.output}}"
-        schema: "{{load_output_schema.output}}"
-        format: json
-        filename: "alphabet_spreading_q1_2025"
-
-    - id: produce_markdown
-      tool: export
-      inputs:
-        data: "{{apply_segments.output}}"
-        schema: "{{load_output_schema.output}}"
+        content: "{{populate_template.output}}"
         format: markdown
-        filename: "alphabet_spreading_q1_2025"
-        periods: "{{session.periods}}"
-        metadata: "{{generate_metadata.output}}"
+        filename: "google_income_statement_spread_q1_2025"
+        metadata:
+          company: "Alphabet Inc."
+          ticker: "GOOGL"
+          source_filing: "10-Q (three months ended 2025-03-31)"
+          filed: "2025-04-29"
+          currency: "USD"
+          units: "$ Millions"
+          audited: "No (Unaudited Quarterly)"
         analyst_notes: "{{generate_analyst_notes.output}}"

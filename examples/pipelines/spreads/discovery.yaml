@@ -1,38 +1,74 @@
-# ─────────────────────────────────────────────
-# PIPELINE 1: discovery
-# ─────────────────────────────────────────────
 pipeline:
   id: discovery
   goal: >
-    Resolve the exchange ticker for Google and determine the correct set of
-    fiscal periods to pull based on the as_of_period of 2025-03-31.
+    Load the income statement schema and spreading manual, resolve fiscal periods
+    to derive the prior-year comparative date, fetch the Alphabet Q1 2025 10-Q
+    from SEC EDGAR, and store all references for downstream sub-pipelines.
   inputs:
-    company: "{{pipeline.inputs.company}}"
-    as_of_period: "{{pipeline.inputs.as_of_period}}"
+    company: "Alphabet Inc."
+    ticker: "GOOGL"
+    period_end: "2025-03-31"
+    schema_path: "examples/data/income_statement_schema.json"
+    manual_path: "examples/data/spreading_manual_income_statement.md"
 
   tasks:
 
-    - id: resolve_ticker
-      tool: compute
+    # ── 1. Load schema and manual in parallel ─────────────────────────────────
+    - id: load_schema
+      tool: load_schema
       inputs:
-        function: ticker_lookup
-        company: "{{pipeline.inputs.company}}"
+        source: "{{pipeline.inputs.schema_path}}"
 
+    - id: ingest_manual
+      tool: ingest_document
+      inputs:
+        path: "{{pipeline.inputs.manual_path}}"
+
+    # ── 2. Resolve fiscal periods ─────────────────────────────────────────────
+    # fiscal_period_logic returns [FY descriptor, ytd_current, ytd_prior].
+    # For 2025-03-31 (Q1): [FY 2024, Q1 2025, Q1 2024].
+    # We store .last.period_end = "2024-03-31" as the prior-year period end.
     - id: resolve_periods
       tool: compute
       inputs:
         function: fiscal_period_logic
-        as_of_date: "{{pipeline.inputs.as_of_period}}"
+        as_of_date: "{{pipeline.inputs.period_end}}"
         company: "{{pipeline.inputs.company}}"
 
-    - id: store_ticker
-      tool: store
+    # ── 3. Fetch the Q1 2025 10-Q from SEC EDGAR ─────────────────────────────
+    - id: fetch_filing
+      tool: fetch_data
       inputs:
-        key: ticker
-        value: "{{resolve_ticker.output}}"
+        source: sec_edgar
+        ticker: "{{pipeline.inputs.ticker}}"
+        period_end: "{{pipeline.inputs.period_end}}"
+        period_type: quarterly
+        count: 1
 
-    - id: store_periods
+    # ── 4. Store references for downstream pipelines ──────────────────────────
+    - id: store_schema
       tool: store
       inputs:
-        key: periods
-        value: "{{resolve_periods.output}}"
+        key: schema
+        value: "{{load_schema.output}}"
+
+    - id: store_manual
+      tool: store
+      inputs:
+        key: manual
+        value: "{{ingest_manual.output}}"
+
+    - id: store_filing_result
+      tool: store
+      inputs:
+        key: filing_result
+        value: "{{fetch_filing.output}}"
+
+    # Store the prior-year period end date ("2024-03-31") derived from
+    # fiscal_period_logic so the extraction pipeline can reference it without
+    # re-running the compute step.
+    - id: store_period_end_prior
+      tool: store
+      inputs:
+        key: period_end_prior
+        value: "{{resolve_periods.output.last.period_end}}"

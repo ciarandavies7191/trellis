@@ -1,47 +1,59 @@
 plan:
-  id: google_financial_spreading
+  id: google_income_statement_spread_q1_2025
   goal: >
-    Pull SEC financial statements for Google (Alphabet Inc.) for the period ending
-    March 31 2025, extract values for all template fields following the spreading
-    manual, populate the output template, and produce an Excel and Markdown output.
+    Spread Alphabet Inc. (GOOGL) income statement for Q1 2025 (period ending
+    2025-03-31). Pull the 10-Q from SEC EDGAR, extract all income statement
+    fields following the spreading manual, compute derived metrics, populate
+    the 10-column template, and export a completed Markdown spread.
   inputs:
     company: "Alphabet Inc."
-    as_of_period: "2025-03-31"
-    template_path: "examples/data/spreading_template_income_statement.md"
+    ticker: "GOOGL"
+    period_end: "2025-03-31"
+    schema_path: "examples/data/income_statement_schema.json"
     manual_path: "examples/data/spreading_manual_income_statement.md"
+    template_path: "examples/data/spreading_template_income_statement.md"
 
   sub_pipelines:
 
+    # ── Step 1 ────────────────────────────────────────────────────────────────
+    # Load the schema and spreading manual, resolve the prior-year comparative
+    # period end date using fiscal_period_logic, fetch the Q1 2025 10-Q from
+    # SEC EDGAR, and store all references for downstream pipelines.
     - id: discovery
       goal: >
-        Resolve the company ticker for Google and determine the correct set of
-        fiscal periods to pull based on the as_of_period.
-      reads: []
-      stores: [ticker, periods]
-      inputs: [company, as_of_period]
+        Load the income statement schema and spreading manual. Use fiscal_period_logic
+        to derive the prior-year comparative period end (2024-03-31). Fetch the
+        Alphabet Inc. 10-Q for Q1 2025 from SEC EDGAR and store the schema,
+        manual, filing result, and prior period end date.
+      inputs: [company, ticker, period_end, schema_path, manual_path]
+      stores: [schema, manual, filing_result, period_end_prior]
 
-    - id: data_acquisition
-      goal: >
-        Fetch SEC financial statement filings for each resolved period, and load
-        the spreading template and manual into document handles.
-      reads: [ticker, periods]
-      stores: [filings, template_document, manual_document]
-      inputs: [template_path, manual_path]
-
+    # ── Step 2 ────────────────────────────────────────────────────────────────
+    # Ingest the 10-Q, page-select each of the four income statement sections,
+    # run extract_fields for both Q1 2025 and Q1 2024, merge the per-section
+    # extractions into two complete period dicts, and store them.
     - id: extraction
       goal: >
-        Load the enriched income-statement schema, select section-specific pages from
-        each filing, extract each section independently per period, assemble sections,
-        compute derived fields deterministically, validate arithmetic cross-checks,
-        correct any failures, and store final per-period field dicts.
-      reads: [filings, manual_document, periods]
-      stores: [extracted_fields]
+        Ingest the Q1 2025 10-Q. Select pages per section (face statement,
+        segment revenue/OI, other income footnote, per-share data). Run
+        extract_fields for each section and for both the Q1 2025 and Q1 2024
+        (prior-year comparative) periods. Merge all four section dicts per
+        period into a single complete extraction dict and store both periods.
+      inputs: [period_end]
+      reads: [schema, manual, filing_result, period_end_prior]
+      stores: [extracted_current, extracted_prior]
 
+    # ── Step 3 ────────────────────────────────────────────────────────────────
+    # Compute derived metrics (margins, growth rates), resolve Alphabet segment
+    # names, populate the template via LLM, generate analyst notes, and export
+    # the finished spread as a Markdown file.
     - id: output_generation
       goal: >
-        Apply segment names to validated extracted data, generate analyst notes
-        and document header from validated figures, and write JSON and Markdown
-        output files.
-      reads: [extracted_fields, periods, filings]
+        Compute derived financial metrics (gross profit, gross margin, operating
+        margin, net margin, effective tax rate) for both periods using
+        calculate_derived_fields. Resolve the three Alphabet segment names.
+        Populate the 10-column income statement template with Q1 2025 and Q1 2024
+        data. Generate analyst notes. Export the completed spread as Markdown.
+      inputs: [company, ticker, period_end, template_path]
+      reads: [schema, extracted_current, extracted_prior]
       stores: []
-      inputs: [company, as_of_period]

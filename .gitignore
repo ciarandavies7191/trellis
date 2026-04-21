@@ -43,3 +43,8 @@ Thumbs.db
 *.env
 *.env.*
 .env.local
+
+# Debug output
+tests/debug/
+outputs
+debug/tools
