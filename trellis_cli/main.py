@@ -3,7 +3,7 @@ Trellis CLI — validate and run pipelines.
 
 Commands:
   trellis validate PATH
-  trellis run PATH [--inputs INPUTS_JSON] [--session SESSION_JSON]
+  trellis run PATH [--inputs INPUTS_JSON] [--params PARAMS_JSON] [--session SESSION_JSON]
                   [--session-file PATH]
                   [--timeout SECONDS] [--concurrency N]
                   [--jitter FRACTION] [--json]
@@ -292,6 +292,11 @@ def run(
         "--inputs",
         help="JSON string of pipeline inputs (e.g., '{\"param\":\"value\"}')",
     ),
+    params: Optional[str] = typer.Option(
+        None,
+        "--params",
+        help="JSON string of typed pipeline params (e.g., '{\"ticker\":\"AAPL\",\"fiscal_year\":2023}')",
+    ),
     session: Optional[str] = typer.Option(
         None,
         "--session",
@@ -432,6 +437,7 @@ def run(
 
     try:
         inputs_obj = json.loads(inputs) if inputs else None
+        params_obj = json.loads(params) if params else None
         # Build session: start from file (if any), then overlay inline --session values.
         session_obj: dict | None = None
         if session_file is not None:
@@ -505,6 +511,7 @@ def run(
             result = await orch.run_pipeline(
                 pipeline,
                 inputs=inputs_obj,
+                params=params_obj,
                 session=session_obj,
                 options=options,
                 collect_events=not output_json,

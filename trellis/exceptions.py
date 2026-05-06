@@ -54,6 +54,14 @@ class UnknownToolError(ValidationError):
     """Raised when a task references a tool not present in the registry."""
 
 
+class PipelineParamError(ValidationError):
+    """
+    Raised when pipeline parameter validation fails at invocation time —
+    e.g. a required param is missing or a value cannot be coerced to the
+    declared type.
+    """
+
+
 # ---------------------------------------------------------------------------
 # Execution errors
 # ---------------------------------------------------------------------------

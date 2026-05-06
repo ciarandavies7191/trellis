@@ -1,0 +1,75 @@
+pipeline:
+  id: ingestion
+  goal: >
+    Load the capex reconciliation schema, fetch Intel's 2022 and 2023 annual
+    10-K filings from SEC EDGAR, ingest the IR capex guidance document, and
+    store all references for downstream sub-pipelines.
+  inputs:
+    company: "Intel Corporation"
+    ticker: "INTC"
+    fy_2022_end: "2022-12-31"
+    fy_2023_end: "2023-12-31"
+    schema_path: "examples/data/capex_reconciliation_schema.json"
+    guidance_url: "https://www.intel.com/content/dam/www/public/us/en/documents/investor-relations/2023-capital-expenditure-outlook.pdf"
+
+  tasks:
+
+    # ── 1. Load schema and fetch both 10-Ks in parallel ───────────────────────
+    - id: load_schema
+      tool: load_schema
+      inputs:
+        source: "{{pipeline.inputs.schema_path}}"
+        hint: "Capital expenditure fields for multi-source reconciliation"
+
+    - id: fetch_10k_2022
+      tool: fetch_data
+      inputs:
+        source: sec_edgar
+        ticker: "{{pipeline.inputs.ticker}}"
+        period_end: "{{pipeline.inputs.fy_2022_end}}"
+        period_type: annual
+        count: 1
+
+    - id: fetch_10k_2023
+      tool: fetch_data
+      inputs:
+        source: sec_edgar
+        ticker: "{{pipeline.inputs.ticker}}"
+        period_end: "{{pipeline.inputs.fy_2023_end}}"
+        period_type: annual
+        count: 1
+
+    # ── 2. Ingest the IR guidance PDF ─────────────────────────────────────────
+    # fetch_data is not used for the guidance doc because it is an Intel IR page
+    # PDF, not an SEC filing. ingest_document fetches and parses it directly.
+    - id: ingest_guidance
+      tool: ingest_document
+      inputs:
+        path: "{{pipeline.inputs.guidance_url}}"
+
+    # ── 3. Store all references for downstream pipelines ──────────────────────
+    - id: store_schema
+      tool: store
+      inputs:
+        key: schema
+        value: "{{load_schema.output}}"
+
+    # Store the full fetch_data result dicts so ingest_document in the extraction
+    # pipeline can resolve the filing URLs via _urls_from_fetch_result.
+    - id: store_filing_2022
+      tool: store
+      inputs:
+        key: filing_2022
+        value: "{{fetch_10k_2022.output}}"
+
+    - id: store_filing_2023
+      tool: store
+      inputs:
+        key: filing_2023
+        value: "{{fetch_10k_2023.output}}"
+
+    - id: store_guidance_doc
+      tool: store
+      inputs:
+        key: guidance_doc
+        value: "{{ingest_guidance.output}}"

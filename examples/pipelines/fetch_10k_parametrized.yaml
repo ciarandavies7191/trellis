@@ -1,0 +1,42 @@
+pipeline:
+  id: fetch_and_load_10k
+  goal: "Fetch {{params.company_name}} 10-K filing for FY{{params.fiscal_year}} from SEC EDGAR and load the document."
+
+  params:
+    company_name:
+      type: string
+      description: "Full legal company name (e.g. Apple Inc.)"
+    ticker:
+      type: string
+      description: "Stock ticker symbol (e.g. AAPL)"
+    fiscal_year:
+      type: integer
+      description: "Fiscal year of the filing"
+      default: 2024
+
+  tasks:
+    - id: fetch_10k_filing
+      tool: fetch_data
+      inputs:
+        source: sec_edgar
+        company: "{{params.company_name}}"
+        ticker: "{{params.ticker}}"
+        form_type: 10-K
+        fiscal_year: "{{params.fiscal_year}}"
+
+    - id: load_10k_document
+      tool: mock
+      inputs:
+        path: "{{fetch_10k_filing.output.filing_url}}"
+
+    - id: store_document
+      tool: store
+      inputs:
+        key: "{{params.ticker}}_10k_fy{{params.fiscal_year}}_document"
+        value: "{{load_10k_document.output}}"
+
+    - id: store_metadata
+      tool: store
+      inputs:
+        key: "{{params.ticker}}_10k_fy{{params.fiscal_year}}_metadata"
+        value: "{{fetch_10k_filing.output.metadata}}"

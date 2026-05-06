@@ -17,15 +17,70 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
+from trellis.exceptions import PipelineParamError
 from trellis.execution.blackboard import Blackboard, InMemoryBlackboard
 from trellis.execution.dag import ExecutionOptions, PipelineResult, execute_pipeline
 from trellis.execution.template import ResolutionContext
-from trellis.models.pipeline import Pipeline
+from trellis.models.pipeline import Pipeline, _MISSING
 from trellis.models.plan import Plan, SubPipeline
 from trellis.tools.registry import AsyncToolRegistry, build_default_registry
 from trellis.validation.graph import plan_execution_waves
 
 logger = logging.getLogger(__name__)
+
+import re as _re
+_TEMPLATE_RE = _re.compile(r"\{\{\s*([^}]+?)\s*\}\}")
+
+
+def _resolve_and_validate_params(
+    pipeline: Pipeline,
+    call_time_params: Dict[str, Any] | None,
+) -> Dict[str, Any]:
+    """
+    Merge call-time params with pipeline param defaults, validate required
+    params are supplied, and coerce each value to its declared type.
+
+    Raises:
+        PipelineParamError: if a required param is missing or coercion fails.
+    """
+    call_time = call_time_params or {}
+    resolved: Dict[str, Any] = {}
+
+    for name, spec in pipeline.params.items():
+        if name in call_time:
+            resolved[name] = spec.coerce(call_time[name], name)
+        elif not spec.required:
+            default = spec.default
+            resolved[name] = spec.coerce(default, name) if default is not None else default
+        else:
+            required = [k for k, v in pipeline.params.items() if v.required]
+            raise PipelineParamError(
+                f"Pipeline {pipeline.id!r}: required param {name!r} was not provided. "
+                f"Required params: {required}."
+            )
+
+    unknown = set(call_time.keys()) - set(pipeline.params.keys())
+    if unknown:
+        logger.warning(
+            "Pipeline %r: unknown params provided (ignored): %s",
+            pipeline.id,
+            sorted(unknown),
+        )
+
+    return resolved
+
+
+def _apply_params_to_goal(goal: str, params: Dict[str, Any]) -> str:
+    """Substitute {{params.key}} expressions in the goal string."""
+    def _replace(m: _re.Match) -> str:
+        expr = m.group(1).strip()
+        parts = expr.split(".")
+        if parts[0] == "params" and len(parts) >= 2:
+            key = parts[1]
+            if key in params:
+                return str(params[key])
+        return m.group(0)
+    return _TEMPLATE_RE.sub(_replace, goal)
 
 
 @dataclass
@@ -68,6 +123,7 @@ class Orchestrator:
         pipeline: Pipeline,
         *,
         inputs: Dict[str, Any] | None = None,
+        params: Dict[str, Any] | None = None,
         session: Dict[str, Any] | None = None,
         options: Optional[ExecutionOptions] = None,
         collect_events: bool = True,
@@ -75,6 +131,9 @@ class Orchestrator:
         """
         Execute a pipeline and return a structured RunResult.
         """
+        resolved_params = _resolve_and_validate_params(pipeline, params)
+        resolved_goal = _apply_params_to_goal(pipeline.goal, resolved_params)
+
         input_keys = sorted(list((inputs or pipeline.inputs or {}).keys()))
         session_keys = sorted(list((session or {}).keys()))
         logger.info(
@@ -83,16 +142,18 @@ class Orchestrator:
             self.tenant_id,
         )
         logger.debug(
-            "Pipeline %r context seeds: inputs_keys=%s, session_keys=%s",
+            "Pipeline %r context seeds: inputs_keys=%s, session_keys=%s, params_keys=%s",
             pipeline.id,
             input_keys,
             session_keys,
+            sorted(resolved_params.keys()),
         )
 
         ctx = ResolutionContext(
             task_outputs={},
             pipeline_inputs=inputs or pipeline.inputs or {},
-            pipeline_goal=pipeline.goal,
+            pipeline_goal=resolved_goal,
+            pipeline_params=resolved_params,
             session=session or {},
             tenant_id=self.tenant_id,
             blackboard=self.blackboard,

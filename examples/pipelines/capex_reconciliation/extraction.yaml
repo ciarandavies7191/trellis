@@ -1,0 +1,363 @@
+pipeline:
+  id: extraction
+  goal: >
+    Extract capital expenditure data from the 2022 10-K, the 2023 10-K, all
+    eight quarterly earnings supplements (fanned out in parallel), and the
+    IR guidance document. Normalise every value to USD millions and store four
+    structured session keys for the reconciliation pipeline.
+  inputs:
+    fy_2022_end: "2022-12-31"
+    fy_2023_end: "2023-12-31"
+    supplement_urls:
+      - "https://www.intel.com/content/dam/www/public/us/en/documents/supplemental/q1-2022-supplemental-financials.pdf"
+      - "https://www.intel.com/content/dam/www/public/us/en/documents/supplemental/q2-2022-supplemental-financials.pdf"
+      - "https://www.intel.com/content/dam/www/public/us/en/documents/supplemental/q3-2022-supplemental-financials.pdf"
+      - "https://www.intel.com/content/dam/www/public/us/en/documents/supplemental/q4-2022-supplemental-financials.pdf"
+      - "https://www.intel.com/content/dam/www/public/us/en/documents/supplemental/q1-2023-supplemental-financials.pdf"
+      - "https://www.intel.com/content/dam/www/public/us/en/documents/supplemental/q2-2023-supplemental-financials.pdf"
+      - "https://www.intel.com/content/dam/www/public/us/en/documents/supplemental/q3-2023-supplemental-financials.pdf"
+      - "https://www.intel.com/content/dam/www/public/us/en/documents/supplemental/q4-2023-supplemental-financials.pdf"
+
+  tasks:
+
+    # ════════════════════════════════════════════════════════════════════════════
+    # SECTION A — Annual 10-K extraction
+    # ════════════════════════════════════════════════════════════════════════════
+
+    # ── A1. Ingest both 10-Ks in parallel ─────────────────────────────────────
+    - id: ingest_10k_2022
+      tool: ingest_document
+      inputs:
+        path: "{{session.filing_2022}}"
+
+    - id: ingest_10k_2023
+      tool: ingest_document
+      inputs:
+        path: "{{session.filing_2023}}"
+
+    # ── A2. Select relevant pages from each 10-K (run in parallel) ────────────
+    # Three selection passes per filing: cash flow statement, segment footnote,
+    # and capex/PP&E footnotes. Each selection narrows the context for
+    # extract_fields, improving accuracy on long 200-page 10-K documents.
+
+    - id: select_cashflow_2022
+      tool: select
+      inputs:
+        document: "{{ingest_10k_2022.output}}"
+        prompt: >
+          Select the pages containing the Consolidated Statements of Cash Flows.
+          Include the full investing activities section where 'Additions to
+          property, plant and equipment' (gross capex) appears. Also include any
+          supplemental cash flow disclosures that mention finance lease PP&E
+          additions or SCIP / partner contributions received.
+
+    - id: select_segments_2022
+      tool: select
+      inputs:
+        document: "{{ingest_10k_2022.output}}"
+        prompt: >
+          Select the pages containing the segment information footnote that
+          discloses capital expenditures (additions to PP&E) by reportable
+          segment. In Intel's 2022 10-K, segments include Client Computing Group
+          (CCG), Data Center and AI (DCAI), Network and Edge (NEX), Intel Foundry
+          Services (IFS), Mobileye, and All Other. Exclude the consolidated
+          income statement and balance sheet.
+
+    - id: select_footnotes_2022
+      tool: select
+      inputs:
+        document: "{{ingest_10k_2022.output}}"
+        prompt: >
+          Select pages containing property, plant and equipment (PP&E) footnotes
+          or supplemental schedules disclosing capital expenditure details,
+          finance lease PP&E additions, right-of-use asset additions, partner
+          contribution programmes (SCIP or Smart Capital), or any footnote
+          referencing reclassifications or restatements of capex figures.
+
+    - id: select_cashflow_2023
+      tool: select
+      inputs:
+        document: "{{ingest_10k_2023.output}}"
+        prompt: >
+          Select the pages containing the Consolidated Statements of Cash Flows.
+          Include the full investing activities section where 'Additions to
+          property, plant and equipment' (gross capex) appears. Also include any
+          supplemental cash flow disclosures that mention finance lease PP&E
+          additions or SCIP / partner contributions received.
+
+    - id: select_segments_2023
+      tool: select
+      inputs:
+        document: "{{ingest_10k_2023.output}}"
+        prompt: >
+          Select the pages containing the segment information footnote that
+          discloses capital expenditures (additions to PP&E) by reportable
+          segment. Intel restructured its segments in 2023: Intel Products
+          (covering CCG, DCAI, NEX, AXG) and Intel Foundry (manufacturing
+          services). Include the segment capex table and any related notes.
+
+    - id: select_footnotes_2023
+      tool: select
+      inputs:
+        document: "{{ingest_10k_2023.output}}"
+        prompt: >
+          Select pages containing property, plant and equipment footnotes,
+          finance lease PP&E additions, SCIP / Smart Capital partner
+          contributions received, or any footnote referencing segment
+          methodology changes, reclassifications, or restatements affecting
+          capital expenditure comparability between 2022 and 2023.
+
+    # ── A3. Extract capex fields from each 10-K section (all 6 run in parallel)
+    - id: extract_cashflow_2022
+      tool: extract_fields
+      inputs:
+        document: "{{select_cashflow_2022.output}}"
+        schema: "{{session.schema}}"
+        period_end: "{{pipeline.inputs.fy_2022_end}}"
+        section_filter: "cash_flow"
+
+    - id: extract_segments_2022
+      tool: extract_fields
+      inputs:
+        document: "{{select_segments_2022.output}}"
+        schema: "{{session.schema}}"
+        period_end: "{{pipeline.inputs.fy_2022_end}}"
+        section_filter: "segments"
+
+    - id: extract_footnotes_2022
+      tool: extract_fields
+      inputs:
+        document: "{{select_footnotes_2022.output}}"
+        schema: "{{session.schema}}"
+        period_end: "{{pipeline.inputs.fy_2022_end}}"
+        section_filter: "footnotes"
+
+    - id: extract_cashflow_2023
+      tool: extract_fields
+      inputs:
+        document: "{{select_cashflow_2023.output}}"
+        schema: "{{session.schema}}"
+        period_end: "{{pipeline.inputs.fy_2023_end}}"
+        section_filter: "cash_flow"
+
+    - id: extract_segments_2023
+      tool: extract_fields
+      inputs:
+        document: "{{select_segments_2023.output}}"
+        schema: "{{session.schema}}"
+        period_end: "{{pipeline.inputs.fy_2023_end}}"
+        section_filter: "segments"
+
+    - id: extract_footnotes_2023
+      tool: extract_fields
+      inputs:
+        document: "{{select_footnotes_2023.output}}"
+        schema: "{{session.schema}}"
+        period_end: "{{pipeline.inputs.fy_2023_end}}"
+        section_filter: "footnotes"
+
+    # ── A4. Merge all sections per year and normalise to USD millions ──────────
+    # The merge also runs the unit-normalisation check: Intel reports in USD
+    # millions in 10-Ks, but this step catches any guidance-style billions figures
+    # that may appear in management commentary within the 10-K.
+    - id: merge_and_normalise_2022
+      tool: llm_job
+      inputs:
+        cash_flow: "{{extract_cashflow_2022.output}}"
+        segments: "{{extract_segments_2022.output}}"
+        footnotes: "{{extract_footnotes_2022.output}}"
+        period: "FY 2022"
+        prompt: |
+          Merge the three extraction dicts above (cash_flow, segments, footnotes)
+          for Intel Corporation FY 2022 into a single flat JSON object.
+
+          Rules:
+          1. Include every key from every dict.
+          2. Where the same key appears in multiple dicts, keep the non-
+             "__not_found__" value. If both are non-sentinel, prefer cash_flow
+             over segments over footnotes.
+          3. Add a "period_label" key with value "FY 2022".
+          4. Add a "source_document" key with value "Intel 10-K FY 2022".
+          5. Normalisation check: Intel 10-Ks report in USD millions. If any
+             extracted numeric value appears to be in billions (e.g. capex_gross
+             of 25 when Intel's actual capex was ~25,000 USD millions), multiply
+             it by 1000 and add a "normalisation_note" key noting the conversion.
+             If all values look correct for USD millions, omit normalisation_note.
+          6. Return a JSON ARRAY containing exactly ONE element — the merged dict:
+             [{ "field1": "value1", ... }]
+          Return ONLY valid JSON, no commentary, no markdown fencing.
+        temperature: 0.0
+        max_tokens: 3000
+
+    - id: merge_and_normalise_2023
+      tool: llm_job
+      inputs:
+        cash_flow: "{{extract_cashflow_2023.output}}"
+        segments: "{{extract_segments_2023.output}}"
+        footnotes: "{{extract_footnotes_2023.output}}"
+        period: "FY 2023"
+        prompt: |
+          Merge the three extraction dicts above (cash_flow, segments, footnotes)
+          for Intel Corporation FY 2023 into a single flat JSON object.
+
+          Rules:
+          1. Include every key from every dict.
+          2. Where the same key appears in multiple dicts, keep the non-
+             "__not_found__" value. If both are non-sentinel, prefer cash_flow
+             over segments over footnotes.
+          3. Add a "period_label" key with value "FY 2023".
+          4. Add a "source_document" key with value "Intel 10-K FY 2023".
+          5. Normalisation check: Intel 10-Ks report in USD millions. If any
+             extracted numeric value appears to be in billions, multiply by 1000
+             and add a "normalisation_note" key noting the conversion.
+          6. Return a JSON ARRAY containing exactly ONE element — the merged dict:
+             [{ "field1": "value1", ... }]
+          Return ONLY valid JSON, no commentary, no markdown fencing.
+        temperature: 0.0
+        max_tokens: 3000
+
+    # ════════════════════════════════════════════════════════════════════════════
+    # SECTION B — Quarterly supplement extraction (fan-out)
+    # ════════════════════════════════════════════════════════════════════════════
+    # Each of the 8 supplement PDFs is ingested, page-selected, and extracted
+    # independently using parallel_over. The final output is a list of 8 dicts,
+    # one per quarter (Q1 2022 through Q4 2023).
+
+    # ── B1. Ingest all supplement PDFs in parallel ─────────────────────────────
+    # ingest_document accepts a URL string directly, so parallel_over over the
+    # URL list is sufficient — no fetch_data step needed for non-EDGAR sources.
+    - id: ingest_supplements
+      tool: ingest_document
+      parallel_over: "{{pipeline.inputs.supplement_urls}}"
+      inputs:
+        path: "{{item}}"
+
+    # ── B2. Select capex pages from each supplement ────────────────────────────
+    - id: select_supplement_capex
+      tool: select
+      parallel_over: "{{ingest_supplements.output}}"
+      inputs:
+        document: "{{item}}"
+        prompt: >
+          Select only the pages containing capital expenditure data. This includes:
+          tables labelled 'Capital expenditures', 'Net capital spending', 'Capex',
+          'Additions to property, plant and equipment', or any table showing
+          quarterly capex trends. Also include pages showing gross vs net capex
+          reconciliation or partner contribution (SCIP) disclosures. Exclude all
+          other financial statement pages.
+
+    # ── B3. Extract capex fields from each supplement ──────────────────────────
+    # No period_end is passed here because each supplement covers a different
+    # quarter; the LLM infers the period from the document's own header/dates.
+    # section_filter is omitted so all relevant fields (cash_flow, footnotes) are
+    # extracted from the compact supplement format.
+    - id: extract_supplement_capex
+      tool: extract_fields
+      parallel_over: "{{select_supplement_capex.output}}"
+      inputs:
+        document: "{{item}}"
+        schema: "{{session.schema}}"
+
+    # ── B4. Normalise supplement extractions ───────────────────────────────────
+    # The 8-element list from extract_supplement_capex is passed to a single
+    # llm_job that normalises units, adds period labels, and fills source_document.
+    # Intel supplements also report in USD millions, but this step validates that
+    # and catches any billion-scale figures from investor-facing presentations.
+    - id: normalise_supplements
+      tool: llm_job
+      inputs:
+        raw_extractions: "{{extract_supplement_capex.output}}"
+        prompt: |
+          You have a list of 8 capex extraction dicts from Intel quarterly
+          earnings supplement PDFs (Q1 2022 through Q4 2023 in chronological
+          order, corresponding to the supplement_urls list provided to this
+          pipeline).
+
+          For each dict in the list:
+          1. Confirm the "period_label" key is set to the correct quarter label
+             (e.g. "Q1 2022", "Q2 2022", ..., "Q4 2023"). If the extracted dict
+             has a period_label that matches, keep it. If it is __not_found__,
+             infer it from position: index 0 = "Q1 2022", index 1 = "Q2 2022",
+             index 2 = "Q3 2022", index 3 = "Q4 2022", index 4 = "Q1 2023",
+             index 5 = "Q2 2023", index 6 = "Q3 2023", index 7 = "Q4 2023".
+          2. Set "source_document" to "Intel Q{q} {year} Earnings Supplement"
+             matching the period.
+          3. Normalisation: Intel supplements report in USD millions. If any
+             capex value appears to be in billions (e.g. capex_gross of 4 when
+             Intel's quarterly capex was ~4,000 USD millions), multiply by 1000
+             and note the conversion in a "normalisation_note" key.
+
+          Return the full corrected list as a JSON ARRAY of 8 dicts:
+          [{"period_label": "Q1 2022", "capex_gross": "...", ...}, ...]
+          Return ONLY valid JSON, no commentary, no markdown fencing.
+        temperature: 0.0
+        max_tokens: 4000
+
+    # ════════════════════════════════════════════════════════════════════════════
+    # SECTION C — IR guidance extraction
+    # ════════════════════════════════════════════════════════════════════════════
+
+    # ── C1. Select capex guidance pages ───────────────────────────────────────
+    - id: select_guidance_capex
+      tool: select
+      inputs:
+        document: "{{session.guidance_doc}}"
+        prompt: >
+          Select pages containing Intel's capital expenditure guidance or outlook.
+          This includes tables or bullet points showing full-year capex guidance
+          ranges, net capex guidance, Smart Capital / SCIP partner contribution
+          assumptions, or management commentary on capex trajectory and investment
+          priorities. Exclude general product roadmap slides unrelated to spend.
+
+    # ── C2. Extract guidance fields ───────────────────────────────────────────
+    - id: extract_guidance_capex
+      tool: extract_fields
+      inputs:
+        document: "{{select_guidance_capex.output}}"
+        schema: "{{session.schema}}"
+        section_filter: "guidance"
+
+    # ── C3. Normalise guidance (may be stated in billions in IR presentations)
+    - id: normalise_guidance
+      tool: llm_job
+      inputs:
+        raw: "{{extract_guidance_capex.output}}"
+        prompt: |
+          Normalise the Intel capex guidance extraction dict to USD millions.
+          Intel IR presentations often state guidance in billions (e.g. "$25B").
+          Convert any billion-scale values to millions (multiply by 1000).
+          Add a "period_label" key with value "Guidance" and a "source_document"
+          key with value "Intel IR Capex Guidance Document".
+          Return a JSON ARRAY with exactly ONE element — the normalised dict:
+          [{ "capex_guidance_gross": "...", "period_label": "Guidance", ... }]
+          Return ONLY valid JSON, no commentary.
+        temperature: 0.0
+        max_tokens: 500
+
+    # ════════════════════════════════════════════════════════════════════════════
+    # SECTION D — Store all outputs for the reconciliation pipeline
+    # ════════════════════════════════════════════════════════════════════════════
+
+    - id: store_capex_annual_2022
+      tool: store
+      inputs:
+        key: capex_annual_2022
+        value: "{{merge_and_normalise_2022.output}}"
+
+    - id: store_capex_annual_2023
+      tool: store
+      inputs:
+        key: capex_annual_2023
+        value: "{{merge_and_normalise_2023.output}}"
+
+    - id: store_capex_supplements
+      tool: store
+      inputs:
+        key: capex_supplements
+        value: "{{normalise_supplements.output}}"
+
+    - id: store_capex_guidance
+      tool: store
+      inputs:
+        key: capex_guidance
+        value: "{{normalise_guidance.output}}"

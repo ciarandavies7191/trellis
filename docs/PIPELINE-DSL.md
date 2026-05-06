@@ -2,7 +2,7 @@
 
 ## Overview
 
-Pipeline DSL v1.4 is a declarative, YAML-based language for describing agentic
+Pipeline (or Trellis) DSL v1.4 is a declarative, YAML-based language for describing agentic
 execution workflows as directed acyclic graphs (DAGs). It is designed to be:
 
 - **Generatable by a single fine-tuned small language model** operating in two modes:

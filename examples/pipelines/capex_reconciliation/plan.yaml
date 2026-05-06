@@ -1,0 +1,81 @@
+plan:
+  id: intel_capex_reconciliation_2022_2023
+  goal: >
+    Extract capital expenditure tables from Intel's 2022 and 2023 10-K filings,
+    quarterly earnings supplements, and the IR capex guidance document. Normalise
+    all values to USD millions, reconcile segment-level spend against consolidated
+    cash flow statement totals, and flag any footnote adjustments. Compile into a
+    single reconciled capex schedule showing quarterly and annual trends across
+    FY 2022 and FY 2023.
+  inputs:
+    company: "Intel Corporation"
+    ticker: "INTC"
+    fy_2022_end: "2022-12-31"
+    fy_2023_end: "2023-12-31"
+    schema_path: "examples/data/capex_reconciliation_schema.json"
+    # Eight quarterly earnings supplement PDFs (Q1–Q4 for 2022 and 2023).
+    # Replace with actual URLs from Intel's investor relations page.
+    supplement_urls:
+      - "https://www.intel.com/content/dam/www/public/us/en/documents/supplemental/q1-2022-supplemental-financials.pdf"
+      - "https://www.intel.com/content/dam/www/public/us/en/documents/supplemental/q2-2022-supplemental-financials.pdf"
+      - "https://www.intel.com/content/dam/www/public/us/en/documents/supplemental/q3-2022-supplemental-financials.pdf"
+      - "https://www.intel.com/content/dam/www/public/us/en/documents/supplemental/q4-2022-supplemental-financials.pdf"
+      - "https://www.intel.com/content/dam/www/public/us/en/documents/supplemental/q1-2023-supplemental-financials.pdf"
+      - "https://www.intel.com/content/dam/www/public/us/en/documents/supplemental/q2-2023-supplemental-financials.pdf"
+      - "https://www.intel.com/content/dam/www/public/us/en/documents/supplemental/q3-2023-supplemental-financials.pdf"
+      - "https://www.intel.com/content/dam/www/public/us/en/documents/supplemental/q4-2023-supplemental-financials.pdf"
+    # Intel IR capex guidance document (annual or multi-year outlook).
+    guidance_url: "https://www.intel.com/content/dam/www/public/us/en/documents/investor-relations/2023-capital-expenditure-outlook.pdf"
+
+  sub_pipelines:
+
+    # ── Step 1 ────────────────────────────────────────────────────────────────
+    # Load the capex schema, fetch both annual 10-K filings from SEC EDGAR, and
+    # ingest the IR capex guidance document. Store all references for downstream
+    # sub-pipelines. The quarterly supplements are ingested directly in extraction
+    # using parallel_over to avoid storing eight large document objects.
+    - id: ingestion
+      goal: >
+        Load the capex reconciliation schema. Fetch Intel's FY 2022 and FY 2023
+        10-K filings from SEC EDGAR. Ingest the IR capex guidance PDF. Store the
+        schema, both 10-K fetch results, and the guidance document handle.
+      inputs: [company, ticker, fy_2022_end, fy_2023_end, schema_path, guidance_url]
+      stores: [schema, filing_2022, filing_2023, guidance_doc]
+
+    # ── Step 2 ────────────────────────────────────────────────────────────────
+    # Extract capex from the two annual 10-Ks (cash flow statement, segment
+    # footnote, and general capex footnotes), extract from each quarterly
+    # supplement in parallel via parallel_over, and extract from the guidance
+    # document. Normalize all values to USD millions and store.
+    - id: extraction
+      goal: >
+        From the 2022 10-K: select and extract cash flow capex, segment capex
+        disclosures, and footnote adjustments. Repeat for the 2023 10-K.
+        Fan out over supplement_urls to ingest, select, and extract capex from
+        each of the eight quarterly earnings supplements in parallel.
+        Extract guidance figures from the stored guidance document.
+        Run an LLM normalisation pass to confirm all values are in USD millions
+        and store four session keys: capex_annual_2022, capex_annual_2023,
+        capex_supplements (list), capex_guidance.
+      inputs: [fy_2022_end, fy_2023_end, supplement_urls]
+      reads: [schema, filing_2022, filing_2023, guidance_doc]
+      stores: [capex_annual_2022, capex_annual_2023, capex_supplements, capex_guidance]
+
+    # ── Step 3 ────────────────────────────────────────────────────────────────
+    # Reconcile segment capex sums against consolidated cash flow totals for each
+    # period, flag footnote adjustments and variances, apply actual Intel segment
+    # names, compile the full 10-column schedule (Q1–Q4 + FY for each year), and
+    # export the completed reconciled capex schedule as Markdown.
+    - id: reconciliation
+      goal: >
+        Resolve Intel's actual segment names for each filing year (Intel changed
+        its reportable segment structure between 2022 and 2023). Reconcile
+        segment capex totals against consolidated capex_gross for FY 2022 and
+        FY 2023. Flag any variance exceeding $50M or 2% of consolidated as a
+        reconciliation exception. Identify footnote adjustments (finance leases,
+        SCIP offsets, reclassifications) and annotate. Compile all periods
+        (Q1 2022 through FY 2023) into a unified reconciled capex schedule with
+        quarterly and annual columns. Export as a Markdown table.
+      inputs: [company, ticker]
+      reads: [capex_annual_2022, capex_annual_2023, capex_supplements, capex_guidance]
+      stores: []

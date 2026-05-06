@@ -1,0 +1,309 @@
+pipeline:
+  id: reconciliation
+  goal: >
+    Reconcile segment capex sums against consolidated totals, flag footnote
+    adjustments and variance exceptions, resolve Intel segment names for each
+    year's reporting structure, compile the unified 10-period capex schedule,
+    and export a complete reconciled capex Markdown document.
+  inputs:
+    company: "Intel Corporation"
+    ticker: "INTC"
+
+  tasks:
+
+    # ── 1. Resolve segment names for each year ─────────────────────────────────
+    # Intel restructured its reportable segments between 2022 and 2023.
+    # 2022: CCG, DCAI, NEX, IFS, Mobileye, All Other
+    # 2023: Intel Products (CCG+DCAI+NEX+AXG), Intel Foundry, All Other
+    # This step maps the generic [1]–[4] + other placeholders to actual names
+    # by inspecting which segment capex keys have non-sentinel values.
+    - id: resolve_segment_names_2022
+      tool: llm_job
+      inputs:
+        annual_2022: "{{session.capex_annual_2022}}"
+        prompt: |
+          The FY 2022 Intel capex extraction uses placeholder keys like
+          "capex_seg_[1]", "capex_seg_[2]", "capex_seg_[3]", "capex_seg_[4]",
+          and "capex_seg_other" for reportable segment capital expenditures.
+
+          Intel's FY 2022 reportable segments were, in descending revenue order:
+          [1] = Client Computing Group (CCG)
+          [2] = Data Center and AI (DCAI)
+          [3] = Network and Edge (NEX)
+          [4] = Intel Foundry Services (IFS)
+          other = All Other (including Mobileye until spin-off and corporate)
+
+          If the extracted values confirm a different ordering (e.g. capex_seg_[1]
+          is much smaller than capex_seg_[2]), adjust the mapping accordingly.
+          If segment capex was not disclosed in the 2022 10-K, return an empty
+          mapping with a note.
+
+          Return a JSON object:
+          {
+            "[1]": "Client Computing Group",
+            "[2]": "Data Center and AI",
+            "[3]": "Network and Edge",
+            "[4]": "Intel Foundry Services",
+            "other": "All Other",
+            "disclosure_note": "..."
+          }
+          Return ONLY valid JSON, no markdown fencing.
+        temperature: 0.0
+        max_tokens: 300
+
+    - id: resolve_segment_names_2023
+      tool: llm_job
+      inputs:
+        annual_2023: "{{session.capex_annual_2023}}"
+        prompt: |
+          The FY 2023 Intel capex extraction uses placeholder keys like
+          "capex_seg_[1]", "capex_seg_[2]", "capex_seg_[3]", and "capex_seg_other"
+          for reportable segment capital expenditures.
+
+          Intel reorganised its segment reporting in Q1 2023:
+          [1] = Intel Products (aggregates CCG, DCAI, NEX, AXG)
+          [2] = Intel Foundry (manufacturing services; previously IFS)
+          other = All Other (corporate, eliminations)
+
+          Return a JSON object:
+          {
+            "[1]": "Intel Products",
+            "[2]": "Intel Foundry",
+            "[3]": "__not_used__",
+            "[4]": "__not_used__",
+            "other": "All Other",
+            "disclosure_note": "..."
+          }
+          Return ONLY valid JSON, no markdown fencing.
+        temperature: 0.0
+        max_tokens: 200
+
+    # ── 2. Reconcile segment totals against consolidated for each annual year ───
+    # A reconciliation exception is flagged when:
+    #   |capex_seg_reported_total - capex_gross| > $50M  OR  > 2% of capex_gross
+    # Footnote adjustments (finance leases, SCIP credits, reclassifications)
+    # explain permitted variances between segment and consolidated figures.
+    - id: reconcile_annual_2022
+      tool: llm_job
+      inputs:
+        annual_2022: "{{session.capex_annual_2022}}"
+        segment_names: "{{resolve_segment_names_2022.output}}"
+        prompt: |
+          Perform a capex reconciliation for Intel FY 2022 using the extraction
+          dict in annual_2022 and the segment name mapping in segment_names.
+
+          Steps:
+          1. Identify capex_gross (consolidated PP&E additions from cash flow).
+          2. Identify capex_seg_[1..4] + capex_seg_other. Compute their sum.
+          3. Compare: variance = capex_seg_reported_total (or computed sum) - capex_gross.
+          4. Flag as EXCEPTION if |variance| > 50 (USD millions) OR > 2% of capex_gross.
+          5. Identify any footnote_adjustment_desc and footnote_adjustment_amount
+             that explain the variance (e.g. finance lease additions, SCIP offsets
+             excluded from segment-level reporting, unallocated manufacturing capex).
+          6. Determine reconciliation_status: "RECONCILED" if variance ≤ threshold,
+             "EXCEPTION" if > threshold, "SEGMENT_NOT_DISCLOSED" if no segment
+             capex data was extracted.
+
+          Return a JSON object:
+          {
+            "period": "FY 2022",
+            "capex_gross_consolidated": <number or null>,
+            "capex_seg_sum": <number or null>,
+            "variance_usd_millions": <number or null>,
+            "variance_pct": <number or null>,
+            "reconciliation_status": "RECONCILED|EXCEPTION|SEGMENT_NOT_DISCLOSED",
+            "exception_flag": true|false,
+            "footnote_adjustments": [
+              {"description": "...", "amount_usd_millions": <number or null>}
+            ],
+            "analyst_comment": "One sentence summary."
+          }
+          Return ONLY valid JSON.
+        temperature: 0.1
+        max_tokens: 800
+
+    - id: reconcile_annual_2023
+      tool: llm_job
+      inputs:
+        annual_2023: "{{session.capex_annual_2023}}"
+        segment_names: "{{resolve_segment_names_2023.output}}"
+        prompt: |
+          Perform a capex reconciliation for Intel FY 2023 using the extraction
+          dict in annual_2023 and the segment name mapping in segment_names.
+
+          Steps:
+          1. Identify capex_gross (consolidated PP&E additions from cash flow).
+          2. Identify capex_seg_[1..4] + capex_seg_other. Compute their sum.
+          3. Compare: variance = capex_seg_reported_total (or computed sum) - capex_gross.
+          4. Flag as EXCEPTION if |variance| > 50 (USD millions) OR > 2% of capex_gross.
+          5. Identify footnote_adjustment_desc and footnote_adjustment_amount that
+             explain the variance. In FY 2023, watch for: Intel Foundry allocated
+             capex vs consolidated, SCIP partner contributions, segment methodology
+             changes from the 2023 reorganisation.
+          6. Determine reconciliation_status: "RECONCILED", "EXCEPTION", or
+             "SEGMENT_NOT_DISCLOSED".
+
+          Return a JSON object with the same structure as the FY 2022 reconciliation
+          but with "period": "FY 2023".
+          Return ONLY valid JSON.
+        temperature: 0.1
+        max_tokens: 800
+
+    # ── 3. Compile the unified 10-period capex schedule ───────────────────────
+    # Combines the 8 quarterly supplement extractions with the 2 annual 10-K
+    # extractions and the guidance figures into a single structured schedule.
+    # The annual 10-K figures serve as the authoritative source for FY totals;
+    # quarterly supplement figures provide the Q1–Q4 breakdown.
+    - id: compile_schedule
+      tool: llm_job
+      inputs:
+        supplements: "{{session.capex_supplements}}"
+        annual_2022: "{{session.capex_annual_2022}}"
+        annual_2023: "{{session.capex_annual_2023}}"
+        guidance: "{{session.capex_guidance}}"
+        reconciliation_2022: "{{reconcile_annual_2022.output}}"
+        reconciliation_2023: "{{reconcile_annual_2023.output}}"
+        segment_names_2022: "{{resolve_segment_names_2022.output}}"
+        segment_names_2023: "{{resolve_segment_names_2023.output}}"
+        prompt: |
+          Compile a unified Intel capex schedule from all sources above. The
+          schedule must cover 10 periods in this exact order:
+            Q1 2022, Q2 2022, Q3 2022, Q4 2022, FY 2022,
+            Q1 2023, Q2 2023, Q3 2023, Q4 2023, FY 2023
+
+          Data sources and priority:
+          - Q1–Q4 figures: use the corresponding dict from supplements (8 elements,
+            index 0–3 = 2022 quarters, index 4–7 = 2023 quarters).
+          - FY 2022 / FY 2023 totals: use annual_2022 and annual_2023 (from 10-Ks).
+            These are authoritative. If a quarterly sum differs, note it.
+          - Guidance: include a separate "Guidance" column or annotate the FY rows.
+          - Reconciliation results: embed the reconciliation_status and
+            variance for FY 2022 and FY 2023.
+
+          For each of the 10 periods, build a dict with these keys (use
+          "__not_found__" if the value was not extracted):
+          {
+            "period_label":            e.g. "Q1 2022"
+            "capex_gross":             gross PP&E additions, USD millions
+            "finance_lease_additions": finance lease PP&E additions, USD millions
+            "capex_total_gross":       capex_gross + finance_lease_additions
+            "partner_contributions":   SCIP / Smart Capital offsets, USD millions
+            "capex_net":               capex_gross - partner_contributions
+            "depreciation_amortization": D&A, USD millions
+            "capex_seg_total":         sum of disclosed segment capex
+            "reconciliation_status":   RECONCILED / EXCEPTION / SEGMENT_NOT_DISCLOSED / N/A
+            "reconciliation_variance": variance in USD millions (annual periods only)
+            "source_document":         e.g. "Intel Q1 2022 Earnings Supplement"
+          }
+
+          For segments, only the FY 2022 and FY 2023 rows will have segment data.
+          Add separate per-segment keys using the resolved names from segment_names_2022
+          and segment_names_2023 (e.g. "capex_seg_Client Computing Group").
+
+          Return a JSON ARRAY of exactly 10 dicts (one per period, in order).
+          Return ONLY valid JSON, no markdown fencing.
+        temperature: 0.0
+        max_tokens: 6000
+
+    # ── 4. Generate analyst notes ──────────────────────────────────────────────
+    - id: generate_analyst_notes
+      tool: llm_job
+      inputs:
+        schedule: "{{compile_schedule.output}}"
+        reconciliation_2022: "{{reconcile_annual_2022.output}}"
+        reconciliation_2023: "{{reconcile_annual_2023.output}}"
+        guidance: "{{session.capex_guidance}}"
+        prompt: |
+          Review Intel's compiled capex schedule and reconciliation results.
+          Write up to 6 analyst notes covering:
+          1. Overall capex trajectory from Q1 2022 through Q4 2023 (magnitude,
+             trend, any step-changes).
+          2. FY 2022 vs FY 2023 year-over-year change in gross and net capex,
+             noting the Intel Smart Capital / SCIP program's impact on net figures.
+          3. Any EXCEPTION flags from reconciliation (segment sum vs consolidated
+             variance exceeding threshold). Explain probable cause.
+          4. Significant footnote adjustments (finance lease reclassifications,
+             segment methodology changes from the 2023 reorganisation).
+          5. Capex guidance comparison: actual outturn vs. stated guidance figures.
+          6. Any quarters with unusually high or low capex relative to trend
+             (e.g. inventory adjustments, fab construction phasing).
+
+          Return a JSON ARRAY of note objects:
+          [
+            {"period": "FY 2022–2023", "line_item": "...", "note": "..."},
+            ...
+          ]
+          Limit each note to two clear sentences. Return ONLY valid JSON.
+        temperature: 0.2
+        max_tokens: 1200
+
+    # ── 5. Populate and export the reconciled Markdown schedule ───────────────
+    - id: populate_schedule_markdown
+      tool: llm_job
+      inputs:
+        schedule: "{{compile_schedule.output}}"
+        reconciliation_2022: "{{reconcile_annual_2022.output}}"
+        reconciliation_2023: "{{reconcile_annual_2023.output}}"
+        segment_names_2022: "{{resolve_segment_names_2022.output}}"
+        segment_names_2023: "{{resolve_segment_names_2023.output}}"
+        guidance: "{{session.capex_guidance}}"
+        prompt: |
+          Produce a complete, formatted Markdown capex reconciliation schedule
+          for Intel Corporation (INTC) covering Q1 2022 through FY 2023.
+
+          The output must contain exactly the following sections in order,
+          separated by "---":
+
+          ## Consolidated Capex Schedule
+          A 12-column table: | Line Item | Q1 2022 | Q2 2022 | Q3 2022 | Q4 2022 | FY 2022 | Q1 2023 | Q2 2023 | Q3 2023 | Q4 2023 | FY 2023 | Guidance |
+          Row groups:
+          - **Gross Capital Additions**
+            - Additions to PP&E (Gross Capex)
+            - Finance Lease PP&E Additions
+            - *Total Gross Capital Additions*
+          - **Partner Contributions & Net Capex**
+            - SCIP / Partner Contributions (offset)
+            - *Net Capex*
+          - **Depreciation & Amortization**
+            - D&A
+
+          ## Segment Capex Breakdown *(from footnotes — FY periods only)*
+          A table with FY 2022 and FY 2023 columns showing each segment's capex.
+          Use the resolved segment names from segment_names_2022 and segment_names_2023.
+          Note the segment restructuring between the two years in a table footnote.
+          Include: Segment Total row and Variance vs Consolidated row.
+
+          ## Reconciliation Summary
+          A table with columns: | Period | Consolidated Gross Capex | Segment Total | Variance ($M) | Variance (%) | Status | Exception Flag |
+          Rows for FY 2022 and FY 2023. Status = RECONCILED / EXCEPTION / SEGMENT_NOT_DISCLOSED.
+
+          ## Footnote Adjustments
+          A table: | Period | Adjustment Description | Amount ($M USD) | Impact |
+          List every footnote_adjustment from both reconciliation results.
+
+          Formatting rules:
+          - All dollar amounts: whole integers (USD millions). Use — for missing values.
+          - Percentage fields: one decimal place (e.g. 12.3%).
+          - Positive partner contributions appear with (parentheses) as offsets.
+          - Bold total/subtotal rows.
+          - Do NOT include a document header or analyst notes section.
+
+          Return ONLY the markdown sections (from ## Consolidated Capex Schedule
+          through ## Footnote Adjustments). Nothing else.
+        temperature: 0.0
+        max_tokens: 5000
+
+    - id: export_capex_schedule
+      tool: export
+      inputs:
+        content: "{{populate_schedule_markdown.output}}"
+        format: markdown
+        filename: "intel_capex_reconciliation_2022_2023"
+        metadata:
+          company: "Intel Corporation"
+          ticker: "INTC"
+          source_filing: "10-K FY 2022, 10-K FY 2023, Quarterly Earnings Supplements, IR Guidance"
+          currency: "USD"
+          units: "$ Millions"
+          audited: "Annual figures audited; quarterly supplements unaudited"
+        analyst_notes: "{{generate_analyst_notes.output}}"

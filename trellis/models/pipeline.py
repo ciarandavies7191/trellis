@@ -9,7 +9,7 @@ document when the generator runs.
 from __future__ import annotations
 
 import re
-from typing import Any
+from typing import Any, Literal
 
 import yaml
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -20,6 +20,14 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 
 #: Matches any {{...}} expression anywhere in a string value.
 _TEMPLATE_RE = re.compile(r"\{\{([^}]+)\}\}")
+
+#: Sentinel used to distinguish "no default provided" from an explicit `default: null`.
+_MISSING: object = object()
+
+#: Recognised param type names.
+VALID_PARAM_TYPES: frozenset[str] = frozenset(
+    {"string", "integer", "number", "boolean", "list", "object"}
+)
 
 #: Valid tool names as defined in DSL v1.4 Tool Registry.
 KNOWN_TOOLS: frozenset[str] = frozenset(
@@ -69,6 +77,81 @@ def extract_template_refs(value: Any) -> list[str]:
         for v in value.values():
             refs.extend(extract_template_refs(v))
     return refs
+
+
+# ---------------------------------------------------------------------------
+# Pipeline parameter model
+# ---------------------------------------------------------------------------
+
+
+class PipelineParam(BaseModel):
+    """
+    Declaration of a single pipeline-level parameter.
+
+    Parameters are referenced in task inputs, parallel_over, and the goal
+    string via the ``{{params.name}}`` template syntax. They are resolved
+    before any task executes, binding a concrete value for every run.
+
+    Attributes:
+        type:        Expected value type. Used for coercion and validation at
+                     invocation time. One of: string, integer, number, boolean,
+                     list, object.
+        description: Human-readable description of the parameter's purpose.
+        default:     Default value used when the caller does not supply the
+                     param. Absence of this field means the param is required.
+    """
+
+    type: str = Field(default="string", description="Value type for coercion.")
+    description: str = Field(default="", description="Human-readable description.")
+    default: Any = Field(default=_MISSING, description="Default value; absent = required.")
+
+    @field_validator("type")
+    @classmethod
+    def type_must_be_valid(cls, v: str) -> str:
+        if v not in VALID_PARAM_TYPES:
+            raise ValueError(
+                f"Invalid param type {v!r}. Valid types: {sorted(VALID_PARAM_TYPES)}"
+            )
+        return v
+
+    @property
+    def required(self) -> bool:
+        """True when no default is declared — the caller must supply a value."""
+        return self.default is _MISSING
+
+    def coerce(self, value: Any, name: str) -> Any:
+        """
+        Coerce *value* to this param's declared type.
+
+        Raises:
+            ValueError: if the value cannot be coerced.
+        """
+        try:
+            if self.type == "string":
+                return str(value)
+            if self.type == "integer":
+                return int(value)
+            if self.type == "number":
+                return float(value)
+            if self.type == "boolean":
+                if isinstance(value, bool):
+                    return value
+                if isinstance(value, str):
+                    return value.lower() in ("true", "1", "yes")
+                return bool(value)
+            if self.type == "list":
+                if not isinstance(value, list):
+                    raise ValueError("expected a list")
+                return value
+            if self.type == "object":
+                if not isinstance(value, dict):
+                    raise ValueError("expected an object (dict)")
+                return value
+        except (ValueError, TypeError) as exc:
+            raise ValueError(
+                f"Param {name!r}: cannot coerce {value!r} to type {self.type!r}: {exc}"
+            ) from exc
+        return value  # unreachable but satisfies type checkers
 
 
 # ---------------------------------------------------------------------------
@@ -221,7 +304,7 @@ class Task(BaseModel):
         for expr in self.template_refs():
             parts = expr.split(".")
             # Exclude known non-task namespaces
-            if parts[0] in ("pipeline", "session", "item"):
+            if parts[0] in ("pipeline", "session", "item", "params"):
                 continue
             # Everything else is treated as a task id reference
             ids.add(parts[0])
@@ -258,6 +341,13 @@ class Pipeline(BaseModel):
             "Referenced as {{pipeline.inputs.key}}."
         ),
     )
+    params: dict[str, PipelineParam] = Field(
+        default_factory=dict,
+        description=(
+            "Typed, named pipeline parameters. Referenced as {{params.key}} in "
+            "the goal, task inputs, and parallel_over. Resolved before any task runs."
+        ),
+    )
     tasks: list[Task] = Field(
         ...,
         min_length=1,
@@ -280,6 +370,53 @@ class Pipeline(BaseModel):
     @classmethod
     def coerce_none_to_dict(cls, v: Any) -> dict:
         return v if v is not None else {}
+
+    @field_validator("params", mode="before")
+    @classmethod
+    def coerce_params_none_to_dict(cls, v: Any) -> dict:
+        return v if v is not None else {}
+
+    @model_validator(mode="after")
+    def params_refs_exist(self) -> "Pipeline":
+        """All {{params.key}} references in the goal and task inputs must be declared."""
+        declared = set(self.params.keys())
+
+        # Scan goal string
+        for ref in extract_template_refs(self.goal):
+            parts = ref.split(".")
+            if parts[0] == "params":
+                if len(parts) < 2:
+                    raise ValueError(
+                        "{{params}} used in goal without a key name — use {{params.key}}."
+                    )
+                key = parts[1]
+                if key not in declared:
+                    raise ValueError(
+                        f"Goal references undeclared param {{{{params.{key}}}}}. "
+                        f"Declared params: {sorted(declared) or '[]'}."
+                    )
+
+        # Scan task inputs and parallel_over
+        for task in self.tasks:
+            all_refs = extract_template_refs(task.inputs)
+            if task.parallel_over:
+                all_refs.extend(extract_template_refs(task.parallel_over))
+            for ref in all_refs:
+                parts = ref.split(".")
+                if parts[0] == "params":
+                    if len(parts) < 2:
+                        raise ValueError(
+                            f"Task {task.id!r}: {{{{params}}}} used without a key name — "
+                            "use {{params.key}}."
+                        )
+                    key = parts[1]
+                    if key not in declared:
+                        raise ValueError(
+                            f"Task {task.id!r} references undeclared param "
+                            f"{{{{params.{key}}}}}. "
+                            f"Declared params: {sorted(declared) or '[]'}."
+                        )
+        return self
 
     @model_validator(mode="after")
     def task_ids_are_unique(self) -> Pipeline:

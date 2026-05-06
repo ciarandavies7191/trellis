@@ -1,0 +1,161 @@
+{
+  "version": "1.0",
+  "description": "Schema for multi-source capital expenditure extraction and reconciliation. Segments use numbered placeholders [1]–[4] because Intel restructured its reportable segments between 2022 and 2023 (CCG/DCG/NEX/IFS in 2022 → Intel Products / Intel Foundry in 2023). Segment names are resolved at runtime.",
+  "fields": [
+    {
+      "name": "capex_gross",
+      "type_hint": "number",
+      "section": "cash_flow",
+      "required": true,
+      "description": "Gross additions to property, plant and equipment from the investing activities section of the cash flow statement. Intel labels this 'Additions to property, plant and equipment'. USD millions.",
+      "sign_convention": "positive",
+      "manual_ref": "§CF-1"
+    },
+    {
+      "name": "finance_lease_additions",
+      "type_hint": "number",
+      "section": "cash_flow",
+      "required": false,
+      "description": "PP&E additions obtained through finance leases. Disclosed in supplemental cash flow information or footnotes. USD millions.",
+      "sign_convention": "positive",
+      "manual_ref": "§CF-2"
+    },
+    {
+      "name": "capex_total_gross",
+      "type_hint": "number",
+      "section": "cash_flow",
+      "required": false,
+      "computed": true,
+      "formula": "capex_gross + finance_lease_additions",
+      "description": "Total gross capital additions: capex_gross plus finance_lease_additions. This is the broadest capex measure inclusive of all PP&E additions.",
+      "manual_ref": "§CF-3"
+    },
+    {
+      "name": "partner_contributions",
+      "type_hint": "number",
+      "section": "cash_flow",
+      "required": false,
+      "description": "Capital offsets received from manufacturing partners under Intel's SCIP (Semiconductor Co-Investment Program) or Smart Capital arrangements. Extract as a positive number representing the magnitude of the offset. USD millions.",
+      "sign_convention": "positive (offset amount)",
+      "fallback_rule": "May appear as 'Partner contributions received' or 'SCIP contributions' in operating or financing activities.",
+      "manual_ref": "§CF-4"
+    },
+    {
+      "name": "capex_net",
+      "type_hint": "number",
+      "section": "cash_flow",
+      "required": false,
+      "computed": true,
+      "formula": "capex_gross - partner_contributions",
+      "description": "Net capex after subtracting partner contributions. Intel may present this as 'Net capital spending' in supplemental schedules or IR documents.",
+      "manual_ref": "§CF-5"
+    },
+    {
+      "name": "depreciation_amortization",
+      "type_hint": "number",
+      "section": "cash_flow",
+      "required": false,
+      "description": "Total depreciation and amortization of property, plant and equipment. From cash flow or income statement. USD millions. Included for capex-to-DA ratio analysis.",
+      "sign_convention": "positive",
+      "manual_ref": "§CF-6"
+    },
+    {
+      "name": "capex_seg_[1]",
+      "type_hint": "number",
+      "section": "segments",
+      "required": false,
+      "description": "Capital expenditures for segment [1] as disclosed in the segment information footnote. Segment [1] is typically Intel's largest reportable segment by revenue.",
+      "fallback_rule": "Look in 'Segment information' or 'Segment operating results' note. Intel may label this 'Additions to property, plant and equipment by segment' or 'Segment capital expenditures'."
+    },
+    {
+      "name": "capex_seg_[2]",
+      "type_hint": "number",
+      "section": "segments",
+      "required": false,
+      "description": "Capital expenditures for segment [2] as disclosed in the segment information footnote."
+    },
+    {
+      "name": "capex_seg_[3]",
+      "type_hint": "number",
+      "section": "segments",
+      "required": false,
+      "description": "Capital expenditures for segment [3] as disclosed in the segment information footnote."
+    },
+    {
+      "name": "capex_seg_[4]",
+      "type_hint": "number",
+      "section": "segments",
+      "required": false,
+      "description": "Capital expenditures for segment [4] as disclosed in the segment information footnote."
+    },
+    {
+      "name": "capex_seg_other",
+      "type_hint": "number",
+      "section": "segments",
+      "required": false,
+      "description": "Capital expenditures allocated to 'All Other', corporate, or unallocated categories in the segment footnote. USD millions.",
+      "fallback_rule": "May appear as 'Corporate and other', 'Eliminations', or 'Unallocated'."
+    },
+    {
+      "name": "capex_seg_reported_total",
+      "type_hint": "number",
+      "section": "segments",
+      "required": false,
+      "description": "Total segment capital expenditures as reported in the segment footnote (the footer/subtotal row of the segment capex table). Used to cross-check against capex_gross from the cash flow statement."
+    },
+    {
+      "name": "footnote_adjustment_desc",
+      "type_hint": "string",
+      "section": "footnotes",
+      "required": false,
+      "description": "Text description of any footnote-level adjustment, reclassification, restatement, or exclusion that affects the comparability of capex figures. Examples: 'Excludes $200M acquired PP&E', 'Finance lease reclassified from prior period'.",
+      "manual_ref": "§FN-1"
+    },
+    {
+      "name": "footnote_adjustment_amount",
+      "type_hint": "number",
+      "section": "footnotes",
+      "required": false,
+      "description": "Monetary value of the footnote adjustment in USD millions. Positive = addition to reported capex, negative = reduction. Set to __not_found__ if no discrete adjustment is mentioned.",
+      "sign_convention": "positive = addition, negative = reduction",
+      "manual_ref": "§FN-2"
+    },
+    {
+      "name": "reporting_units",
+      "type_hint": "string",
+      "section": "footnotes",
+      "required": false,
+      "description": "Unit scale stated on the face of the source document (e.g. 'millions', 'billions'). Used to verify normalization to USD millions.",
+      "fallback_rule": "Check document header, table footnotes, or the statement title. Intel 10-Ks and supplements typically report in millions."
+    },
+    {
+      "name": "reporting_currency",
+      "type_hint": "string",
+      "section": "footnotes",
+      "required": false,
+      "description": "Currency of the source document (e.g. 'USD'). Intel reports exclusively in USD."
+    },
+    {
+      "name": "capex_guidance_gross",
+      "type_hint": "number",
+      "section": "guidance",
+      "required": false,
+      "description": "Intel management's full-year gross capex guidance figure (guidance documents and IR presentations). May be expressed as a range midpoint. USD millions.",
+      "fallback_rule": "May appear as 'Capital expenditures outlook', 'Capex guidance', or in an 'Outlook' table."
+    },
+    {
+      "name": "capex_guidance_net",
+      "type_hint": "number",
+      "section": "guidance",
+      "required": false,
+      "description": "Intel management's full-year net capex guidance after partner contributions / SCIP offsets. USD millions."
+    },
+    {
+      "name": "capex_guidance_note",
+      "type_hint": "string",
+      "section": "guidance",
+      "required": false,
+      "description": "Qualitative context from the guidance document: assumptions, year, basis (gross vs net), partner program details, or management commentary."
+    }
+  ]
+}

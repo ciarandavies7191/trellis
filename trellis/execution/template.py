@@ -18,8 +18,9 @@ Template forms supported
     {{task_id.output.field}}        named field within a task's output
     {{task_id.output.list.first}}   first element of a list in a task's output
     {{task_id.output.list.last}}    last element of a list in a task's output
-    {{pipeline.inputs.key}}         a named pipeline input parameter
+    {{pipeline.inputs.key}}         a named pipeline input parameter (legacy)
     {{pipeline.goal}}               the pipeline goal string
+    {{params.key}}                  a typed pipeline parameter (resolved before tasks run)
     {{session.key}}                 a value from the session blackboard
     {{item}}                        current element in a parallel_over loop
 
@@ -82,6 +83,7 @@ class ResolutionContext:
     task_outputs:    dict[str, Any] = field(default_factory=dict)
     pipeline_inputs: dict[str, Any] = field(default_factory=dict)
     pipeline_goal:   str            = ""
+    pipeline_params: dict[str, Any] = field(default_factory=dict)
     session:         dict[str, Any] = field(default_factory=dict)
     item:            Any            = None
     tenant_id:       str            = "default"
@@ -91,7 +93,14 @@ class ResolutionContext:
         """Record a completed task's output in the context."""
         self.task_outputs[task_id] = output
 
-    def with_item(self, item: Any) -> ResolutionContext:
+    def with_params(self, params: dict[str, Any]) -> "ResolutionContext":
+        """Return a shallow copy of this context with pipeline_params set."""
+        import copy
+        ctx = copy.copy(self)
+        ctx.pipeline_params = params
+        return ctx
+
+    def with_item(self, item: Any) -> "ResolutionContext":
         """Return a shallow copy of this context with {{item}} bound to item."""
         import copy
         ctx = copy.copy(self)
@@ -180,6 +189,21 @@ def _resolve_expr(expr: str, ctx: ResolutionContext) -> Any:
             )
         root = ctx.item
         return _walk_path(root, parts[1:], expr) if len(parts) > 1 else root
+
+    # {{params.key}} --------------------------------------------------------
+    if parts[0] == "params":
+        if len(parts) < 2:
+            raise ResolutionError(
+                f"Cannot resolve {{{{{expr}}}}}: 'params' requires a key name."
+            )
+        key = parts[1]
+        if key not in ctx.pipeline_params:
+            raise ResolutionError(
+                f"Cannot resolve {{{{{expr}}}}}: param {key!r} not found. "
+                f"Available params: {sorted(ctx.pipeline_params.keys()) or []}."
+            )
+        root = ctx.pipeline_params[key]
+        return _walk_path(root, parts[2:], expr) if len(parts) > 2 else root
 
     # {{pipeline.inputs.key}} / {{pipeline.goal}} ----------------------------
     if parts[0] == "pipeline":
