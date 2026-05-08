@@ -1,0 +1,60 @@
+site_name: Trellis
+site_description: Modular agentic pipeline system for document and data workflows
+site_url: https://ciarandavies7191.github.io/trellis
+repo_url: https://github.com/ciarandavies7191/trellis
+copyright: "© 2026 Trellis contributors"
+nav:
+  - Overview: index.md
+  - Installation: installation.md
+  - Quickstart: quickstart.md
+  - Pipeline DSL Reference: PIPELINE-DSL.md
+  - Tools & Registry: tools-index.md
+  - Interfaces:
+      - API (REST): interfaces-api.md
+      - CLI: interfaces-cli.md
+      - MCP: interfaces-mcp.md
+  - Tutorials & Examples:
+      - Overview: tutorials/index.md
+      - Web Search & Summarization: tutorials/web-search-summarize.md
+      - PDF Ingest & Extraction: tutorials/pdf-ingest-extract.md
+      - SEC Filing Extraction: tutorials/sec-field-extraction.md
+      - Exporting Results: tutorials/export-results.md
+  - Operations:
+      - Configuration & Environment: operations-configuration.md
+      - Execution Backends & Run Queue: operations-execution.md
+      - Persistence & Multi-tenancy (Blackboard): operations-blackboard.md
+  - Extensibility: extensibility-index.md
+  - Development & Testing: development-index.md
+  - Troubleshooting & FAQ: troubleshooting.md
+  - Changelog & Versioning: changelog.md
+  - Security & Privacy: security.md
+  - License & Support: support.md
+theme:
+  name: material
+  logo: assets/trellis-full.svg
+  favicon: assets/trellis-full.svg
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - content.code.copy
+
+extra_css:
+  - stylesheets/extra.css
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - tables
+  - attr_list
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ciarandavies7191/trellis
+      name: GitHub
+

@@ -28,7 +28,8 @@
       "Bash(python:*)",
       "Bash(ls *.py)",
       "Bash(ls scripts/)",
-      "Bash(trellis validate:*)"
+      "Bash(trellis validate:*)",
+      "Bash(curl -s https://pypi.org/pypi/trellis/json)"
     ]
   }
 }

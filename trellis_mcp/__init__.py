@@ -1,5 +1,3 @@
-"""Trellis MCP - Model Context Protocol server."""
+"""Trellis MCP - Model Context Protocol server (not yet implemented)."""
 
-from .server import MCPServer
-
-__all__ = ["MCPServer"]
+__all__: list[str] = []

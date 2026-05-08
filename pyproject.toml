@@ -3,61 +3,95 @@ requires = ["setuptools>=65", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "trellis"
+# NOTE: "trellis" is already registered on PyPI (Phillip J. Eby, v0.7a2).
+# Replace the name below with your chosen PyPI name before publishing.
+# The import name ("trellis", "trellis_api", etc.) is unaffected by this field.
+name = "trellis-pipelines"
 version = "0.1.0"
-description = "An agentic solution for pipeline planning and execution within controlled environments"
+description = "Modular agentic pipeline system for document and data workflows"
 readme = "README.md"
-license = {text = "MIT"}
+license = {file = "LICENSE"}
 authors = [
-    {name = "Trellis Contributors"}
+    {name = "Ciaran Davies"},
 ]
 requires-python = ">=3.12"
+keywords = [
+    "pipeline", "agentic", "dag", "document", "extraction",
+    "llm", "pdf", "sec", "etl", "workflow",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Office/Business",
+    "Typing :: Typed",
+]
+# ── Core dependencies ────────────────────────────────────────────────────────
+# Installed for every user. FastAPI/uvicorn are optional (see [api] extra).
 dependencies = [
     "pydantic>=2.0",
-    "fastapi>=0.104",
-    "uvicorn>=0.24",
     "pyyaml>=6.0",
-    "pytest>=9.0.2",
     "litellm>=1.0.0",
-    "PyPDF2>=3.0.0",
-    "pymupdf>=1.24.0",
+    "PyMuPDF>=1.24.0",
+    "pypdf>=3.0.0",
     "python-dotenv>=1.0.0",
-    "tenacity>=9.1.4",
     "beautifulsoup4>=4.12.0",
+    "typer>=0.9",
 ]
 
+[project.urls]
+Homepage = "https://github.com/ciarandavies7191/trellis"
+Repository = "https://github.com/ciarandavies7191/trellis"
+Documentation = "https://ciarandavies7191.github.io/trellis"
+"Bug Tracker" = "https://github.com/ciarandavies7191/trellis/issues"
+
+# ── Optional extras ──────────────────────────────────────────────────────────
 [project.optional-dependencies]
+api = [
+    "fastapi>=0.104",
+    "uvicorn[standard]>=0.24",
+]
 dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
     "pytest-asyncio>=0.21.0",
+    "httpx>=0.24",
     "black>=23.0",
     "isort>=5.12",
     "mypy>=1.0",
     "ruff>=0.1",
 ]
-api = [
-    "fastapi>=0.104",
-    "uvicorn>=0.24",
+all = [
+    "trellis-pipelines[api]",
 ]
-cli = [
-    "typer>=0.9",
-    "rich>=13.0",
-]
-mcp = []
 
 [project.scripts]
 trellis = "trellis_cli.main:main"
 
-[tool.setuptools]
-packages = ["trellis", "trellis_api", "trellis_mcp", "trellis_cli", "tests"]
+# ── Package discovery ────────────────────────────────────────────────────────
+# find: auto-discovers all packages (any directory with __init__.py).
+# tests and build artefacts are excluded from the distribution.
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["trellis*", "trellis_api*", "trellis_cli*", "trellis_mcp*"]
 
+# ── Tool configuration ───────────────────────────────────────────────────────
 [tool.black]
 line-length = 100
 
 [tool.isort]
 profile = "black"
 line_length = 100
+
+[tool.ruff]
+line-length = 100
 
 [tool.mypy]
 python_version = "3.12"

@@ -21,6 +21,10 @@ import urllib.request
 from typing import Any, Dict, List, Optional, Union
 import litellm  # type: ignore
 import fitz  # PyMuPDF  # type: ignore
+try:
+    import pypdf as _pypdf
+except ImportError:  # pragma: no cover
+    _pypdf = None  # type: ignore[assignment]
 from bs4 import BeautifulSoup, Tag
 from dataclasses import dataclass, field
 from typing import List, Optional
@@ -547,9 +551,9 @@ def _handle_from_bytes(
                 page_count = len(pages)
             except Exception:
                 pages = []
-        if not pages:
+        if not pages and _pypdf is not None:
             try:
-                reader = PyPDF2.PdfReader(io.BytesIO(data))  # type: ignore[attr-defined]
+                reader = _pypdf.PdfReader(io.BytesIO(data))
                 page_count = len(reader.pages)
                 for idx, pg in enumerate(getattr(reader, "pages", []) or []):
                     try:
