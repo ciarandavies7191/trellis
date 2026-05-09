@@ -1,0 +1,2962 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Modular agentic pipeline system for document and data workflows">
+      
+      
+      
+        <link rel="canonical" href="https://ciarandavies7191.github.io/trellis/specifications/PIPELINE-DSL/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/trellis-full.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Pipeline DSL v1.4 — Reference Specification - Trellis</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pipeline-dsl-v14-reference-specification" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Trellis" class="md-header__button md-logo" aria-label="Trellis" data-md-component="logo">
+      
+  <img src="../../assets/trellis-full.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Trellis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Pipeline DSL v1.4 — Reference Specification
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ciarandavies7191/trellis" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Trellis" class="md-nav__button md-logo" aria-label="Trellis" data-md-component="logo">
+      
+  <img src="../../assets/trellis-full.svg" alt="logo">
+
+    </a>
+    Trellis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ciarandavies7191/trellis" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PIPELINE-DSL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline DSL Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools & Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interfaces
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Interfaces
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API (REST)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials & Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials & Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/web-search-summarize/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Search & Summarization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/pdf-ingest-extract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PDF Ingest & Extraction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/sec-field-extraction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SEC Filing Extraction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/export-results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exporting Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration & Environment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution Backends & Run Queue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations-blackboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Persistence & Multi-tenancy (Blackboard)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extensibility-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extensibility
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development & Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting & FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog & Versioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security & Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../support/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    License & Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#two-level-generation-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two-Level Generation Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Two-Level Generation Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generation-and-execution-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generation and Execution Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complexity-budget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complexity Budget
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plan-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan Document
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Plan Document">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sub-pipeline-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sub-Pipeline Entry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependency-resolution-in-plans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Resolution in Plans
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plan-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inferred-sub-pipeline-dag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inferred Sub-Pipeline DAG
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pipeline-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline Document
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pipeline Document">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#top-level-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-Level Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fields_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline Inputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Task Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fields_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Resolution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dependency Resolution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#template-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template Syntax
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Template Syntax">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reference-forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference Forms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-class-handle-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-Class Handle Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="First-Class Handle Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documenthandle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DocumentHandle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schemahandle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SchemaHandle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perioddescriptor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PeriodDescriptor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tool-design-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool Design Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tool-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool Registry
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tool Registry">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#document-processing-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Document Processing Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ingest_document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest_document
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        load_schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#select" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        select
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extract_from_texts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_from_texts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extract_from_tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_from_tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extract_fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm_job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        llm_job
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fetch_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fetch_data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search_web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        search_web
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        compute
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="compute">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#built-in-finance-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in Finance Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        store
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        export
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fan-out-with-parallel_over" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fan-out with parallel_over
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#explicit-barrier-with-await" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explicit Barrier with await
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canonical-archetype-financial-spreading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical Archetype: Financial Spreading
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-example-data-acquisition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Example — Data Acquisition
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Full Example — Data Acquisition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inferred-dag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inferred DAG
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-this-dsl-intentionally-omits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This DSL Intentionally Omits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tool-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version History
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="pipeline-dsl-v14-reference-specification">Pipeline DSL v1.4 — Reference Specification<a class="headerlink" href="#pipeline-dsl-v14-reference-specification" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Pipeline (or Trellis) DSL v1.4 is a declarative, YAML-based language for describing agentic
+execution workflows as directed acyclic graphs (DAGs). It is designed to be:</p>
+<ul>
+<li><strong>Generatable by a single fine-tuned small language model</strong> operating in two modes:
+  Planner and Generator</li>
+<li><strong>Executable by a DAG runtime</strong> (e.g. Prefect, Airflow, or a custom executor)</li>
+<li><strong>Minimal by design</strong> — logic and reasoning are delegated to <code>llm_job</code> tasks, not
+  encoded in the DSL itself</li>
+<li><strong>Scalable to 20-30+ task workflows</strong> via plan-level decomposition into sub-pipelines</li>
+</ul>
+<p>The DSL does not include conditionals, loops, or decorators. Control flow complexity
+lives inside <code>llm_job</code> tool calls, not in the pipeline structure.</p>
+<hr />
+<h2 id="two-level-generation-architecture">Two-Level Generation Architecture<a class="headerlink" href="#two-level-generation-architecture" title="Permanent link">&para;</a></h2>
+<p>Complex workflows exceeding ~10 tasks are handled by decomposing them into a <strong>plan</strong>
+of named sub-pipelines, each of which is then generated independently. This keeps
+individual pipelines within the reliable generation window of a small fine-tuned model
+while supporting arbitrarily large overall workflows.</p>
+<p>A single fine-tuned model handles both levels, distinguished by a <strong>task token</strong>
+prepended to every prompt:</p>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Output schema</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[PLAN]</code></td>
+<td>Plan YAML</td>
+<td>Decompose a complex goal into named sub-pipelines</td>
+</tr>
+<tr>
+<td><code>[PIPELINE]</code></td>
+<td>Pipeline YAML</td>
+<td>Generate a single sub-pipeline's DAG</td>
+</tr>
+</tbody>
+</table>
+<p>The two output schemas share structural similarity (both YAML, both <code>id</code>/<code>goal</code>-rooted,
+both express dependency) but have no overlapping field names, giving the model a clean
+discriminative signal from the root key (<code>plan:</code> vs <code>pipeline:</code>).</p>
+<h3 id="generation-and-execution-loop">Generation and Execution Loop<a class="headerlink" href="#generation-and-execution-loop" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[PLAN] &lt;user prompt&gt;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    └──► model generates Plan YAML
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>              └──► orchestrator topological-sorts sub-pipelines by reads/stores
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                        └──► for each sub-pipeline in order:
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                                  [PIPELINE] goal: &lt;goal&gt; | reads: &lt;keys&gt; | inputs: &lt;params&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                                      └──► model generates Pipeline YAML
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                                                └──► validate
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                                                          └──► execute
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                                                                    └──► store outputs to blackboard
+</code></pre></div>
+<p>The <code>reads</code> list passed to each <code>[PIPELINE]</code> prompt reflects what is currently
+available on the session blackboard at the point of generation, preventing hallucinated
+<code>{{session.*}}</code> references.</p>
+<h3 id="complexity-budget">Complexity Budget<a class="headerlink" href="#complexity-budget" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Ceiling</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tasks per sub-pipeline</td>
+<td>~10</td>
+<td>Reliable generation window for a 3-4B model</td>
+</tr>
+<tr>
+<td>Sub-pipelines per plan</td>
+<td>~8</td>
+<td>Keeps plan document tractable</td>
+</tr>
+<tr>
+<td>Effective total tasks</td>
+<td>~60-80</td>
+<td>Well beyond the 20-30 task requirement</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="plan-document">Plan Document<a class="headerlink" href="#plan-document" title="Permanent link">&para;</a></h2>
+<p>The plan is the intermediate representation between a complex user goal and the
+individual pipeline YAMLs. It is produced by the model in <code>[PLAN]</code> mode and consumed
+by the orchestrator.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">plan</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;string&gt;</span><span class="w">          </span><span class="c1"># unique identifier, snake_case</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">goal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;string&gt;</span><span class="w">        </span><span class="c1"># natural language restatement of the overall intent</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span><span class="w">               </span><span class="c1"># optional — top-level parameters passed into the plan</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">&lt;key&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;value&gt;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">sub_pipelines</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;list&gt;</span>
+</code></pre></div>
+<h3 id="sub-pipeline-entry">Sub-Pipeline Entry<a class="headerlink" href="#sub-pipeline-entry" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;string&gt;</span><span class="w">          </span><span class="c1"># unique sub-pipeline identifier, snake_case</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">goal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;string&gt;</span><span class="w">        </span><span class="c1"># natural language goal for this sub-pipeline</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">reads</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">&lt;key&gt;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">]</span><span class="w">   </span><span class="c1"># session blackboard keys this sub-pipeline will read</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">stores</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">&lt;key&gt;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">]</span><span class="w">  </span><span class="c1"># session blackboard keys this sub-pipeline will write</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">&lt;key&gt;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">]</span><span class="w">  </span><span class="c1"># optional — pipeline.inputs keys forwarded from plan.inputs</span>
+</code></pre></div>
+<h3 id="fields">Fields<a class="headerlink" href="#fields" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>yes</td>
+<td>Unique sub-pipeline identifier, snake_case</td>
+</tr>
+<tr>
+<td><code>goal</code></td>
+<td>yes</td>
+<td>Passed verbatim as the goal of the generated pipeline</td>
+</tr>
+<tr>
+<td><code>reads</code></td>
+<td>yes</td>
+<td>Blackboard keys consumed. Drives topological ordering. Empty list <code>[]</code> for root sub-pipelines</td>
+</tr>
+<tr>
+<td><code>stores</code></td>
+<td>yes</td>
+<td>Blackboard keys produced. Must match <code>store</code> task keys in the generated pipeline</td>
+</tr>
+<tr>
+<td><code>inputs</code></td>
+<td>no</td>
+<td>Plan-level input keys forwarded to this sub-pipeline</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dependency-resolution-in-plans">Dependency Resolution in Plans<a class="headerlink" href="#dependency-resolution-in-plans" title="Permanent link">&para;</a></h3>
+<p>Sub-pipeline execution order is derived from <code>reads</code>/<code>stores</code> relationships, exactly
+as task dependencies are derived from <code>{{ref}}</code> templates within a pipeline. A
+sub-pipeline whose <code>reads</code> list is empty or fully satisfied runs immediately. Multiple
+sub-pipelines with satisfied reads run in parallel.</p>
+<h3 id="plan-example">Plan Example<a class="headerlink" href="#plan-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">plan</span><span class="p">:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gulf_disruption_assessment</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">goal</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="no">Assess disruption, impact, and credit risk across three energy disruption</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="no">scenarios. Report on liquidity, supply-chain, and energy-cost sensitivity.</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nt">companies</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Google</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Apple</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Microsoft</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Agilent</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="nt">year</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2025</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="nt">sub_pipelines</span><span class="p">:</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data_acquisition</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">      </span><span class="nt">goal</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Fetch</span><span class="nv"> </span><span class="s">company</span><span class="nv"> </span><span class="s">financials,</span><span class="nv"> </span><span class="s">energy</span><span class="nv"> </span><span class="s">exposure,</span><span class="nv"> </span><span class="s">market</span><span class="nv"> </span><span class="s">data,</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">web</span><span class="nv"> </span><span class="s">context&quot;</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">      </span><span class="nt">reads</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">      </span><span class="nt">stores</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">company_financials</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">energy_exposure</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">energy_markets</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">disruption_context</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">companies</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">year</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">short_term_assessment</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">      </span><span class="nt">goal</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Assess</span><span class="nv"> </span><span class="s">disruption,</span><span class="nv"> </span><span class="s">impact</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">credit</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">1-month</span><span class="nv"> </span><span class="s">risk</span><span class="nv"> </span><span class="s">premium</span><span class="nv"> </span><span class="s">shock&quot;</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">      </span><span class="nt">reads</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">company_financials</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">energy_exposure</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">energy_markets</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">disruption_context</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">      </span><span class="nt">stores</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">credit_short</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">impact_short</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">companies</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">medium_term_assessment</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">      </span><span class="nt">goal</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">        </span><span class="no">Assess disruption, impact and credit for 1-3 month supply constraint scenario,</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">        </span><span class="no">building on short-term credit assessment</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">      </span><span class="nt">reads</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">company_financials</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">energy_exposure</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">energy_markets</span><span class="p p-Indicator">,</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">              </span><span class="nv">disruption_context</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">credit_short</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">      </span><span class="nt">stores</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">credit_medium</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">impact_medium</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">companies</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">long_term_assessment</span>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="w">      </span><span class="nt">goal</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="w">        </span><span class="no">Assess disruption, impact and credit for &gt;6 month sustained disruption,</span>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="w">        </span><span class="no">building on medium-term credit assessment</span>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="w">      </span><span class="nt">reads</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">company_financials</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">energy_exposure</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">energy_markets</span><span class="p p-Indicator">,</span>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a><span class="w">              </span><span class="nv">disruption_context</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">credit_medium</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a><span class="w">      </span><span class="nt">stores</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">credit_long</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">impact_long</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">companies</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">synthesis</span>
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a><span class="w">      </span><span class="nt">goal</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a><span class="w">        </span><span class="no">Synthesise liquidity, supply-chain, and energy-cost sensitivity analysis</span>
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a><span class="w">        </span><span class="no">across all three scenario horizons for all companies</span>
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a><span class="w">      </span><span class="nt">reads</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">company_financials</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">energy_exposure</span><span class="p p-Indicator">,</span>
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a><span class="w">              </span><span class="nv">credit_short</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">credit_medium</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">credit_long</span><span class="p p-Indicator">,</span>
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a><span class="w">              </span><span class="nv">impact_short</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">impact_medium</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">impact_long</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a><span class="w">      </span><span class="nt">stores</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">liquidity_analysis</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">supply_chain_analysis</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">energy_cost_analysis</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">companies</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a>
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">final_report</span>
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a><span class="w">      </span><span class="nt">goal</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Produce</span><span class="nv"> </span><span class="s">executive</span><span class="nv"> </span><span class="s">credit</span><span class="nv"> </span><span class="s">assessment</span><span class="nv"> </span><span class="s">report</span><span class="nv"> </span><span class="s">across</span><span class="nv"> </span><span class="s">all</span><span class="nv"> </span><span class="s">scenarios&quot;</span>
+<a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a><span class="w">      </span><span class="nt">reads</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">liquidity_analysis</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">supply_chain_analysis</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">energy_cost_analysis</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a><span class="w">      </span><span class="nt">stores</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+</code></pre></div>
+<h3 id="inferred-sub-pipeline-dag">Inferred Sub-Pipeline DAG<a class="headerlink" href="#inferred-sub-pipeline-dag" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>data_acquisition
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    └──► short_term_assessment
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>               └──► medium_term_assessment
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>                          └──► long_term_assessment ──┐
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>                                                       ├──► synthesis ──► final_report
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    └──────────────────────────────────────────────────┘
+</code></pre></div>
+<p><code>data_acquisition</code> is the sole root. The three assessment sub-pipelines are sequential
+(credit assessments chain). <code>synthesis</code> waits on all three. <code>final_report</code> waits on
+<code>synthesis</code>.</p>
+<hr />
+<h2 id="pipeline-document">Pipeline Document<a class="headerlink" href="#pipeline-document" title="Permanent link">&para;</a></h2>
+<p>A pipeline is the executable unit. Each sub-pipeline entry in the plan produces one
+pipeline document when the model runs in <code>[PIPELINE]</code> mode.</p>
+<h3 id="top-level-structure">Top-Level Structure<a class="headerlink" href="#top-level-structure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">pipeline</span><span class="p">:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;string&gt;</span><span class="w">        </span><span class="c1"># matches the sub-pipeline id from the plan</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">goal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;string&gt;</span><span class="w">      </span><span class="c1"># matches the sub-pipeline goal from the plan</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span><span class="w">             </span><span class="c1"># optional — named parameters provided by the orchestrator</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nt">&lt;key&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;value&gt;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nt">tasks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;list&gt;</span>
+</code></pre></div>
+<h3 id="fields_1">Fields<a class="headerlink" href="#fields_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>yes</td>
+<td>Unique pipeline identifier, snake_case. Should match plan sub-pipeline id</td>
+</tr>
+<tr>
+<td><code>goal</code></td>
+<td>yes</td>
+<td>Human-readable description of this pipeline's intent</td>
+</tr>
+<tr>
+<td><code>inputs</code></td>
+<td>no</td>
+<td>Named input parameters. Referenced as <code>{{pipeline.inputs.key}}</code></td>
+</tr>
+<tr>
+<td><code>tasks</code></td>
+<td>yes</td>
+<td>List of task objects</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pipeline-inputs">Pipeline Inputs<a class="headerlink" href="#pipeline-inputs" title="Permanent link">&para;</a></h3>
+<p>The <code>inputs</code> block declares parameters provided by the orchestrator at execution time.
+These are values that vary per invocation and should not be hardcoded in task
+definitions.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">pipeline</span><span class="p">:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data_acquisition</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">goal</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Fetch</span><span class="nv"> </span><span class="s">company</span><span class="nv"> </span><span class="s">financials,</span><span class="nv"> </span><span class="s">energy</span><span class="nv"> </span><span class="s">exposure,</span><span class="nv"> </span><span class="s">market</span><span class="nv"> </span><span class="s">data,</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">web</span><span class="nv"> </span><span class="s">context&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="nt">companies</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Google</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Apple</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Microsoft</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Agilent</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="nt">year</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2025</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_financials</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_data</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">        </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">company_info</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">        </span><span class="nt">companies</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.companies}}&quot;</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">        </span><span class="nt">year</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.year}}&quot;</span>
+</code></pre></div>
+<p><strong>Parameters</strong> vary per invocation and belong in <code>inputs</code>. <strong>Configuration</strong> is fixed
+vocabulary belonging inline in tasks (source names, prompt strings, format hints).</p>
+<hr />
+<h2 id="task-structure">Task Structure<a class="headerlink" href="#task-structure" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;string&gt;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;string&gt;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nt">&lt;key&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;value | template&gt;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="nt">parallel_over</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;template&gt;</span><span class="w">     </span><span class="c1"># optional</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="nt">retry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;int&gt;</span><span class="w">                  </span><span class="c1"># optional, default 0</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="nt">await</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">&lt;task_id&gt;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">]</span><span class="w">       </span><span class="c1"># optional, escape hatch only</span>
+</code></pre></div>
+<h3 id="fields_2">Fields<a class="headerlink" href="#fields_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>yes</td>
+<td>Unique task identifier within the pipeline, snake_case</td>
+</tr>
+<tr>
+<td><code>tool</code></td>
+<td>yes</td>
+<td>Name of the tool to invoke (see Tool Registry)</td>
+</tr>
+<tr>
+<td><code>inputs</code></td>
+<td>yes</td>
+<td>Key-value pairs passed to the tool. Values may be literals or templates</td>
+</tr>
+<tr>
+<td><code>parallel_over</code></td>
+<td>no</td>
+<td>Fan-out: runs the task once per item in the referenced list. Item bound to <code>{{item}}</code></td>
+</tr>
+<tr>
+<td><code>retry</code></td>
+<td>no</td>
+<td>Number of retry attempts on task failure. Default: <code>0</code></td>
+</tr>
+<tr>
+<td><code>await</code></td>
+<td>no</td>
+<td>Explicit barrier — wait for listed task IDs without consuming output. Use only when no input reference exists</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="dependency-resolution">Dependency Resolution<a class="headerlink" href="#dependency-resolution" title="Permanent link">&para;</a></h2>
+<p><strong>Within a pipeline, dependencies are implicit and inferred from input templates.</strong>
+There is no <code>depends_on</code> field.</p>
+<p>The runtime parses all <code>{{task_id.output}}</code> references across <code>inputs</code> and
+<code>parallel_over</code> fields to construct the DAG. Tasks with no upstream references are
+roots and execute immediately. Tasks whose inputs are all satisfied execute in parallel
+automatically.</p>
+<h3 id="rules">Rules<a class="headerlink" href="#rules" title="Permanent link">&para;</a></h3>
+<ul>
+<li>A task may not reference its own output</li>
+<li>Circular references are invalid and must be rejected at parse time</li>
+<li><code>await</code> is the only mechanism for a dependency that produces no consumed output</li>
+<li><code>{{session.*}}</code> references never create intra-pipeline dependencies — they resolve
+  from the blackboard at task execution time</li>
+</ul>
+<hr />
+<h2 id="template-syntax">Template Syntax<a class="headerlink" href="#template-syntax" title="Permanent link">&para;</a></h2>
+<p>Templates use double-brace syntax: <code>{{expression}}</code></p>
+<h3 id="reference-forms">Reference Forms<a class="headerlink" href="#reference-forms" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Template</th>
+<th>Resolves to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{{task_id.output}}</code></td>
+<td>Full output of a completed task in this pipeline</td>
+</tr>
+<tr>
+<td><code>{{task_id.output.field}}</code></td>
+<td>Named field within a task's output</td>
+</tr>
+<tr>
+<td><code>{{pipeline.inputs.key}}</code></td>
+<td>A named pipeline input parameter</td>
+</tr>
+<tr>
+<td><code>{{pipeline.goal}}</code></td>
+<td>The top-level pipeline goal string</td>
+</tr>
+<tr>
+<td><code>{{session.key}}</code></td>
+<td>A value previously stored to the session blackboard</td>
+</tr>
+<tr>
+<td><code>{{item}}</code></td>
+<td>Current element when inside a <code>parallel_over</code> task</td>
+</tr>
+</tbody>
+</table>
+<p>Templates may appear in any input value and in <code>parallel_over</code>. They may not appear in
+<code>id</code>, <code>tool</code>, or other structural fields.</p>
+<h3 id="session-references">Session References<a class="headerlink" href="#session-references" title="Permanent link">&para;</a></h3>
+<p><code>{{session.key}}</code> references must only be used for keys listed in the sub-pipeline's
+<code>reads</code> field in the plan. The generator prompt will include the list of currently
+available session keys to prevent hallucinated references.</p>
+<hr />
+<h2 id="first-class-handle-types">First-Class Handle Types<a class="headerlink" href="#first-class-handle-types" title="Permanent link">&para;</a></h2>
+<p>The runtime passes typed handle objects between tasks as task outputs. These flow
+through the DAG identically to any other value — <code>{{task_id.output}}</code> resolves to the
+handle at execution time.</p>
+<h3 id="documenthandle"><code>DocumentHandle</code><a class="headerlink" href="#documenthandle" title="Permanent link">&para;</a></h3>
+<p>Produced by <code>ingest_document</code>. Carries a list of <code>Page</code> objects, each with <code>.text</code>
+populated (native or OCR'd), optional <code>.image_bytes</code>, and <code>.sheet_name</code> for XLSX pages.
+Consumed by <code>select</code>, <code>extract_from_texts</code>, <code>extract_from_tables</code>, <code>extract_fields</code>,
+and <code>load_schema</code>.</p>
+<h3 id="schemahandle"><code>SchemaHandle</code><a class="headerlink" href="#schemahandle" title="Permanent link">&para;</a></h3>
+<p>Produced by <code>load_schema</code> (or by an <code>llm_job</code> that infers structure). Carries an
+ordered list of <code>FieldDefinition</code> objects, source provenance, and an optional <code>raw</code>
+field retaining the original template bytes for populate-mode <code>export</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>SchemaHandle
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  .fields:  list[FieldDefinition]   # name, type_hint, required, description
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  .source:  str                     # provenance (&quot;credit_memo_v2&quot;, &quot;template.xlsx&quot;, …)
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  .raw:     Any                     # original source bytes/dict; used for populate-mode export
+</code></pre></div>
+<p><strong>Key invariant:</strong> the schema is always explicit in the pipeline graph. Field definitions
+are never embedded invisibly in a prompt string.</p>
+<p><code>SchemaHandle</code> is to structured output what <code>DocumentHandle</code> is to document content. It
+flows through the pipeline as a standard task output and is consumed by <code>extract_fields</code>
+and <code>export</code>.</p>
+<h3 id="perioddescriptor"><code>PeriodDescriptor</code><a class="headerlink" href="#perioddescriptor" title="Permanent link">&para;</a></h3>
+<p>Produced by the <code>fiscal_period_logic</code> compute function. Carries a human-readable
+period label, ISO period-end date, period type, and <code>is_annual</code> flag.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>PeriodDescriptor
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  .label:       str   # &quot;Q1 2025&quot;, &quot;FY 2024&quot;
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  .period_end:  str   # &quot;2025-03-31&quot;
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  .period_type: str   # &quot;annual&quot; | &quot;ytd_current&quot; | &quot;ytd_prior&quot;
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  .is_annual:   bool
+</code></pre></div>
+<hr />
+<h2 id="tool-design-philosophy">Tool Design Philosophy<a class="headerlink" href="#tool-design-philosophy" title="Permanent link">&para;</a></h2>
+<p>All tools are <strong>polymorphic on their inputs</strong>. A tool interprets what it receives
+contextually and does its best to fulfil the request:</p>
+<ul>
+<li>A string path or URL is treated as a single resource</li>
+<li>A list of paths or URLs is treated as a set, processed accordingly</li>
+<li>A document handle is used directly</li>
+<li>A list of handles is processed as a collection</li>
+</ul>
+<p>The pipeline author does not need to wrap inputs, add type hints, or explicitly loop
+over lists in most cases. The tool decides how to handle what it receives.</p>
+<p><strong>Deterministic computation belongs in <code>compute</code>, not <code>llm_job</code>.</strong> Any rule fully
+expressible in code (date arithmetic, ticker resolution, period labelling, currency
+normalization) should use a registered <code>compute</code> function. Reserve <code>llm_job</code> for tasks
+that genuinely require language model judgment.</p>
+<hr />
+<h2 id="tool-registry">Tool Registry<a class="headerlink" href="#tool-registry" title="Permanent link">&para;</a></h2>
+<h3 id="document-processing-pipeline">Document Processing Pipeline<a class="headerlink" href="#document-processing-pipeline" title="Permanent link">&para;</a></h3>
+<p>The document tools form a clear, ordered pipeline for unstructured content:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ingest_document → select → extract_from_texts
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>                          → extract_from_tables
+</code></pre></div>
+<p>For schema-guided extraction of known fields, add <code>load_schema</code> and <code>extract_fields</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ingest_document ──────────────────────────► select → extract_from_texts / extract_from_tables
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>load_schema (template) → SchemaHandle ──► extract_fields (schema + rules)
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>                                                    └──► export (schema, format: xlsx)
+</code></pre></div>
+<p>Each tool has a single, unambiguous responsibility. A tool never needs to consider
+what a prior tool should have done.</p>
+<hr />
+<h3 id="ingest_document"><code>ingest_document</code><a class="headerlink" href="#ingest_document" title="Permanent link">&para;</a></h3>
+<p>Loads one or more documents and fully resolves them — including OCR for scanned pages.</p>
+<p>Accepts a file path, a URL, or a list of either. Handles PDF, XLSX, CSV, DOCX, plain
+text, and images automatically. For scanned or image-based PDFs, OCR is applied
+<strong>eagerly at ingest time</strong> — every page in the returned handle has its text field
+populated. Downstream tools (<code>select</code>, <code>extract_from_texts</code>, <code>extract_from_tables</code>)
+never need to consider OCR.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingest_report</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingest_document</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.report_path}}&quot;</span>
+</code></pre></div>
+<p><strong>Emits:</strong> A <code>DocumentHandle</code> or list of handles. Every page has <code>.text</code> populated
+(native PDF text, or OCR result for scanned pages). Image bytes are retained for
+visual table extraction.</p>
+<hr />
+<h3 id="load_schema"><code>load_schema</code><a class="headerlink" href="#load_schema" title="Permanent link">&para;</a></h3>
+<p>Produces a <code>SchemaHandle</code> from any schema source. Parallel to <code>ingest_document</code> for
+document content — the schema is loaded once and flows through the pipeline as data.</p>
+<p>Source resolution order:
+1. Registered name → returned directly from <code>SchemaRegistry</code>
+2. Existing <code>SchemaHandle</code> → returned as-is (pass-through)
+3. <code>DocumentHandle</code> → schema derived from document structure (column headers for
+   XLSX/CSV, top-level keys for JSON/YAML, <code>hint</code>-driven LLM pass for unstructured)
+4. <code>dict</code> or <code>list</code> → field definitions parsed inline
+5. File path or URL → loaded then treated as (3)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Derive schema from a loaded Excel template</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load_output_schema</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load_schema</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{ingest_template.output}}&quot;</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span><span class="nt">hint</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Column</span><span class="nv"> </span><span class="s">headers</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">first</span><span class="nv"> </span><span class="s">sheet</span><span class="nv"> </span><span class="s">define</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">field</span><span class="nv"> </span><span class="s">names&quot;</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Load a registered schema by name</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load_credit_schema</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load_schema</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">    </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">credit_memo_v2</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>source</code></td>
+<td>yes</td>
+<td>File path, URL, registered name, <code>DocumentHandle</code>, dict, or existing <code>SchemaHandle</code></td>
+</tr>
+<tr>
+<td><code>hint</code></td>
+<td>no</td>
+<td>Natural language hint guiding derivation when source is a <code>DocumentHandle</code> or ambiguous file</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Emits:</strong> A <code>SchemaHandle</code>. <strong>Terminal?</strong> No.</p>
+<hr />
+<h3 id="select"><code>select</code><a class="headerlink" href="#select" title="Permanent link">&para;</a></h3>
+<p>Retrieval tool: filters a document down to a relevant subset of pages using a natural
+language prompt or explicit page numbers.</p>
+<p>Pure retrieval — no extraction, no OCR. Assumes the document was already ingested via
+<code>ingest_document</code>. Analogous to RAG retrieval but operating on document page structure.
+Use <code>select</code> before extraction tasks on large documents to prune context and reduce cost.</p>
+<p>Selection modes (in priority order):
+1. <strong>Explicit pages</strong> — <code>pages: [2, 3, 4]</code> selects exact 1-based page numbers.
+2. <strong>NL prompt</strong> — LLM identifies relevant page numbers from a page inventory.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select_financial_pages</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{ingest_report.output}}&quot;</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Pages</span><span class="nv"> </span><span class="s">containing</span><span class="nv"> </span><span class="s">financial</span><span class="nv"> </span><span class="s">tables,</span><span class="nv"> </span><span class="s">balance</span><span class="nv"> </span><span class="s">sheets,</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">annual</span><span class="nv"> </span><span class="s">projections&quot;</span>
+</code></pre></div>
+<p><strong>Emits:</strong> A <code>PageList</code> — a reduced view with provenance (original page numbers, sheet
+names, source document).</p>
+<hr />
+<h3 id="extract_from_texts"><code>extract_from_texts</code><a class="headerlink" href="#extract_from_texts" title="Permanent link">&para;</a></h3>
+<p>Structured extraction from document text. Given a selection of pages and an extraction
+prompt, returns a structured JSON object with the requested fields.</p>
+<p>No OCR is performed — assumes text is already available (i.e. <code>ingest_document</code> ran
+first). Prompt-driven: the caller describes what to extract; the tool returns a dict.</p>
+<p>Use for: narrative content, specific field values, dates, totals, named entities.
+Complements <code>extract_from_tables</code> — use this for prose and field values, that for
+structured row/column data. For extraction against a known field contract, prefer
+<code>extract_fields</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract_totals</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract_from_texts</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{select_financial_pages.output}}&quot;</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Extract</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">grand</span><span class="nv"> </span><span class="s">total,</span><span class="nv"> </span><span class="s">net</span><span class="nv"> </span><span class="s">profit,</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">report</span><span class="nv"> </span><span class="s">date&quot;</span>
+</code></pre></div>
+<p><strong>Emits:</strong> A JSON dict with the extracted fields, e.g.
+<code>{"grand_total": "£2.4M", "net_profit": "£0.8M", "report_date": "2024-03-31"}</code>.</p>
+<hr />
+<h3 id="extract_from_tables"><code>extract_from_tables</code><a class="headerlink" href="#extract_from_tables" title="Permanent link">&para;</a></h3>
+<p>Structured table extraction from document pages. Identifies tables and returns them as
+structured row/column/cell objects.</p>
+<p>No OCR is performed — assumes text (and image bytes for visual tables) are already
+available from <code>ingest_document</code>. Optional <code>selector</code> targets a specific table by name
+or description.</p>
+<p>Use for: financial statements, data tables, comparison matrices — anywhere the
+row/column structure matters. Complements <code>extract_from_texts</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract_income_statement</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract_from_tables</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{select_financial_pages.output}}&quot;</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span><span class="nt">selector</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;income</span><span class="nv"> </span><span class="s">statement&quot;</span><span class="w">    </span><span class="c1"># optional</span>
+</code></pre></div>
+<p><strong>Emits:</strong> A list of table objects, each with <code>headers</code>, <code>rows</code> (list of dicts mapping
+column name to cell value), <code>source_page</code>, and optional <code>sheet_name</code>.</p>
+<hr />
+<h3 id="extract_fields"><code>extract_fields</code><a class="headerlink" href="#extract_fields" title="Permanent link">&para;</a></h3>
+<p>Schema-bound field extraction from a document. Extracts values for every field declared
+in a <code>SchemaHandle</code>. Use this instead of <code>extract_from_texts</code> when you have a known
+field contract — the schema is explicit, the output is bounded to declared fields, and
+missing values are surfaced as a sentinel rather than hallucinated.</p>
+<p>Fields that cannot be located in the source document are emitted as the sentinel string
+<code>"__not_found__"</code> — a warning, not a hard error. A follow-on <code>llm_job</code> can review and
+resolve not-found fields before <code>export</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract_financials</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract_fields</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">    </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{select_statements.output}}&quot;</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">    </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{load_output_schema.output}}&quot;</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">    </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{ingest_spreading_manual.output}}&quot;</span><span class="w">   </span><span class="c1"># optional</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>document</code></td>
+<td>yes</td>
+<td><code>DocumentHandle</code>, page list, or text string to extract from</td>
+</tr>
+<tr>
+<td><code>schema</code></td>
+<td>yes</td>
+<td><code>SchemaHandle</code> declaring which fields to extract</td>
+</tr>
+<tr>
+<td><code>rules</code></td>
+<td>no</td>
+<td><code>DocumentHandle</code> containing extraction rules (e.g. a spreading manual). Per-field instructions are injected into the extraction context</td>
+</tr>
+<tr>
+<td><code>selector</code></td>
+<td>no</td>
+<td>Natural language hint to scope extraction to a region of the document</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Emits:</strong> <code>{field_name: extracted_value | "__not_found__"}</code> — only fields declared in
+the schema are present. No hallucinated fields. <strong>Terminal?</strong> No.</p>
+<hr />
+<h3 id="llm_job"><code>llm_job</code><a class="headerlink" href="#llm_job" title="Permanent link">&para;</a></h3>
+<p>Delegates a reasoning, extraction, classification, transformation, or generation task
+to an LLM.</p>
+<p>All inputs are injected into the LLM's context alongside the prompt. The prompt should
+be focused and single-purpose. For complex multi-step reasoning, prefer multiple
+chained <code>llm_job</code> tasks over a single large prompt.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reconcile</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llm_job</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">    </span><span class="nt">tables</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{extract_tables.output}}&quot;</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">    </span><span class="nt">supplement</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{summarize_supplement.output}}&quot;</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Identify</span><span class="nv"> </span><span class="s">any</span><span class="nv"> </span><span class="s">discrepancies</span><span class="nv"> </span><span class="s">between</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">two</span><span class="nv"> </span><span class="s">sources</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">revenue</span><span class="nv"> </span><span class="s">line</span><span class="nv"> </span><span class="s">items&quot;</span>
+</code></pre></div>
+<p><code>llm_job</code> is the primary workhorse of the DSL. Conditionals, validation, classification,
+and multi-source synthesis all belong here, not in the pipeline structure.</p>
+<p>Use <code>compute</code> instead of <code>llm_job</code> for any computation that is fully expressible in
+code (date arithmetic, ticker resolution, period labelling, currency normalization).</p>
+<p><strong>Emits:</strong> Text or structured data as directed by the prompt.</p>
+<hr />
+<h3 id="fetch_data"><code>fetch_data</code><a class="headerlink" href="#fetch_data" title="Permanent link">&para;</a></h3>
+<p>Retrieves structured data from a named external source.</p>
+<p>Source-specific parameters are passed through loosely. Built-in sources: <code>sec_edgar</code>,
+<code>market_data</code>, <code>company_info</code>, <code>exchange_rates</code>. Additional sources can be registered
+at runtime.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_filings</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_data</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">    </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sec_edgar</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">    </span><span class="nt">companies</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.companies}}&quot;</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">    </span><span class="nt">year</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.year}}&quot;</span>
+</code></pre></div>
+<p><strong>Emits:</strong> Raw structured data in the shape native to the source.</p>
+<hr />
+<h3 id="search_web"><code>search_web</code><a class="headerlink" href="#search_web" title="Permanent link">&para;</a></h3>
+<p>Performs one or more web searches and returns results as text snippets with URLs.</p>
+<p>Accepts a query string or a list of queries run in parallel. Prefer this over embedding
+search queries inside <code>llm_job</code> prompts — explicit retrieval improves auditability.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">find_context</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">search_web</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">    </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.company}}</span><span class="nv"> </span><span class="s">SEC</span><span class="nv"> </span><span class="s">investigation</span><span class="nv"> </span><span class="s">2025&quot;</span>
+</code></pre></div>
+<p><strong>Emits:</strong> A list of results, each with title, snippet, and source URL.</p>
+<hr />
+<h3 id="compute"><code>compute</code><a class="headerlink" href="#compute" title="Permanent link">&para;</a></h3>
+<p>Invokes a named deterministic function from the <code>FunctionRegistry</code>. This is the single
+DSL surface for all computations that are fully expressible in code — date arithmetic,
+ticker resolution, fiscal period logic, currency normalization. It does not accept code
+strings; the function definition lives in the operator's registry.</p>
+<p>The trust boundary mirrors <code>fetch_data</code>'s <code>source</code> registry: the model references
+registered function names; it cannot define or inject implementations.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Resolve fiscal periods for a given date</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resolve_periods</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compute</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">    </span><span class="nt">function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fiscal_period_logic</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">    </span><span class="nt">as_of_date</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.as_of_period}}&quot;</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">    </span><span class="nt">company</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.company}}&quot;</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="c1"># Resolve ticker symbol</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resolve_ticker</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compute</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="w">    </span><span class="nt">function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ticker_lookup</span>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="w">    </span><span class="nt">company</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.company}}&quot;</span>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="c1"># Normalize currency and scale</span>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">normalize_scale</span>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compute</span>
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a><span class="w">    </span><span class="nt">function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">financial_scale_normalize</span>
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a><span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{extract_financials.output.total_revenue}}&quot;</span>
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a><span class="w">    </span><span class="nt">source_currency</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{extract_financials.output.currency}}&quot;</span>
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a><span class="w">    </span><span class="nt">target_currency</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">USD</span>
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a><span class="w">    </span><span class="nt">target_scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">millions</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>function</code></td>
+<td>yes</td>
+<td>Registered function name. Runtime rejects unknown names</td>
+</tr>
+<tr>
+<td>(others)</td>
+<td>varies</td>
+<td>Additional key-value inputs forwarded to the function implementation</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Validation:</strong> A <code>compute</code> task must declare a <code>function</code> input key. This is checked
+at parse time. Registry membership is validated at execution time (consistent with how
+<code>fetch_data</code> handles its <code>source</code>).</p>
+<p><strong>Emits:</strong> Whatever the registered function returns. <strong>Terminal?</strong> No.</p>
+<h4 id="built-in-finance-functions">Built-in Finance Functions<a class="headerlink" href="#built-in-finance-functions" title="Permanent link">&para;</a></h4>
+<p>These functions are registered at startup in the default <code>FunctionRegistry</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Inputs</th>
+<th>Output</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fiscal_period_logic</code></td>
+<td><code>as_of_date: str</code>, <code>company: str</code></td>
+<td><code>list[PeriodDescriptor]</code></td>
+<td>Returns 1 or 3 period descriptors depending on whether <code>as_of_date</code> is a fiscal year-end</td>
+</tr>
+<tr>
+<td><code>ticker_lookup</code></td>
+<td><code>company: str</code></td>
+<td><code>str</code></td>
+<td>Resolves a company name to its primary exchange ticker</td>
+</tr>
+<tr>
+<td><code>financial_scale_normalize</code></td>
+<td><code>value</code>, <code>source_currency</code>, <code>target_currency</code>, <code>target_scale</code></td>
+<td><code>float</code></td>
+<td>Converts a financial value between currency and scale units</td>
+</tr>
+<tr>
+<td><code>period_label</code></td>
+<td><code>date: str</code>, <code>period_type: str</code></td>
+<td><code>str</code></td>
+<td>Produces a standardised period label (e.g. <code>"Q1 2025"</code>, <code>"FY 2024"</code>)</td>
+</tr>
+<tr>
+<td><code>fiscal_year_end</code></td>
+<td><code>company: str</code></td>
+<td><code>str</code></td>
+<td>Returns the fiscal year-end as <code>"MM-DD"</code> for a given company</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="store"><code>store</code><a class="headerlink" href="#store" title="Permanent link">&para;</a></h3>
+<p>Persists a value to the session blackboard under a named key.</p>
+<p>Accepts any value. Subsequent pipelines in the same session read the value via
+<code>{{session.key}}</code>. Overwrites existing keys unless <code>append: true</code>. Blackboard writes
+are always <strong>explicit</strong> — no tool writes to the session silently.</p>
+<p>The <code>store</code> key must match an entry in the sub-pipeline's <code>stores</code> list in the plan.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">persist_financials</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">store</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">    </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">company_financials</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{fetch_financials.output}}&quot;</span>
+</code></pre></div>
+<p><strong>Emits:</strong> Confirmation of the stored key and a value summary.</p>
+<hr />
+<h3 id="export"><code>export</code><a class="headerlink" href="#export" title="Permanent link">&para;</a></h3>
+<p>Produces a final output artifact in a specified format.</p>
+<p><code>export</code> is a terminal tool and should always be a leaf node with no downstream
+dependents. Supported formats: <code>markdown</code>, <code>pdf</code>, <code>csv</code>, <code>xlsx</code>, <code>json</code>.</p>
+<p><strong>Schema-aware mode (v1.4):</strong> When an optional <code>schema</code> input is provided, <code>export</code>
+validates the content against the schema before writing. Missing required fields raise a
+<code>ContractError</code>. Extra fields are dropped with a warning (set <code>strict: true</code> to raise
+instead).</p>
+<p><strong>Populate mode:</strong> When <code>schema.raw</code> is present and the output format matches the
+raw source type (e.g. both XLSX), <code>export</code> operates in <em>populate</em> mode — values are
+written into the original template file rather than generating a new file from scratch.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Basic export (unchanged from v1.3)</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">produce_report</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">    </span><span class="nt">content</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{final_summary.output}}&quot;</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">markdown</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;q3_analysis_report&quot;</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="c1"># Schema-validated export with populate mode</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">produce_output</span>
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export</span>
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a><span class="w">    </span><span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{extract_financials.output}}&quot;</span>
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a><span class="w">    </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{load_output_schema.output}}&quot;</span>
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a><span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xlsx</span>
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a><span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;q1_2025_spreading&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>content</code> / <code>data</code></td>
+<td>no</td>
+<td>Content to export (<code>data</code> takes precedence when both supplied)</td>
+</tr>
+<tr>
+<td><code>format</code></td>
+<td>no</td>
+<td><code>markdown</code>, <code>json</code>, <code>csv</code>, <code>xlsx</code>, <code>pdf</code>. Default: <code>markdown</code></td>
+</tr>
+<tr>
+<td><code>filename</code></td>
+<td>no</td>
+<td>Base filename without extension</td>
+</tr>
+<tr>
+<td><code>schema</code></td>
+<td>no</td>
+<td><code>SchemaHandle</code>. When present, validates conformance and enables populate mode</td>
+</tr>
+<tr>
+<td><code>strict</code></td>
+<td>no</td>
+<td>When <code>true</code>, extra fields raise <code>ContractError</code> instead of being dropped. Default: <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Emits:</strong> A file handle or download reference for the produced artifact. <strong>Terminal?</strong> Yes.</p>
+<hr />
+<h2 id="fan-out-with-parallel_over">Fan-out with <code>parallel_over</code><a class="headerlink" href="#fan-out-with-parallel_over" title="Permanent link">&para;</a></h2>
+<p>Runs a task once per element in a list with explicit per-item parallelism. The runtime
+fans out, runs instances in parallel, and collects results into a list.</p>
+<p>In most cases, passing a list directly to a tool is sufficient — tools handle lists
+internally. Use <code>parallel_over</code> when downstream tasks need to reference per-item
+results individually.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">assess_per_company</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llm_job</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="nt">parallel_over</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.companies}}&quot;</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">    </span><span class="nt">company</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{item}}&quot;</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">    </span><span class="nt">financials</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{fetch_financials.output}}&quot;</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Assess</span><span class="nv"> </span><span class="s">credit</span><span class="nv"> </span><span class="s">risk</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">{{item}}</span><span class="nv"> </span><span class="s">under</span><span class="nv"> </span><span class="s">current</span><span class="nv"> </span><span class="s">scenario&quot;</span>
+</code></pre></div>
+<p>The output of a <code>parallel_over</code> task is always a list, one element per input item.</p>
+<p><strong>Runtime-resolved fan-out:</strong> When the list to fan over is produced by a preceding task
+(e.g. <code>compute</code> returning a list of <code>PeriodDescriptor</code>s), <code>parallel_over</code> resolves at
+execution time. This is the standard pattern for dynamic fan-out:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resolve_periods</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compute</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="w">    </span><span class="nt">function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fiscal_period_logic</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="w">    </span><span class="nt">as_of_date</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.as_of_date}}&quot;</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="w">    </span><span class="nt">company</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.company}}&quot;</span>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_per_period</span>
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_data</span>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="w">  </span><span class="nt">parallel_over</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{resolve_periods.output}}&quot;</span>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a><span class="w">    </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sec_edgar</span>
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a><span class="w">    </span><span class="nt">period</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{item}}&quot;</span>
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a><span class="w">    </span><span class="nt">company</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.company}}&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="explicit-barrier-with-await">Explicit Barrier with <code>await</code><a class="headerlink" href="#explicit-barrier-with-await" title="Permanent link">&para;</a></h2>
+<p>For the rare case where a task must wait on another without consuming its output:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">generate_report</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llm_job</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">  </span><span class="nt">await</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">audit_log</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="w">    </span><span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{reconcile.output}}&quot;</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Generate</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">final</span><span class="nv"> </span><span class="s">analyst</span><span class="nv"> </span><span class="s">report&quot;</span>
+</code></pre></div>
+<p>Use sparingly. Frequent use of <code>await</code> indicates the pipeline structure needs
+revisiting.</p>
+<hr />
+<h2 id="canonical-archetype-financial-spreading">Canonical Archetype: Financial Spreading<a class="headerlink" href="#canonical-archetype-financial-spreading" title="Permanent link">&para;</a></h2>
+<p>The financial spreading archetype is the reference pattern for schema-guided document
+extraction. It uses <code>compute</code> (fiscal period resolution), <code>load_schema</code> (template
+schema derivation), <code>extract_fields</code> (schema-bound extraction), and <code>export</code> (populate
+mode).</p>
+<p>Canonical graph shape:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>compute (fiscal_period_logic)
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>    └──► fetch_data (sec_edgar, parallel_over periods)
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>              └──► ingest_document (template)
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>              └──► ingest_document (spreading manual)
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>              └──► load_schema (from template DocumentHandle)
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>                        └──► select (financial statement pages)
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>                                  └──► extract_fields (schema + rules)
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>                                            └──► export (schema, format: xlsx)
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>                                            └──► export (format: markdown)
+</code></pre></div>
+<p>Example pipeline fragment:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="nt">pipeline</span><span class="p">:</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">financial_spreading</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">  </span><span class="nt">goal</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Extract</span><span class="nv"> </span><span class="s">financial</span><span class="nv"> </span><span class="s">statement</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">into</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">standardised</span><span class="nv"> </span><span class="s">spreading</span><span class="nv"> </span><span class="s">template&quot;</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">    </span><span class="nt">company</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Apple</span>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="w">    </span><span class="nt">as_of_date</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2024-09-30&quot;</span>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">    </span><span class="nt">report_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.report_path}}&quot;</span>
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="w">    </span><span class="nt">template_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.template_path}}&quot;</span>
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a><span class="w">    </span><span class="nt">manual_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.manual_path}}&quot;</span>
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>
+<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a><span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a>
+<a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resolve_periods</span>
+<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compute</span>
+<a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a><span class="w">        </span><span class="nt">function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fiscal_period_logic</span>
+<a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a><span class="w">        </span><span class="nt">as_of_date</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.as_of_date}}&quot;</span>
+<a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a><span class="w">        </span><span class="nt">company</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.company}}&quot;</span>
+<a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a>
+<a id="__codelineno-28-20" name="__codelineno-28-20" href="#__codelineno-28-20"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingest_report</span>
+<a id="__codelineno-28-21" name="__codelineno-28-21" href="#__codelineno-28-21"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingest_document</span>
+<a id="__codelineno-28-22" name="__codelineno-28-22" href="#__codelineno-28-22"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-28-23" name="__codelineno-28-23" href="#__codelineno-28-23"></a><span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.report_path}}&quot;</span>
+<a id="__codelineno-28-24" name="__codelineno-28-24" href="#__codelineno-28-24"></a>
+<a id="__codelineno-28-25" name="__codelineno-28-25" href="#__codelineno-28-25"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingest_template</span>
+<a id="__codelineno-28-26" name="__codelineno-28-26" href="#__codelineno-28-26"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingest_document</span>
+<a id="__codelineno-28-27" name="__codelineno-28-27" href="#__codelineno-28-27"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-28-28" name="__codelineno-28-28" href="#__codelineno-28-28"></a><span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.template_path}}&quot;</span>
+<a id="__codelineno-28-29" name="__codelineno-28-29" href="#__codelineno-28-29"></a>
+<a id="__codelineno-28-30" name="__codelineno-28-30" href="#__codelineno-28-30"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingest_manual</span>
+<a id="__codelineno-28-31" name="__codelineno-28-31" href="#__codelineno-28-31"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingest_document</span>
+<a id="__codelineno-28-32" name="__codelineno-28-32" href="#__codelineno-28-32"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-28-33" name="__codelineno-28-33" href="#__codelineno-28-33"></a><span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.manual_path}}&quot;</span>
+<a id="__codelineno-28-34" name="__codelineno-28-34" href="#__codelineno-28-34"></a>
+<a id="__codelineno-28-35" name="__codelineno-28-35" href="#__codelineno-28-35"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load_output_schema</span>
+<a id="__codelineno-28-36" name="__codelineno-28-36" href="#__codelineno-28-36"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load_schema</span>
+<a id="__codelineno-28-37" name="__codelineno-28-37" href="#__codelineno-28-37"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-28-38" name="__codelineno-28-38" href="#__codelineno-28-38"></a><span class="w">        </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{ingest_template.output}}&quot;</span>
+<a id="__codelineno-28-39" name="__codelineno-28-39" href="#__codelineno-28-39"></a><span class="w">        </span><span class="nt">hint</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Column</span><span class="nv"> </span><span class="s">headers</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">first</span><span class="nv"> </span><span class="s">sheet</span><span class="nv"> </span><span class="s">define</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">field</span><span class="nv"> </span><span class="s">names&quot;</span>
+<a id="__codelineno-28-40" name="__codelineno-28-40" href="#__codelineno-28-40"></a>
+<a id="__codelineno-28-41" name="__codelineno-28-41" href="#__codelineno-28-41"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select_statements</span>
+<a id="__codelineno-28-42" name="__codelineno-28-42" href="#__codelineno-28-42"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<a id="__codelineno-28-43" name="__codelineno-28-43" href="#__codelineno-28-43"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-28-44" name="__codelineno-28-44" href="#__codelineno-28-44"></a><span class="w">        </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{ingest_report.output}}&quot;</span>
+<a id="__codelineno-28-45" name="__codelineno-28-45" href="#__codelineno-28-45"></a><span class="w">        </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Pages</span><span class="nv"> </span><span class="s">containing</span><span class="nv"> </span><span class="s">income</span><span class="nv"> </span><span class="s">statement,</span><span class="nv"> </span><span class="s">balance</span><span class="nv"> </span><span class="s">sheet,</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">cash</span><span class="nv"> </span><span class="s">flow</span><span class="nv"> </span><span class="s">statement&quot;</span>
+<a id="__codelineno-28-46" name="__codelineno-28-46" href="#__codelineno-28-46"></a>
+<a id="__codelineno-28-47" name="__codelineno-28-47" href="#__codelineno-28-47"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract_financials</span>
+<a id="__codelineno-28-48" name="__codelineno-28-48" href="#__codelineno-28-48"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract_fields</span>
+<a id="__codelineno-28-49" name="__codelineno-28-49" href="#__codelineno-28-49"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-28-50" name="__codelineno-28-50" href="#__codelineno-28-50"></a><span class="w">        </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{select_statements.output}}&quot;</span>
+<a id="__codelineno-28-51" name="__codelineno-28-51" href="#__codelineno-28-51"></a><span class="w">        </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{load_output_schema.output}}&quot;</span>
+<a id="__codelineno-28-52" name="__codelineno-28-52" href="#__codelineno-28-52"></a><span class="w">        </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{ingest_manual.output}}&quot;</span>
+<a id="__codelineno-28-53" name="__codelineno-28-53" href="#__codelineno-28-53"></a>
+<a id="__codelineno-28-54" name="__codelineno-28-54" href="#__codelineno-28-54"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">produce_xlsx</span>
+<a id="__codelineno-28-55" name="__codelineno-28-55" href="#__codelineno-28-55"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export</span>
+<a id="__codelineno-28-56" name="__codelineno-28-56" href="#__codelineno-28-56"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-28-57" name="__codelineno-28-57" href="#__codelineno-28-57"></a><span class="w">        </span><span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{extract_financials.output}}&quot;</span>
+<a id="__codelineno-28-58" name="__codelineno-28-58" href="#__codelineno-28-58"></a><span class="w">        </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{load_output_schema.output}}&quot;</span>
+<a id="__codelineno-28-59" name="__codelineno-28-59" href="#__codelineno-28-59"></a><span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xlsx</span>
+<a id="__codelineno-28-60" name="__codelineno-28-60" href="#__codelineno-28-60"></a><span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;spreading_output&quot;</span>
+<a id="__codelineno-28-61" name="__codelineno-28-61" href="#__codelineno-28-61"></a>
+<a id="__codelineno-28-62" name="__codelineno-28-62" href="#__codelineno-28-62"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">produce_markdown</span>
+<a id="__codelineno-28-63" name="__codelineno-28-63" href="#__codelineno-28-63"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export</span>
+<a id="__codelineno-28-64" name="__codelineno-28-64" href="#__codelineno-28-64"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-28-65" name="__codelineno-28-65" href="#__codelineno-28-65"></a><span class="w">        </span><span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{extract_financials.output}}&quot;</span>
+<a id="__codelineno-28-66" name="__codelineno-28-66" href="#__codelineno-28-66"></a><span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">markdown</span>
+<a id="__codelineno-28-67" name="__codelineno-28-67" href="#__codelineno-28-67"></a><span class="w">        </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;spreading_output&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="full-example-data-acquisition">Full Example — Data Acquisition<a class="headerlink" href="#full-example-data-acquisition" title="Permanent link">&para;</a></h2>
+<p>The <code>data_acquisition</code> sub-pipeline from the Gulf disruption assessment plan,
+showing session blackboard persistence via <code>store</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="nt">pipeline</span><span class="p">:</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data_acquisition</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">  </span><span class="nt">goal</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Fetch</span><span class="nv"> </span><span class="s">company</span><span class="nv"> </span><span class="s">financials,</span><span class="nv"> </span><span class="s">energy</span><span class="nv"> </span><span class="s">exposure,</span><span class="nv"> </span><span class="s">market</span><span class="nv"> </span><span class="s">data,</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">web</span><span class="nv"> </span><span class="s">context&quot;</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="w">    </span><span class="nt">companies</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Google</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Apple</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Microsoft</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Agilent</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="w">    </span><span class="nt">year</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2025</span>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_financials</span>
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_data</span>
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a><span class="w">        </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">company_info</span>
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a><span class="w">        </span><span class="nt">companies</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.companies}}&quot;</span>
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a><span class="w">        </span><span class="nt">fields</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">liquidity_ratios</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">debt_structure</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">credit_ratings</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">revenue_breakdown</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a><span class="w">        </span><span class="nt">year</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.year}}&quot;</span>
+<a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>
+<a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_energy_exposure</span>
+<a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_data</span>
+<a id="__codelineno-29-20" name="__codelineno-29-20" href="#__codelineno-29-20"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-29-21" name="__codelineno-29-21" href="#__codelineno-29-21"></a><span class="w">        </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">company_info</span>
+<a id="__codelineno-29-22" name="__codelineno-29-22" href="#__codelineno-29-22"></a><span class="w">        </span><span class="nt">companies</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{pipeline.inputs.companies}}&quot;</span>
+<a id="__codelineno-29-23" name="__codelineno-29-23" href="#__codelineno-29-23"></a><span class="w">        </span><span class="nt">fields</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">energy_cost_pct_revenue</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">supply_chain_geography</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">energy_procurement</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-29-24" name="__codelineno-29-24" href="#__codelineno-29-24"></a>
+<a id="__codelineno-29-25" name="__codelineno-29-25" href="#__codelineno-29-25"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_energy_markets</span>
+<a id="__codelineno-29-26" name="__codelineno-29-26" href="#__codelineno-29-26"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_data</span>
+<a id="__codelineno-29-27" name="__codelineno-29-27" href="#__codelineno-29-27"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-29-28" name="__codelineno-29-28" href="#__codelineno-29-28"></a><span class="w">        </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">market_data</span>
+<a id="__codelineno-29-29" name="__codelineno-29-29" href="#__codelineno-29-29"></a><span class="w">        </span><span class="nt">markets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">crude_oil</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">natural_gas</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">energy_risk_premium</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-29-30" name="__codelineno-29-30" href="#__codelineno-29-30"></a><span class="w">        </span><span class="nt">fields</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">price</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">volatility</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">forward_curve</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-29-31" name="__codelineno-29-31" href="#__codelineno-29-31"></a>
+<a id="__codelineno-29-32" name="__codelineno-29-32" href="#__codelineno-29-32"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">search_disruption_context</span>
+<a id="__codelineno-29-33" name="__codelineno-29-33" href="#__codelineno-29-33"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">search_web</span>
+<a id="__codelineno-29-34" name="__codelineno-29-34" href="#__codelineno-29-34"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-29-35" name="__codelineno-29-35" href="#__codelineno-29-35"></a><span class="w">        </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Gulf</span><span class="nv"> </span><span class="s">energy</span><span class="nv"> </span><span class="s">export</span><span class="nv"> </span><span class="s">disruption</span><span class="nv"> </span><span class="s">logistics</span><span class="nv"> </span><span class="s">bottleneck</span><span class="nv"> </span><span class="s">2025&quot;</span>
+<a id="__codelineno-29-36" name="__codelineno-29-36" href="#__codelineno-29-36"></a>
+<a id="__codelineno-29-37" name="__codelineno-29-37" href="#__codelineno-29-37"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">store_financials</span>
+<a id="__codelineno-29-38" name="__codelineno-29-38" href="#__codelineno-29-38"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">store</span>
+<a id="__codelineno-29-39" name="__codelineno-29-39" href="#__codelineno-29-39"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-29-40" name="__codelineno-29-40" href="#__codelineno-29-40"></a><span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">company_financials</span>
+<a id="__codelineno-29-41" name="__codelineno-29-41" href="#__codelineno-29-41"></a><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{fetch_financials.output}}&quot;</span>
+<a id="__codelineno-29-42" name="__codelineno-29-42" href="#__codelineno-29-42"></a>
+<a id="__codelineno-29-43" name="__codelineno-29-43" href="#__codelineno-29-43"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">store_energy_exposure</span>
+<a id="__codelineno-29-44" name="__codelineno-29-44" href="#__codelineno-29-44"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">store</span>
+<a id="__codelineno-29-45" name="__codelineno-29-45" href="#__codelineno-29-45"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-29-46" name="__codelineno-29-46" href="#__codelineno-29-46"></a><span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">energy_exposure</span>
+<a id="__codelineno-29-47" name="__codelineno-29-47" href="#__codelineno-29-47"></a><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{fetch_energy_exposure.output}}&quot;</span>
+<a id="__codelineno-29-48" name="__codelineno-29-48" href="#__codelineno-29-48"></a>
+<a id="__codelineno-29-49" name="__codelineno-29-49" href="#__codelineno-29-49"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">store_energy_markets</span>
+<a id="__codelineno-29-50" name="__codelineno-29-50" href="#__codelineno-29-50"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">store</span>
+<a id="__codelineno-29-51" name="__codelineno-29-51" href="#__codelineno-29-51"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-29-52" name="__codelineno-29-52" href="#__codelineno-29-52"></a><span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">energy_markets</span>
+<a id="__codelineno-29-53" name="__codelineno-29-53" href="#__codelineno-29-53"></a><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{fetch_energy_markets.output}}&quot;</span>
+<a id="__codelineno-29-54" name="__codelineno-29-54" href="#__codelineno-29-54"></a>
+<a id="__codelineno-29-55" name="__codelineno-29-55" href="#__codelineno-29-55"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">store_disruption_context</span>
+<a id="__codelineno-29-56" name="__codelineno-29-56" href="#__codelineno-29-56"></a><span class="w">      </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">store</span>
+<a id="__codelineno-29-57" name="__codelineno-29-57" href="#__codelineno-29-57"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-29-58" name="__codelineno-29-58" href="#__codelineno-29-58"></a><span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disruption_context</span>
+<a id="__codelineno-29-59" name="__codelineno-29-59" href="#__codelineno-29-59"></a><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{search_disruption_context.output}}&quot;</span>
+</code></pre></div>
+<h3 id="inferred-dag">Inferred DAG<a class="headerlink" href="#inferred-dag" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>fetch_financials ──────────► store_financials
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>fetch_energy_exposure ─────► store_energy_exposure
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>fetch_energy_markets ──────► store_energy_markets
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>search_disruption_context ─► store_disruption_context
+</code></pre></div>
+<p>All four fetch/search tasks are roots — they run in parallel immediately. Each <code>store</code>
+task runs as soon as its upstream task completes.</p>
+<hr />
+<h2 id="design-principles">Design Principles<a class="headerlink" href="#design-principles" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Topology only.</strong> The DSL encodes execution order and data flow, not logic or
+   reasoning.</li>
+<li><strong>Two levels of composition.</strong> Complex goals decompose into plans; plans decompose
+   into pipelines; pipelines decompose into tasks. Each level has a hard complexity
+   ceiling.</li>
+<li><strong>Dependencies are implicit.</strong> Inferred from <code>{{template}}</code> references within
+   pipelines, and from <code>reads</code>/<code>stores</code> relationships between sub-pipelines.</li>
+<li><strong>Logic lives in <code>llm_job</code>.</strong> Conditionals, validation, and decisions belong in
+   natural language prompts, not DSL constructs.</li>
+<li><strong>Deterministic computation lives in <code>compute</code>.</strong> Any rule fully expressible in code
+   belongs in a registered function, not an <code>llm_job</code> prompt. This makes computation
+   auditable, testable, and cheaper to run.</li>
+<li><strong>Schema is explicit.</strong> Field definitions are declared as a <code>SchemaHandle</code> in the
+   pipeline graph, never embedded invisibly in a prompt string.</li>
+<li><strong>Tools are polymorphic.</strong> Tools interpret inputs contextually. No type coercion or
+   format hints required.</li>
+<li><strong>Flat by default.</strong> A linear list of tasks with reference wiring is the normal
+   form. Avoid nesting.</li>
+<li><strong>Parallelism is automatic.</strong> Tasks with satisfied inputs run concurrently. No
+   explicit parallel blocks needed in most cases.</li>
+<li><strong>Scope before processing.</strong> Use <code>select</code> to reduce document scope before passing to
+    <code>extract_from_tables</code>, <code>extract_from_texts</code>, <code>extract_fields</code>, or <code>llm_job</code>.</li>
+<li><strong>Persistence is explicit.</strong> Nothing writes to the session blackboard unless a
+    <code>store</code> task is present. <code>store</code> keys must match the sub-pipeline's <code>stores</code>
+    declaration in the plan.</li>
+<li><strong>Session references are declared.</strong> <code>{{session.key}}</code> references must correspond
+    to keys listed in the sub-pipeline's <code>reads</code>. Undeclared reads are invalid.</li>
+</ol>
+<hr />
+<h2 id="what-this-dsl-intentionally-omits">What This DSL Intentionally Omits<a class="headerlink" href="#what-this-dsl-intentionally-omits" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Conditionals / branching</td>
+<td>Handled inside <code>llm_job</code> prompts</td>
+</tr>
+<tr>
+<td>Loops / iteration (non-fan-out)</td>
+<td>Handled inside <code>llm_job</code> or as <code>parallel_over</code></td>
+</tr>
+<tr>
+<td>Error handling / fallback paths</td>
+<td>Runtime concern, not DSL concern</td>
+</tr>
+<tr>
+<td>Variable assignment</td>
+<td>Outputs referenced directly via templates</td>
+</tr>
+<tr>
+<td>Type constraints on inputs</td>
+<td>Tools interpret inputs polymorphically</td>
+</tr>
+<tr>
+<td>Implicit blackboard writes</td>
+<td>All persistence is via explicit <code>store</code> tasks</td>
+</tr>
+<tr>
+<td>Inline function definitions</td>
+<td>All compute logic lives in the <code>FunctionRegistry</code>; the DSL only names functions</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="tool-summary">Tool Summary<a class="headerlink" href="#tool-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+<th>Terminal?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ingest_document</code></td>
+<td>Load files/URLs and fully resolve (incl. OCR) into a <code>DocumentHandle</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>load_schema</code></td>
+<td>Load or derive a <code>SchemaHandle</code> from a file, URL, <code>DocumentHandle</code>, or registry name</td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>select</code></td>
+<td>Retrieval: filter document to relevant pages by NL prompt or page numbers</td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>extract_from_texts</code></td>
+<td>Structured extraction of specific fields from page text (prompt-driven)</td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>extract_from_tables</code></td>
+<td>Structured extraction of row/column/cell table data</td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>extract_fields</code></td>
+<td>Schema-bound field extraction from a document (emits <code>"__not_found__"</code> for missing fields)</td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>llm_job</code></td>
+<td>LLM reasoning, extraction, synthesis, generation</td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>fetch_data</code></td>
+<td>Retrieve structured data from external sources</td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>search_web</code></td>
+<td>Web search, returns snippets and URLs</td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>compute</code></td>
+<td>Invoke a named deterministic function from the <code>FunctionRegistry</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>store</code></td>
+<td>Persist a value to the session blackboard</td>
+<td>yes*</td>
+</tr>
+<tr>
+<td><code>export</code></td>
+<td>Produce a file artifact (md, pdf, csv, xlsx, json); schema-aware in v1.4</td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>extract_chart</code></td>
+<td>Extract chart data from documents (stub)</td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>classify_page</code></td>
+<td>Page classification to guide extraction (reserved)</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+<p>*<code>store</code> is logically terminal but may appear mid-pipeline if persistence is needed
+before further processing steps.</p>
+<blockquote>
+<p>Note: <code>extract_chart</code> is a stub. <code>classify_page</code> is reserved in the DSL but not
+registered by default — implement and register a <code>BaseTool</code> to use it.</p>
+</blockquote>
+<hr />
+<h2 id="version-history">Version History<a class="headerlink" href="#version-history" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0</td>
+<td>Initial spec: pipeline structure, tool registry, template syntax</td>
+</tr>
+<tr>
+<td>1.1</td>
+<td>Added <code>pipeline.inputs</code> block; polymorphic tool philosophy</td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>Added full tool registry: <code>select</code>, <code>extract_text</code>, <code>search_web</code>, <code>store</code>, <code>export</code></td>
+</tr>
+<tr>
+<td>1.3</td>
+<td>Added two-level Planner/Generator architecture; Plan document schema; task tokens <code>[PLAN]</code> / <code>[PIPELINE]</code>; session <code>reads</code>/<code>stores</code> contract; complexity budget guidance</td>
+</tr>
+<tr>
+<td>1.4 (doc rename)</td>
+<td>Renamed and clarified document tools: <code>load_document</code> → <code>ingest_document</code> (eager OCR); <code>extract_text</code> → <code>extract_from_texts</code>; <code>extract_table</code> → <code>extract_from_tables</code>; <code>select</code> role clarified as pure retrieval</td>
+</tr>
+<tr>
+<td>1.4 (this revision)</td>
+<td><strong>Schema as first-class object:</strong> <code>SchemaHandle</code>, <code>FieldDefinition</code>, <code>PeriodDescriptor</code> handle types; <code>load_schema</code> tool; <code>extract_fields</code> tool; schema-aware <code>export</code> with conformance validation and populate mode. <strong>Deterministic compute:</strong> <code>compute</code> tool; <code>FunctionRegistry</code>; built-in finance functions (<code>fiscal_period_logic</code>, <code>ticker_lookup</code>, <code>financial_scale_normalize</code>, <code>period_label</code>, <code>fiscal_year_end</code>). <strong>New design principles</strong> (5, 6). <strong>Financial spreading archetype.</strong> Runtime-resolved fan-out pattern. All changes additive — no v1.3 pipelines require modification.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><strong>DSL Version:</strong> 1.4<br />
+<strong>Status:</strong> Active<br />
+<strong>Intended consumers:</strong> Fine-tuned small language model (Planner + Generator modes),
+DAG runtime executor (consumer)</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      © 2026 Trellis contributors
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/ciarandavies7191/trellis" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

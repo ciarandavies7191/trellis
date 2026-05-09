@@ -1,0 +1,2967 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Modular agentic pipeline system for document and data workflows">
+      
+      
+      
+        <link rel="canonical" href="https://ciarandavies7191.github.io/trellis/tools-index/">
+      
+      
+        <link rel="prev" href="../PIPELINE-DSL/">
+      
+      
+        <link rel="next" href="../interfaces-api/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/trellis-full.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Tools & Registry - Trellis</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tools-registry-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Trellis" class="md-header__button md-logo" aria-label="Trellis" data-md-component="logo">
+      
+  <img src="../assets/trellis-full.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Trellis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Tools & Registry
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ciarandavies7191/trellis" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Trellis" class="md-nav__button md-logo" aria-label="Trellis" data-md-component="logo">
+      
+  <img src="../assets/trellis-full.svg" alt="logo">
+
+    </a>
+    Trellis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ciarandavies7191/trellis" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PIPELINE-DSL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline DSL Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools & Registry
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools & Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ingest_document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest_document
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#select" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        select
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extract_from_texts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_from_texts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extract_from_tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_from_tables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extract_fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extract_chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_chart
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#load_schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        load_schema
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#llm_job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        llm_job
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fetch_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fetch_data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="fetch_data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sec-edgar-mode-source-sec_edgar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SEC EDGAR mode (source: sec_edgar)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-url-mode-source-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP URL mode (source: url)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#search_web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        search_web
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        compute
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        store
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registry-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registry mechanics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Registry mechanics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-tools-are-discovered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How tools are discovered
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-invocation-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How invocation works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registering-a-custom-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a custom tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registering-a-plain-callable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a plain callable
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interfaces
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Interfaces
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interfaces-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API (REST)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interfaces-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interfaces-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials & Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials & Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/web-search-summarize/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Search & Summarization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/pdf-ingest-extract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PDF Ingest & Extraction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/sec-field-extraction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SEC Filing Extraction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/export-results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exporting Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operations-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration & Environment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operations-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution Backends & Run Queue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operations-blackboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Persistence & Multi-tenancy (Blackboard)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../extensibility-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extensibility
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development & Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting & FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog & Versioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security & Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../support/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    License & Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ingest_document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest_document
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#select" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        select
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extract_from_texts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_from_texts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extract_from_tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_from_tables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extract_fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extract_chart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_chart
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#load_schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        load_schema
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#llm_job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        llm_job
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fetch_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fetch_data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="fetch_data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sec-edgar-mode-source-sec_edgar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SEC EDGAR mode (source: sec_edgar)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-url-mode-source-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP URL mode (source: url)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#search_web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        search_web
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        compute
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        store
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registry-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registry mechanics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Registry mechanics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-tools-are-discovered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How tools are discovered
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-invocation-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How invocation works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registering-a-custom-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a custom tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registering-a-plain-callable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a plain callable
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="tools-registry-reference">Tools &amp; Registry Reference<a class="headerlink" href="#tools-registry-reference" title="Permanent link">&para;</a></h1>
+<p>Built-in tool catalog and the async discovery/registration system that connects tools to the pipeline executor.</p>
+<hr />
+<h2 id="quick-reference">Quick reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>DSL name</th>
+<th>LLM required</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#ingest_document">ingest_document</a></td>
+<td><code>ingest_document</code></td>
+<td>For OCR only</td>
+<td>Load and parse a document; OCR any scanned pages</td>
+</tr>
+<tr>
+<td><a href="#select">select</a></td>
+<td><code>select</code></td>
+<td>For NL selection</td>
+<td>Filter a document to relevant pages</td>
+</tr>
+<tr>
+<td><a href="#extract_from_texts">extract_from_texts</a></td>
+<td><code>extract_from_texts</code></td>
+<td>Yes</td>
+<td>Freeform field extraction from document text</td>
+</tr>
+<tr>
+<td><a href="#extract_from_tables">extract_from_tables</a></td>
+<td><code>extract_from_tables</code></td>
+<td>Yes</td>
+<td>Row/column/cell extraction from tabular data</td>
+</tr>
+<tr>
+<td><a href="#extract_fields">extract_fields</a></td>
+<td><code>extract_fields</code></td>
+<td>Yes</td>
+<td>Schema-bound typed field extraction</td>
+</tr>
+<tr>
+<td><a href="#extract_chart">extract_chart</a></td>
+<td><code>extract_chart</code></td>
+<td>—</td>
+<td>Chart data extraction (stub)</td>
+</tr>
+<tr>
+<td><a href="#load_schema">load_schema</a></td>
+<td><code>load_schema</code></td>
+<td>No</td>
+<td>Resolve a field schema from file, dict, or document</td>
+</tr>
+<tr>
+<td><a href="#llm_job">llm_job</a></td>
+<td><code>llm_job</code></td>
+<td>Yes</td>
+<td>General LLM reasoning and generation</td>
+</tr>
+<tr>
+<td><a href="#fetch_data">fetch_data</a></td>
+<td><code>fetch_data</code></td>
+<td>No</td>
+<td>Fetch SEC EDGAR filings or HTTP URLs</td>
+</tr>
+<tr>
+<td><a href="#search_web">search_web</a></td>
+<td><code>search_web</code></td>
+<td>No</td>
+<td>Web search via DuckDuckGo or SerpAPI</td>
+</tr>
+<tr>
+<td><a href="#compute">compute</a></td>
+<td><code>compute</code></td>
+<td>No</td>
+<td>Invoke a registered deterministic function</td>
+</tr>
+<tr>
+<td><a href="#store">store</a></td>
+<td><code>store</code></td>
+<td>No</td>
+<td>Persist a value to the session blackboard</td>
+</tr>
+<tr>
+<td><a href="#export">export</a></td>
+<td><code>export</code></td>
+<td>No</td>
+<td>Write output to JSON, Markdown, CSV, or XLSX</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ingest_document">ingest_document<a class="headerlink" href="#ingest_document" title="Permanent link">&para;</a></h2>
+<p>Loads a document and fully populates the text of every page. For digital PDFs the native text layer is extracted. For scanned pages (image coverage above the threshold), a vision LLM is called to OCR each page. After this tool runs, all pages in the returned <code>DocumentHandle</code> are ready for <code>select</code>, <code>extract_from_texts</code>, and <code>extract_fields</code> — those tools never need to consider OCR.</p>
+<p><strong>Inputs</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>path</code></td>
+<td>str, URL, list, or <code>DocumentHandle</code></td>
+<td>Yes</td>
+<td>—</td>
+<td>File path, HTTPS URL, list of paths, or the output dict of <code>fetch_data</code></td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>INGEST_OCR_MODEL</code> env var or <code>openai/gpt-4o</code></td>
+<td>LiteLLM model string used for OCR (ignored for native-text pages)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output</strong> — <code>DocumentHandle</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;https://example.com/report.pdf&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;PDF&quot;</span><span class="p">,</span>                    <span class="c1"># PDF | TEXT | IMAGE | XLSX | DOCX | UNKNOWN</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="s2">&quot;page_count&quot;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="s2">&quot;is_scanned&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>                <span class="c1"># True if any page was OCR&#39;d</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="s2">&quot;pages&quot;</span><span class="p">:</span> <span class="p">[</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="p">{</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>            <span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>                <span class="c1"># 1-based</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Annual Report...&quot;</span><span class="p">,</span> <span class="c1"># populated for every page</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>            <span class="s2">&quot;is_scanned&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>            <span class="s2">&quot;sheet_name&quot;</span><span class="p">:</span> <span class="kc">None</span>          <span class="c1"># set for XLSX sheets</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="p">},</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="c1"># ...</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="p">]</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Environment variables</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>INGEST_OCR_MODEL</code></td>
+<td><code>openai/gpt-4o</code></td>
+<td>Vision model for OCR</td>
+</tr>
+<tr>
+<td><code>PYMUPDF_RASTERIZE_COVERAGE_THRESHOLD</code></td>
+<td><code>0.25</code></td>
+<td>Image-coverage ratio above which a page is rasterized</td>
+</tr>
+<tr>
+<td><code>PYMUPDF_RASTERIZE_DPI</code></td>
+<td><code>150</code></td>
+<td>DPI used when rasterizing pages</td>
+</tr>
+<tr>
+<td><code>EXTRACT_MIN_NATIVE_CHARS</code></td>
+<td><code>80</code></td>
+<td>Char count below which OCR is preferred over native text</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Minimal example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingest</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingest_document</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{params.pdf_path}}&quot;</span>
+</code></pre></div>
+<p>Pass the output of <code>fetch_data</code> directly — <code>ingest_document</code> understands the SEC EDGAR result structure:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_data</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sec_edgar</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">ticker</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AAPL</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">period_end</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2024-09-30&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingest</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingest_document</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{fetch.output}}&quot;</span><span class="w">    </span><span class="c1"># passes the full fetch_data result dict</span>
+</code></pre></div>
+<hr />
+<h2 id="select">select<a class="headerlink" href="#select" title="Permanent link">&para;</a></h2>
+<p>Filters a <code>DocumentHandle</code> or <code>PageList</code> to the subset of pages that match a selection criterion. Three modes in priority order:</p>
+<ol>
+<li><strong>Explicit page numbers</strong> — pass <code>pages: [3, 5, 12]</code>; no LLM call, fastest</li>
+<li><strong>NL prompt</strong> — the LLM reads a page inventory (page number + first 300 chars) and returns the relevant page numbers</li>
+<li><strong>Passthrough</strong> — if neither is provided, all pages are returned unchanged</li>
+</ol>
+<p><strong>Inputs</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>document</code></td>
+<td><code>DocumentHandle</code>, <code>PageList</code>, list, or str</td>
+<td>Yes</td>
+<td>—</td>
+<td>Ingested document; pages must already have text populated</td>
+</tr>
+<tr>
+<td><code>prompt</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>None</code></td>
+<td>Natural language selection instruction</td>
+</tr>
+<tr>
+<td><code>pages</code></td>
+<td>list[int]</td>
+<td>No</td>
+<td><code>None</code></td>
+<td>Explicit 1-based page numbers to select</td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>SELECT_MODEL</code> or <code>openai/gpt-4o</code></td>
+<td>LiteLLM model string for NL selection</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output</strong> — <code>PageList</code> (or <code>list[PageList]</code> when input is a list)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="s2">&quot;parent_source&quot;</span><span class="p">:</span> <span class="s2">&quot;https://example.com/report.pdf&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="s2">&quot;parent_format&quot;</span><span class="p">:</span> <span class="s2">&quot;PDF&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="s2">&quot;pages&quot;</span><span class="p">:</span> <span class="p">[</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="p">{</span><span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Income Statement...&quot;</span><span class="p">},</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        <span class="p">{</span><span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Notes to Financial Statements...&quot;</span><span class="p">}</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="p">],</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="s2">&quot;selector_prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;consolidated income statement&quot;</span>  <span class="c1"># or &quot;[explicit pages]&quot; / &quot;[passthrough]&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Environment variables</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SELECT_MODEL</code></td>
+<td><code>openai/gpt-4o</code></td>
+<td>Model for NL page selection</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># NL prompt selection</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select_income_stmt</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{ingest.output}}&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Select</span><span class="nv"> </span><span class="s">only</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">consolidated</span><span class="nv"> </span><span class="s">income</span><span class="nv"> </span><span class="s">statement</span><span class="nv"> </span><span class="s">pages&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Explicit page numbers — no LLM call</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select_pages</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{ingest.output}}&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="nt">pages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<hr />
+<h2 id="extract_from_texts">extract_from_texts<a class="headerlink" href="#extract_from_texts" title="Permanent link">&para;</a></h2>
+<p>Sends the text content of selected pages to an LLM with a freeform extraction prompt. Returns the extracted fields as a structured JSON dict. Use this when you want flexible, prompt-driven extraction without a rigid schema.</p>
+<p><strong>Inputs</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>document</code></td>
+<td><code>DocumentHandle</code>, <code>PageList</code>, list, or str</td>
+<td>Yes</td>
+<td>—</td>
+<td>Document with populated page text</td>
+</tr>
+<tr>
+<td><code>prompt</code></td>
+<td>str</td>
+<td>Yes</td>
+<td>—</td>
+<td>What to extract, e.g. <code>"Extract the revenue and net income figures"</code></td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>EXTRACT_MODEL</code> or <code>openai/gpt-4o</code></td>
+<td>LiteLLM model override</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output</strong> — <code>TextExtractionResult</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="s2">&quot;extracted&quot;</span><span class="p">:</span> <span class="p">{</span>                      <span class="c1"># LLM-parsed JSON dict</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>        <span class="s2">&quot;revenue&quot;</span><span class="p">:</span> <span class="s2">&quot;391035&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        <span class="s2">&quot;net_income&quot;</span><span class="p">:</span> <span class="s2">&quot;93736&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        <span class="s2">&quot;reporting_currency&quot;</span><span class="p">:</span> <span class="s2">&quot;USD&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="p">},</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="s2">&quot;source_pages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>             <span class="c1"># 1-based pages processed</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="s2">&quot;sources&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;https://example.com/report.pdf&quot;</span><span class="p">],</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;Extract the revenue and net income figures&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;openai/gpt-4o&quot;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="p">}</span>
+</code></pre></div>
+<p>Access extracted fields in downstream tasks as <code>{{extract.output.extracted.revenue}}</code>.</p>
+<p><strong>Environment variables</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EXTRACT_MODEL</code></td>
+<td><code>openai/gpt-4o</code></td>
+<td>Extraction model</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Minimal example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract_from_texts</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{select_pages.output}}&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Extract</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">total</span><span class="nv"> </span><span class="s">revenue,</span><span class="nv"> </span><span class="s">gross</span><span class="nv"> </span><span class="s">profit,</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">net</span><span class="nv"> </span><span class="s">income</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">most</span><span class="nv"> </span><span class="s">recent</span><span class="nv"> </span><span class="s">period&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="extract_from_tables">extract_from_tables<a class="headerlink" href="#extract_from_tables" title="Permanent link">&para;</a></h2>
+<p>Extracts structured table data (headers and rows) from document pages. Can target a specific table with an optional <code>selector</code> hint. Useful for XLSX, HTML tables embedded in filings, and tabular PDFs.</p>
+<p><strong>Inputs</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>document</code></td>
+<td><code>DocumentHandle</code>, <code>PageList</code>, list, or str</td>
+<td>Yes</td>
+<td>—</td>
+<td>Document with populated page text</td>
+</tr>
+<tr>
+<td><code>selector</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>None</code></td>
+<td>NL hint to target a specific table, e.g. <code>"income statement"</code></td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>EXTRACT_MODEL</code> or <code>openai/gpt-4o</code></td>
+<td>LiteLLM model override</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output</strong> — <code>TableExtractionResult</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="s2">&quot;tables&quot;</span><span class="p">:</span> <span class="p">[</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        <span class="p">{</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>            <span class="s2">&quot;headers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;FY2024&quot;</span><span class="p">,</span> <span class="s2">&quot;FY2023&quot;</span><span class="p">],</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>            <span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="p">[</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>                <span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">:</span> <span class="s2">&quot;Total Revenues&quot;</span><span class="p">,</span> <span class="s2">&quot;FY2024&quot;</span><span class="p">:</span> <span class="s2">&quot;391,035&quot;</span><span class="p">,</span> <span class="s2">&quot;FY2023&quot;</span><span class="p">:</span> <span class="s2">&quot;383,285&quot;</span><span class="p">},</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>                <span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">:</span> <span class="s2">&quot;Cost of Sales&quot;</span><span class="p">,</span>  <span class="s2">&quot;FY2024&quot;</span><span class="p">:</span> <span class="s2">&quot;210,352&quot;</span><span class="p">,</span> <span class="s2">&quot;FY2023&quot;</span><span class="p">:</span> <span class="s2">&quot;214,137&quot;</span><span class="p">},</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>                <span class="c1"># ...</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>            <span class="p">],</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>            <span class="s2">&quot;source_page&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>            <span class="s2">&quot;sheet_name&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>            <span class="s2">&quot;selector&quot;</span><span class="p">:</span> <span class="s2">&quot;income statement&quot;</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>        <span class="p">}</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>    <span class="p">],</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>    <span class="s2">&quot;source_pages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>    <span class="s2">&quot;sources&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;report.pdf&quot;</span><span class="p">],</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;openai/gpt-4o&quot;</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Minimal example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract_table</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract_from_tables</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{select_pages.output}}&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="nt">selector</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;consolidated</span><span class="nv"> </span><span class="s">balance</span><span class="nv"> </span><span class="s">sheet&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="extract_fields">extract_fields<a class="headerlink" href="#extract_fields" title="Permanent link">&para;</a></h2>
+<p>Schema-bound extraction: extracts values for every field declared in a <code>SchemaHandle</code> in a single LLM call. Fields that cannot be located are set to the sentinel string <code>"__not_found__"</code>. Use this when you have a predefined list of fields and want typed, validated output.</p>
+<p><strong>Inputs</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>document</code></td>
+<td><code>DocumentHandle</code>, <code>PageList</code>, list, or str</td>
+<td>Yes</td>
+<td>—</td>
+<td>Pre-selected document pages</td>
+</tr>
+<tr>
+<td><code>schema</code></td>
+<td><code>SchemaHandle</code></td>
+<td>Yes</td>
+<td>—</td>
+<td>Field definitions to extract</td>
+</tr>
+<tr>
+<td><code>rules</code></td>
+<td><code>DocumentHandle</code></td>
+<td>No</td>
+<td><code>None</code></td>
+<td>Spreading manual or extraction rules document injected as context</td>
+</tr>
+<tr>
+<td><code>selector</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>None</code></td>
+<td>NL hint to scope extraction to a sub-region of the document</td>
+</tr>
+<tr>
+<td><code>period_end</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>None</code></td>
+<td>ISO date (YYYY-MM-DD); instructs the model to extract only this period's values</td>
+</tr>
+<tr>
+<td><code>section_filter</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>None</code></td>
+<td>Extract only fields with this <code>section</code> value (<code>face</code>, <code>segments</code>, <code>footnotes</code>, etc.)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output</strong> — <code>dict[str, Any]</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="s2">&quot;revenue&quot;</span><span class="p">:</span>          <span class="mi">391035</span><span class="p">,</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="s2">&quot;gross_profit&quot;</span><span class="p">:</span>     <span class="mi">180683</span><span class="p">,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="s2">&quot;operating_income&quot;</span><span class="p">:</span> <span class="mi">123216</span><span class="p">,</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="s2">&quot;net_income&quot;</span><span class="p">:</span>       <span class="mi">93736</span><span class="p">,</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="s2">&quot;eps_diluted&quot;</span><span class="p">:</span>      <span class="s2">&quot;__not_found__&quot;</span>   <span class="c1"># field not located in document</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Environment variables</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EXTRACT_FIELDS_MODEL</code></td>
+<td><code>openai/gpt-4o</code></td>
+<td>Extraction model</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Minimal example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract_fields</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{select_pages.output}}&quot;</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{load_schema.output}}&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span><span class="nt">period_end</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{params.period_end}}&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="nt">section_filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">face</span>
+</code></pre></div>
+<p><strong>With a spreading manual for higher accuracy</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract_fields</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{select_pages.output}}&quot;</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{load_schema.output}}&quot;</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{ingest_manual.output}}&quot;</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span><span class="nt">period_end</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{params.period_end}}&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="extract_chart">extract_chart<a class="headerlink" href="#extract_chart" title="Permanent link">&para;</a></h2>
+<p>Extract numerical data from charts in a document. Currently a stub — returns an empty <code>charts</code> list. Intended for future multimodal chart parsing.</p>
+<p><strong>Inputs</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>document</code></td>
+<td><code>DocumentHandle</code>, <code>PageList</code>, or str</td>
+<td>Yes</td>
+<td>—</td>
+<td>Document containing charts</td>
+</tr>
+<tr>
+<td><code>classification</code></td>
+<td><code>PageClassification</code> or list</td>
+<td>No</td>
+<td><code>None</code></td>
+<td>Page classification to guide the backend</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="s2">&quot;charts&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;document&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="s2">&quot;classification&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="load_schema">load_schema<a class="headerlink" href="#load_schema" title="Permanent link">&para;</a></h2>
+<p>Resolves a field schema from multiple source types and returns a <code>SchemaHandle</code>. Use this as the first step in any extraction pipeline that uses <code>extract_fields</code>.</p>
+<p><strong>Source resolution order</strong></p>
+<ol>
+<li>If <code>source</code> is already a <code>SchemaHandle</code> → returns it unchanged (pass-through)</li>
+<li>If a <code>SchemaRegistry</code> is configured and <code>source</code> is a registered name → looked up</li>
+<li>If <code>source</code> is a <code>.json</code> / <code>.yaml</code> / <code>.yml</code> file path → loaded and parsed</li>
+<li>If <code>source</code> is a <code>dict</code> → interpreted as <code>{field_name: type_hint}</code> or <code>{"fields": [...]}</code></li>
+<li>If <code>source</code> is a <code>list</code> → treated as a list of field name strings or field definition dicts</li>
+<li>If <code>source</code> is a <code>DocumentHandle</code> → field names derived from Markdown table rows or XLSX column headers</li>
+</ol>
+<p><strong>Inputs</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>source</code></td>
+<td>str, dict, list, <code>DocumentHandle</code>, or <code>SchemaHandle</code></td>
+<td>Yes</td>
+<td>—</td>
+<td>Schema source (see resolution order above)</td>
+</tr>
+<tr>
+<td><code>hint</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>None</code></td>
+<td>NL hint guiding field derivation when source is a document</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output</strong> — <code>SchemaHandle</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>        <span class="p">{</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;revenue&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>            <span class="s2">&quot;type_hint&quot;</span><span class="p">:</span> <span class="s2">&quot;number&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>            <span class="s2">&quot;section&quot;</span><span class="p">:</span> <span class="s2">&quot;face&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>            <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Total consolidated revenue&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>            <span class="s2">&quot;computed&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>            <span class="s2">&quot;formula&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>            <span class="s2">&quot;sign_convention&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>            <span class="s2">&quot;manual_ref&quot;</span><span class="p">:</span> <span class="s2">&quot;§2.1&quot;</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>        <span class="p">},</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>        <span class="c1"># ...</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>    <span class="p">],</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>    <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;income_statement.json&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>    <span class="s2">&quot;task_id&quot;</span><span class="p">:</span> <span class="s2">&quot;load_schema&quot;</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>JSON schema file format</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="p">{</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;revenue&quot;</span><span class="p">,</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">      </span><span class="nt">&quot;type_hint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span><span class="p">,</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">      </span><span class="nt">&quot;section&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;face&quot;</span><span class="p">,</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">      </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Total revenues&quot;</span><span class="p">,</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">      </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">      </span><span class="nt">&quot;sign_convention&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">      </span><span class="nt">&quot;formula&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">      </span><span class="nt">&quot;manual_ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;§2.1&quot;</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Minimal example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">schema</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load_schema</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;schemas/income_statement.json&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="llm_job">llm_job<a class="headerlink" href="#llm_job" title="Permanent link">&para;</a></h2>
+<p>General-purpose LLM invocation backed by LiteLLM. Accepts any number of extra keyword arguments alongside <code>prompt</code> — each extra kwarg is serialised as a labelled context block that is prepended to the prompt before the model sees it.</p>
+<p><strong>Inputs</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prompt</code></td>
+<td>str</td>
+<td>Yes</td>
+<td>—</td>
+<td>Instruction text for the LLM</td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>TRELLIS_LLM_MODEL</code> or <code>openai/gpt-4o-mini</code></td>
+<td>LiteLLM model string</td>
+</tr>
+<tr>
+<td><code>temperature</code></td>
+<td>float</td>
+<td>No</td>
+<td><code>0.7</code></td>
+<td>Sampling temperature</td>
+</tr>
+<tr>
+<td><code>max_tokens</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>2000</code></td>
+<td>Maximum response tokens</td>
+</tr>
+<tr>
+<td><code>**kwargs</code></td>
+<td>any</td>
+<td>No</td>
+<td>—</td>
+<td>Any additional key-value pairs become labelled context blocks in the prompt</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output</strong> — <code>str</code> (the LLM response text)</p>
+<p><strong>Context injection</strong></p>
+<p>Any input key that is not <code>prompt</code>, <code>model</code>, <code>temperature</code>, or <code>max_tokens</code> is injected into the prompt as a labelled section:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">review</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llm_job</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span><span class="nt">extracted</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{extract.output}}&quot;</span><span class="w">       </span><span class="c1"># injected as &quot;--- extracted ---\n{...}&quot;</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{schema.output}}&quot;</span><span class="w">           </span><span class="c1"># injected as &quot;--- schema ---\n{...}&quot;</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Review</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">extracted</span><span class="nv"> </span><span class="s">values</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">fix</span><span class="nv"> </span><span class="s">any</span><span class="nv"> </span><span class="s">__not_found__</span><span class="nv"> </span><span class="s">entries.&quot;</span>
+</code></pre></div>
+<p>The model receives:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>--- extracted ---
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>{&quot;revenue&quot;: &quot;391035&quot;, &quot;eps_diluted&quot;: &quot;__not_found__&quot;}
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>--- schema ---
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>{&quot;source&quot;: &quot;income_statement.json&quot;, &quot;fields&quot;: [&quot;revenue&quot;, &quot;eps_diluted&quot;]}
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>--- prompt ---
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>Review the extracted values and fix any __not_found__ entries.
+</code></pre></div>
+<p><strong>Environment variables</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TRELLIS_LLM_MODEL</code></td>
+<td><code>openai/gpt-4o-mini</code></td>
+<td>Default model for all <code>llm_job</code> tasks</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="fetch_data">fetch_data<a class="headerlink" href="#fetch_data" title="Permanent link">&para;</a></h2>
+<p>Fetches data from SEC EDGAR or a generic HTTP URL. In SEC mode, resolves the company or ticker to a CIK, queries the EDGAR submissions API, and returns a list of matching filings with URLs. In URL mode, performs a plain HTTP GET and returns the parsed response.</p>
+<h3 id="sec-edgar-mode-source-sec_edgar">SEC EDGAR mode (<code>source: sec_edgar</code>)<a class="headerlink" href="#sec-edgar-mode-source-sec_edgar" title="Permanent link">&para;</a></h3>
+<p><strong>Inputs</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>source</code></td>
+<td>str</td>
+<td>Yes</td>
+<td>—</td>
+<td><code>sec_edgar</code>, <code>sec</code>, or <code>edgar</code></td>
+</tr>
+<tr>
+<td><code>companies</code></td>
+<td>str or list[str]</td>
+<td>Yes*</td>
+<td>—</td>
+<td>Company names or tickers; <code>ticker</code> is an alias</td>
+</tr>
+<tr>
+<td><code>ticker</code></td>
+<td>str or list[str]</td>
+<td>Yes*</td>
+<td>—</td>
+<td>Alias for <code>companies</code></td>
+</tr>
+<tr>
+<td><code>period_end</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>None</code></td>
+<td>ISO date <code>YYYY-MM-DD</code>; year extracted for filing filter</td>
+</tr>
+<tr>
+<td><code>period_type</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>None</code></td>
+<td><code>annual</code> → 10-K only; <code>quarterly</code>/<code>ytd_current</code>/<code>ytd_prior</code> → 10-Q only</td>
+</tr>
+<tr>
+<td><code>forms</code></td>
+<td>list[str]</td>
+<td>No</td>
+<td><code>None</code></td>
+<td>Explicit form filter, e.g. <code>["10-K", "10-Q"]</code></td>
+</tr>
+<tr>
+<td><code>year</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>None</code></td>
+<td>Filter by filing year (overrides year derived from <code>period_end</code>)</td>
+</tr>
+<tr>
+<td><code>count</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>20</code></td>
+<td>Max filings per company</td>
+</tr>
+</tbody>
+</table>
+<p>*One of <code>companies</code> or <code>ticker</code> is required.</p>
+<p><strong>Output</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="p">{</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;sec_edgar&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    <span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="p">[</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>        <span class="p">{</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>            <span class="s2">&quot;company_input&quot;</span><span class="p">:</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>            <span class="s2">&quot;company_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Apple Inc.&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>            <span class="s2">&quot;ticker&quot;</span><span class="p">:</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>            <span class="s2">&quot;cik&quot;</span><span class="p">:</span> <span class="s2">&quot;0000320193&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>            <span class="s2">&quot;filings&quot;</span><span class="p">:</span> <span class="p">[</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>                <span class="p">{</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>                    <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="s2">&quot;10-K&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>                    <span class="s2">&quot;filing_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2024-11-01&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>                    <span class="s2">&quot;accession_no&quot;</span><span class="p">:</span> <span class="s2">&quot;0000320193-24-000123&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>                    <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.sec.gov/Archives/edgar/data/320193/.../aapl20240928.htm&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>                    <span class="s2">&quot;primary_document&quot;</span><span class="p">:</span> <span class="s2">&quot;aapl20240928.htm&quot;</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>                <span class="p">}</span>
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>            <span class="p">]</span>
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>        <span class="p">}</span>
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>    <span class="p">]</span>
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Environment variables</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SEC_USER_AGENT</code></td>
+<td><code>Trellis/0.1 (contact@example.com)</code></td>
+<td>User-Agent header sent to SEC EDGAR (required by SEC policy)</td>
+</tr>
+<tr>
+<td><code>SEC_THROTTLE_SECONDS</code></td>
+<td><code>0.2</code></td>
+<td>Delay between EDGAR requests</td>
+</tr>
+</tbody>
+</table>
+<h3 id="http-url-mode-source-url">HTTP URL mode (<code>source: url</code>)<a class="headerlink" href="#http-url-mode-source-url" title="Permanent link">&para;</a></h3>
+<p><strong>Additional inputs</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>url</code></td>
+<td>str</td>
+<td>Yes</td>
+<td>—</td>
+<td>HTTP URL to fetch</td>
+</tr>
+<tr>
+<td><code>method</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>GET</code></td>
+<td>HTTP method</td>
+</tr>
+<tr>
+<td><code>headers</code></td>
+<td>dict</td>
+<td>No</td>
+<td><code>None</code></td>
+<td>Custom HTTP headers</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="p">{</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;url&quot;</span><span class="p">,</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://api.example.com/data.json&quot;</span><span class="p">,</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="s2">&quot;content_type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">}</span>           <span class="c1"># parsed JSON, text, or raw bytes</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Examples</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Annual 10-K for Apple, fiscal year ending 2024-09-30</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_data</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">    </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sec_edgar</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">    </span><span class="nt">ticker</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AAPL</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="w">    </span><span class="nt">period_end</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2024-09-30&quot;</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="w">    </span><span class="nt">period_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">annual</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="w">    </span><span class="nt">count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="c1"># Multiple companies</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_multi</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_data</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="w">    </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sec_edgar</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="w">    </span><span class="nt">companies</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Apple</span><span class="nv"> </span><span class="s">Inc.&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Microsoft</span><span class="nv"> </span><span class="s">Corporation&quot;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="w">    </span><span class="nt">forms</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;10-K&quot;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="w">    </span><span class="nt">year</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2024</span>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a><span class="c1"># HTTP URL</span>
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_json</span>
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fetch_data</span>
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a><span class="w">    </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">url</span>
+<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://api.example.com/metrics.json&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="search_web">search_web<a class="headerlink" href="#search_web" title="Permanent link">&para;</a></h2>
+<p>Performs web search and returns titles, snippets, and URLs. Uses DuckDuckGo by default (no API key required). Falls back automatically to DuckDuckGo if SerpAPI is configured but fails.</p>
+<p><strong>Inputs</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>query</code></td>
+<td>str or list[str]</td>
+<td>Yes</td>
+<td>—</td>
+<td>Search query or list of queries</td>
+</tr>
+<tr>
+<td><code>top_n</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>5</code></td>
+<td>Max results per query</td>
+</tr>
+<tr>
+<td><code>provider</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>duckduckgo</code></td>
+<td><code>duckduckgo</code> or <code>serpapi</code></td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>15</code></td>
+<td>HTTP timeout in seconds</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="p">{</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    <span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="p">[</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>        <span class="p">{</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Apple Reports First Quarter Results&quot;</span><span class="p">,</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>            <span class="s2">&quot;snippet&quot;</span><span class="p">:</span> <span class="s2">&quot;Apple today announced financial results for its fiscal 2025 first quarter...&quot;</span><span class="p">,</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.apple.com/newsroom/...&quot;</span><span class="p">,</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>            <span class="s2">&quot;source_query&quot;</span><span class="p">:</span> <span class="s2">&quot;Apple earnings Q1 2025&quot;</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>        <span class="p">},</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>        <span class="c1"># ...</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>    <span class="p">]</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="p">}</span>
+</code></pre></div>
+<p>When <code>query</code> is a list, all results are merged into a single flat list with the originating query preserved in <code>source_query</code>.</p>
+<p><strong>Environment variables</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TRELLIS_SEARCH_PROVIDER</code></td>
+<td><code>duckduckgo</code></td>
+<td>Default provider</td>
+</tr>
+<tr>
+<td><code>TRELLIS_SEARCH_TOP_N</code></td>
+<td><code>5</code></td>
+<td>Default result count</td>
+</tr>
+<tr>
+<td><code>TRELLIS_SEARCH_TIMEOUT</code></td>
+<td><code>15</code></td>
+<td>Default HTTP timeout</td>
+</tr>
+<tr>
+<td><code>SERPAPI_API_KEY</code></td>
+<td>—</td>
+<td>Required for SerpAPI provider</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Minimal example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">search</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">search_web</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">    </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{params.topic}}&quot;</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">    </span><span class="nt">top_n</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+</code></pre></div>
+<hr />
+<h2 id="compute">compute<a class="headerlink" href="#compute" title="Permanent link">&para;</a></h2>
+<p>Invokes a named deterministic function from the <code>FunctionRegistry</code>. This is the DSL surface for all codeable, side-effect-free computations: date arithmetic, currency normalization, fiscal period resolution, financial ratios, etc. The function body lives in the operator's registry — the pipeline only names it.</p>
+<p><strong>Inputs</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>function</code></td>
+<td>str</td>
+<td>Yes</td>
+<td>—</td>
+<td>Registered function name</td>
+</tr>
+<tr>
+<td><code>**kwargs</code></td>
+<td>any</td>
+<td>No</td>
+<td>—</td>
+<td>Forwarded to the function as keyword arguments</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output</strong> — whatever the registered function returns (depends on the function)</p>
+<p>The built-in <code>FunctionRegistry</code> is populated by <code>build_finance_registry()</code>. See the <a href="../extensibility-index/">Extensibility</a> guide for how to add functions.</p>
+<p><strong>Minimal example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resolve_periods</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compute</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">    </span><span class="nt">function</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fiscal_period_logic</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">    </span><span class="nt">as_of_date</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{params.period_end}}&quot;</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">    </span><span class="nt">company</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{params.company}}&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="store">store<a class="headerlink" href="#store" title="Permanent link">&para;</a></h2>
+<p>Persists a value to the session blackboard under a named key. The actual persistence happens in the DAG executor, which writes to the <code>Blackboard</code> after <code>store</code> returns — the value is then visible to all subsequent tasks in the same pipeline via <code>{{session.key}}</code>.</p>
+<p>In a multi-pipeline <code>Plan</code>, values written by <code>store</code> in one sub-pipeline are available as <code>{{session.key}}</code> in any later sub-pipeline that declares the key in its <code>reads</code> list.</p>
+<p><strong>Inputs</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>key</code></td>
+<td>str</td>
+<td>Yes</td>
+<td>—</td>
+<td>Blackboard key to write under</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>any</td>
+<td>Yes</td>
+<td>—</td>
+<td>Value to persist; can be any Python object</td>
+</tr>
+<tr>
+<td><code>append</code></td>
+<td>bool</td>
+<td>No</td>
+<td><code>False</code></td>
+<td>Append to an existing list under this key instead of replacing</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Output</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="p">{</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>    <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;extraction_result&quot;</span><span class="p">,</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>    <span class="s2">&quot;append&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>    <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>                    <span class="c1"># echoes back the stored value</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Minimal example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">persist</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">store</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="w">    </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extraction_result</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{extract.output}}&quot;</span>
+</code></pre></div>
+<p>Keys can be parameterized:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">persist</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">store</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="w">    </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{params.ticker}}_{{params.period_end}}_result&quot;</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{extract.output}}&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="export">export<a class="headerlink" href="#export" title="Permanent link">&para;</a></h2>
+<p>Writes any pipeline value to disk in a choice of formats. Output goes to <code>TRELLIS_OUTPUT_DIR</code> (default: <code>outputs/</code>) unless overridden. JSON strings from <code>llm_job</code> are parsed automatically before writing.</p>
+<p><strong>Inputs</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data</code></td>
+<td>any</td>
+<td>No*</td>
+<td>—</td>
+<td>Content to export (takes precedence over <code>content</code> if both supplied)</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>any</td>
+<td>No*</td>
+<td>—</td>
+<td>Alias for <code>data</code></td>
+</tr>
+<tr>
+<td><code>format</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>markdown</code></td>
+<td><code>json</code>, <code>markdown</code>, <code>csv</code>, <code>xlsx</code></td>
+</tr>
+<tr>
+<td><code>filename</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>artifact</code></td>
+<td>Base filename without extension</td>
+</tr>
+<tr>
+<td><code>output_dir</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>outputs</code></td>
+<td>Directory to write into (created if absent)</td>
+</tr>
+<tr>
+<td><code>schema</code></td>
+<td><code>SchemaHandle</code></td>
+<td>No</td>
+<td><code>None</code></td>
+<td>When provided, validates conformance before writing</td>
+</tr>
+<tr>
+<td><code>strict</code></td>
+<td>bool</td>
+<td>No</td>
+<td><code>False</code></td>
+<td>Raise on extra fields when <code>schema</code> is supplied</td>
+</tr>
+<tr>
+<td><code>metadata</code></td>
+<td>dict</td>
+<td>No</td>
+<td><code>None</code></td>
+<td>Document header fields for Markdown export (<code>company</code>, <code>ticker</code>, <code>currency</code>, <code>units</code>, <code>audited</code>, <code>source_filing</code>, <code>filed</code>)</td>
+</tr>
+<tr>
+<td><code>periods</code></td>
+<td>list</td>
+<td>No</td>
+<td><code>None</code></td>
+<td>Period label dicts (<code>{"label": "FY2024"}</code>) used as Markdown column headers</td>
+</tr>
+<tr>
+<td><code>analyst_notes</code></td>
+<td>list or str</td>
+<td>No</td>
+<td><code>None</code></td>
+<td>Notes appended as an Analyst Notes table in Markdown output</td>
+</tr>
+</tbody>
+</table>
+<p>*At least one of <code>data</code> or <code>content</code> should be supplied.</p>
+<p><strong>Output</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="p">{</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>    <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>    <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;AAPL_extraction&quot;</span><span class="p">,</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>    <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/absolute/path/to/outputs/AAPL_extraction.json&quot;</span><span class="p">,</span>
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>    <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">512</span><span class="p">,</span>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>    <span class="s2">&quot;schema_source&quot;</span><span class="p">:</span> <span class="s2">&quot;income_statement.json&quot;</span>   <span class="c1"># only when schema= was supplied</span>
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Environment variables</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TRELLIS_OUTPUT_DIR</code></td>
+<td><code>outputs</code></td>
+<td>Default output directory</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Minimal example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span><span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{extract.output}}&quot;</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">json</span>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{params.ticker}}_result&quot;</span>
+</code></pre></div>
+<p><strong>Markdown export with metadata</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write_md</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">    </span><span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{extract.output}}&quot;</span>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">markdown</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">income_statement</span>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="w">      </span><span class="nt">company</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Apple</span><span class="nv"> </span><span class="s">Inc.&quot;</span>
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="w">      </span><span class="nt">ticker</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AAPL</span>
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a><span class="w">      </span><span class="nt">currency</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">USD</span>
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a><span class="w">      </span><span class="nt">units</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">millions</span>
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a><span class="w">      </span><span class="nt">audited</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a><span class="w">    </span><span class="nt">periods</span><span class="p">:</span>
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;FY2024&quot;</span>
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;FY2023&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="registry-mechanics">Registry mechanics<a class="headerlink" href="#registry-mechanics" title="Permanent link">&para;</a></h2>
+<h3 id="how-tools-are-discovered">How tools are discovered<a class="headerlink" href="#how-tools-are-discovered" title="Permanent link">&para;</a></h3>
+<p><code>AsyncToolRegistry.discover_impls()</code> scans every module under <code>trellis.tools.impls</code>, finds all <code>BaseTool</code> subclasses, instantiates them with default arguments, and registers them. The <code>build_default_registry()</code> factory calls this and then re-registers <code>ComputeTool</code> with the built-in <code>FunctionRegistry</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">trellis.tools.registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_default_registry</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="n">registry</span> <span class="o">=</span> <span class="n">build_default_registry</span><span class="p">()</span>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">registry</span><span class="o">.</span><span class="n">registered_tools</span><span class="p">())</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="c1"># [&#39;compute&#39;, &#39;export&#39;, &#39;extract_chart&#39;, &#39;extract_fields&#39;, &#39;extract_from_tables&#39;,</span>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="c1">#  &#39;extract_from_texts&#39;, &#39;fetch_data&#39;, &#39;ingest_document&#39;, &#39;llm_job&#39;, &#39;load_schema&#39;,</span>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="c1">#  &#39;mock&#39;, &#39;search_web&#39;, &#39;select&#39;, &#39;store&#39;, ...]</span>
+</code></pre></div>
+<p>The <code>Orchestrator</code> calls <code>build_default_registry()</code> on construction, so all built-in tools are available automatically.</p>
+<h3 id="how-invocation-works">How invocation works<a class="headerlink" href="#how-invocation-works" title="Permanent link">&para;</a></h3>
+<p>When the executor runs a task, it resolves the task's template inputs and calls <code>registry.invoke(task.tool, resolved_inputs)</code>. Internally:</p>
+<ul>
+<li>If the tool's <code>execute()</code> method is a coroutine function, it is <code>await</code>-ed directly.</li>
+<li>If it is a synchronous function, it is run in a worker thread via <code>asyncio.to_thread()</code> so it does not block the event loop.</li>
+</ul>
+<p>This means all tools — sync or async — are safe to run concurrently inside a wave.</p>
+<h3 id="registering-a-custom-tool">Registering a custom tool<a class="headerlink" href="#registering-a-custom-tool" title="Permanent link">&para;</a></h3>
+<p>Subclass <code>BaseTool</code> and pass an instance to <code>registry.register_tool()</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">trellis.tools.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseTool</span><span class="p">,</span> <span class="n">ToolInput</span><span class="p">,</span> <span class="n">ToolOutput</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">trellis.tools.registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_default_registry</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">trellis.execution.orchestrator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Orchestrator</span>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyTool</span><span class="p">(</span><span class="n">BaseTool</span><span class="p">):</span>
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;my_tool&quot;</span><span class="p">,</span> <span class="s2">&quot;Does something custom&quot;</span><span class="p">)</span>
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">multiplier</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">text</span> <span class="o">*</span> <span class="n">multiplier</span><span class="p">}</span>
+<a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a>
+<a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ToolInput</span><span class="p">]:</span>
+<a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a>        <span class="k">return</span> <span class="p">{</span>
+<a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a>            <span class="s2">&quot;text&quot;</span><span class="p">:</span>       <span class="n">ToolInput</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span>       <span class="s2">&quot;Input text&quot;</span><span class="p">,</span>        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+<a id="__codelineno-31-16" name="__codelineno-31-16" href="#__codelineno-31-16"></a>            <span class="s2">&quot;multiplier&quot;</span><span class="p">:</span> <span class="n">ToolInput</span><span class="p">(</span><span class="s2">&quot;multiplier&quot;</span><span class="p">,</span> <span class="s2">&quot;Repeat count&quot;</span><span class="p">,</span>      <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+<a id="__codelineno-31-17" name="__codelineno-31-17" href="#__codelineno-31-17"></a>        <span class="p">}</span>
+<a id="__codelineno-31-18" name="__codelineno-31-18" href="#__codelineno-31-18"></a>
+<a id="__codelineno-31-19" name="__codelineno-31-19" href="#__codelineno-31-19"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_output</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ToolOutput</span><span class="p">:</span>
+<a id="__codelineno-31-20" name="__codelineno-31-20" href="#__codelineno-31-20"></a>        <span class="k">return</span> <span class="n">ToolOutput</span><span class="p">(</span><span class="s2">&quot;result&quot;</span><span class="p">,</span> <span class="s2">&quot;Repeated text&quot;</span><span class="p">,</span> <span class="n">type_</span><span class="o">=</span><span class="s2">&quot;string&quot;</span><span class="p">)</span>
+<a id="__codelineno-31-21" name="__codelineno-31-21" href="#__codelineno-31-21"></a>
+<a id="__codelineno-31-22" name="__codelineno-31-22" href="#__codelineno-31-22"></a>
+<a id="__codelineno-31-23" name="__codelineno-31-23" href="#__codelineno-31-23"></a><span class="c1"># Wire it into the orchestrator</span>
+<a id="__codelineno-31-24" name="__codelineno-31-24" href="#__codelineno-31-24"></a><span class="n">registry</span> <span class="o">=</span> <span class="n">build_default_registry</span><span class="p">()</span>
+<a id="__codelineno-31-25" name="__codelineno-31-25" href="#__codelineno-31-25"></a><span class="n">registry</span><span class="o">.</span><span class="n">register_tool</span><span class="p">(</span><span class="n">MyTool</span><span class="p">())</span>
+<a id="__codelineno-31-26" name="__codelineno-31-26" href="#__codelineno-31-26"></a>
+<a id="__codelineno-31-27" name="__codelineno-31-27" href="#__codelineno-31-27"></a><span class="n">orch</span> <span class="o">=</span> <span class="n">Orchestrator</span><span class="p">(</span><span class="n">registry</span><span class="o">=</span><span class="n">registry</span><span class="p">)</span>
+</code></pre></div>
+<p>The tool name (<code>"my_tool"</code>) is what you use in the DSL <code>tool:</code> field. Note that <code>KNOWN_TOOLS</code> in <code>trellis/models/pipeline.py</code> is the set of names that pass validation — add your tool name there, or disable validation for your custom pipelines.</p>
+<h3 id="registering-a-plain-callable">Registering a plain callable<a class="headerlink" href="#registering-a-plain-callable" title="Permanent link">&para;</a></h3>
+<p>For lightweight tools that don't need <code>BaseTool</code> metadata, register any callable directly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_async_tool</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;answer&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;result for </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="n">registry</span><span class="o">.</span><span class="n">register_callable</span><span class="p">(</span><span class="s2">&quot;my_async_tool&quot;</span><span class="p">,</span> <span class="n">my_async_tool</span><span class="p">)</span>
+</code></pre></div>
+<p>Sync and async callables are both supported — the registry detects <code>iscoroutinefunction</code> at invoke time.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      © 2026 Trellis contributors
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/ciarandavies7191/trellis" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
