@@ -97,17 +97,20 @@ Pass the output of `fetch_data` directly — `ingest_document` understands the S
 Filters a `DocumentHandle` or `PageList` to the subset of pages that match a selection criterion. Three modes in priority order:
 
 1. **Explicit page numbers** — pass `pages: [3, 5, 12]`; no LLM call, fastest
-2. **NL prompt** — the LLM reads a page inventory (page number + first 300 chars) and returns the relevant page numbers
-3. **Passthrough** — if neither is provided, all pages are returned unchanged
+2. **BM25 chunk retrieval** — `granularity: chunk`; builds an in-memory BM25 index over structural chunks and scores them against a keyword query; no LLM call; best for large documents
+3. **NL prompt** — `granularity: page` (default); the LLM reads a page inventory (page number + first 300 chars) and returns the relevant page numbers
+4. **Passthrough** — if neither `pages` nor `prompt` is provided, all pages are returned unchanged
 
 **Inputs**
 
 | Name | Type | Required | Default | Description |
 |---|---|---|---|---|
 | `document` | `DocumentHandle`, `PageList`, list, or str | Yes | — | Ingested document; pages must already have text populated |
-| `prompt` | str | No | `None` | Natural language selection instruction |
+| `prompt` | str | No | `None` | Keyword query (chunk mode) or NL instruction (page mode) |
 | `pages` | list[int] | No | `None` | Explicit 1-based page numbers to select |
-| `model` | str | No | `SELECT_MODEL` or `openai/gpt-4o` | LiteLLM model string for NL selection |
+| `granularity` | str | No | `"page"` | `"page"` for LLM page scan; `"chunk"` for BM25 keyword retrieval |
+| `top_k` | int | No | `15` | Number of top-scoring chunks to retrieve (chunk mode only) |
+| `model` | str | No | `SELECT_MODEL` or `openai/gpt-4o` | LiteLLM model string for NL page-mode selection |
 
 **Output** — `PageList` (or `list[PageList]` when input is a list)
 
@@ -127,12 +130,21 @@ Filters a `DocumentHandle` or `PageList` to the subset of pages that match a sel
 
 | Variable | Default | Effect |
 |---|---|---|
-| `SELECT_MODEL` | `openai/gpt-4o` | Model for NL page selection |
+| `SELECT_MODEL` | `openai/gpt-4o` | Model for NL page-mode selection |
 
 **Examples**
 
 ```yaml
-# NL prompt selection
+# BM25 keyword retrieval — no LLM, best for large documents
+- id: select_section
+  tool: select
+  inputs:
+    document: "{{ingest.output}}"
+    granularity: chunk
+    prompt: "Human Capital Resources employees workforce headcount"
+    top_k: 10
+
+# NL prompt selection (default page mode)
 - id: select_income_stmt
   tool: select
   inputs:
@@ -146,6 +158,8 @@ Filters a `DocumentHandle` or `PageList` to the subset of pages that match a sel
     document: "{{ingest.output}}"
     pages: [3, 4, 5]
 ```
+
+See the [BM25 Section Extraction tutorial](tutorials/bm25-section-extraction.md) for a full worked example and guidance on choosing `top_k` and writing effective keyword queries.
 
 ---
 

@@ -1,0 +1,62 @@
+pipeline:
+  id: meta_10k_workforce
+  goal: >
+    Extract structured workforce data from Meta's 2025 10-K filing and write
+    it to a JSON artifact.
+
+  tasks:
+
+    # ── 1. Load the filing directly from SEC EDGAR ───────────────────────────
+    - id: ingest_10k
+      tool: ingest_document
+      inputs:
+        path: "https://www.sec.gov/Archives/edgar/data/1326801/000162828026003942/meta-20251231.htm"
+
+    # ── 2. Select the Human Capital section pages ─────────────────────────────
+    #
+    # granularity=chunk builds a BM25 index over the document's structural chunks
+    # in-memory and retrieves the pages most relevant to the query terms — no LLM
+    # page-snippet scan, no context-window limits. The top_k chunks are mapped back
+    # to their source pages and returned as a PageList for extract_from_texts.
+    - id: select_human_capital
+      tool: select
+      inputs:
+        document: "{{ingest_10k.output}}"
+        granularity: chunk
+        prompt: "Human Capital Resources employees workforce headcount office cities attrition diversity"
+        top_k: 10
+
+    # ── 3. Extract workforce facts ────────────────────────────────────────────
+    #
+    # extract_from_texts reads the actual page .text from the PageList and sends
+    # it to the LLM. Its output is a TextExtractionResult whose .extracted dict
+    # is serialized by export in the next step.
+    - id: extract_workforce
+      tool: extract_from_texts
+      inputs:
+        document: "{{select_human_capital.output}}"
+        prompt: |
+          Extract every workforce and human capital fact stated in the document.
+          Return a JSON object with the following fields (null if not stated):
+
+          - total_employees: integer — exact global headcount as stated
+          - as_of_date: string — ISO date the headcount applies to (e.g. "2025-12-31")
+          - office_cities: integer — number of cities with offices worldwide
+          - full_time_employees: integer or null
+          - part_time_employees: integer or null
+          - female_employees_pct: number or null — percentage
+          - underrepresented_minorities_pct: number or null — percentage
+          - voluntary_attrition_pct: number or null
+          - source_quote: string — the exact sentence(s) from the filing that
+            state the total employee count and number of office cities
+
+    # ── 4. Write the JSON artifact ────────────────────────────────────────────
+    #
+    # export receives a TextExtractionResult. Its .extracted dict is a proper
+    # Python dict so _write_json serialises it cleanly.
+    - id: export_workforce
+      tool: export
+      inputs:
+        data: "{{extract_workforce.output.extracted}}"
+        format: json
+        filename: "meta_2025_workforce"

@@ -140,20 +140,32 @@ class ExportTool(BaseTool):
     @staticmethod
     def _parse_payload(payload: Any) -> Any:
         """
-        Normalise payload to a Python object.
+        Normalise payload to a JSON-serialisable Python object.
 
-        llm_job returns strings (sometimes with markdown code fences). Parse
-        JSON strings so downstream writers work with dicts/lists directly.
+        - str: strip markdown fences, parse as JSON if possible.
+        - dataclass with an ``extracted`` dict field (e.g. TextExtractionResult):
+          unwrap to the extracted dict so json.dump succeeds.
+        - dataclass without extracted: convert to dict via dataclasses.asdict().
+        - everything else: pass through.
         """
-        if not isinstance(payload, str):
-            return payload
-        # Strip markdown code fences, e.g. ```json ... ```
-        stripped = re.sub(r"^```[a-z]*\s*", "", payload.strip(), flags=re.I)
-        stripped = re.sub(r"\s*```$", "", stripped)
-        try:
-            return json.loads(stripped)
-        except Exception:
-            return payload  # return as plain string if not JSON
+        if isinstance(payload, str):
+            stripped = re.sub(r"^```[a-z]*\s*", "", payload.strip(), flags=re.I)
+            stripped = re.sub(r"\s*```$", "", stripped)
+            try:
+                return json.loads(stripped)
+            except Exception:
+                return payload
+
+        import dataclasses
+        if dataclasses.is_dataclass(payload) and not isinstance(payload, type):
+            if hasattr(payload, "extracted") and isinstance(payload.extracted, dict):
+                return payload.extracted
+            try:
+                return dataclasses.asdict(payload)
+            except Exception:
+                return payload
+
+        return payload
 
     @staticmethod
     def _write_json(payload: Any, filename: str, out_dir: pathlib.Path) -> pathlib.Path:

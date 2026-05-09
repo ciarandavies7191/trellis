@@ -54,6 +54,16 @@ Load a PDF from disk or URL, select the pages that matter, extract structured co
 
 ---
 
+### [BM25 Section Extraction](bm25-section-extraction.md)
+
+Extract structured fields from a specific section of a large document using keyword-based BM25 retrieval. Covers how chunk-mode `select` works, when to use it over page-mode, and how to build a BM25 index directly from the Python SDK.
+
+**Tools:** `ingest_document` → `select` (BM25 mode) → `extract_from_texts` → `export`  
+**Requires:** LLM API key  
+**Time:** ~10 minutes
+
+---
+
 ### [SEC Filing Field Extraction](sec-field-extraction.md)
 
 Fetch a public 10-K or 10-Q from SEC EDGAR, ingest it, and extract typed financial fields against a declared schema. The full document-intelligence workflow end-to-end.
@@ -89,3 +99,5 @@ These pipelines ship in `examples/pipelines/` and can be run directly with `trel
 | `pdf_summarize.yaml` | PDF → extract → LLM summarize |
 | `image_ocr_summarize.yaml` | Scanned PDF with OCR → select → extract → summarize |
 | `extract_sec_field.yaml` | Full SEC extraction: schema + manual + fetch + extract + export |
+| `bm25_field_extraction.yaml` | BM25 section selection + `extract_from_texts` on a large HTML filing |
+| `meta_10k_workforce.yaml` | Workforce facts from Meta's 2025 10-K using BM25 select |

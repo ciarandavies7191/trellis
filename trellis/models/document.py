@@ -26,7 +26,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from trellis.retrieval.models import ChunkPipelineState
 
 
 # ---------------------------------------------------------------------------
@@ -152,13 +155,14 @@ class DocumentHandle:
         source_url:    Source URL if the document was fetched from the web.
         metadata:      Document-level metadata (title, author, creation date, …).
     """
-    source:     str
-    format:     DocFormat
-    pages:      list[Page]           = field(default_factory=list)
-    page_count: int                  = 0
-    is_scanned: bool                 = False
-    source_url: str | None           = None
-    metadata:   dict[str, Any]       = field(default_factory=dict)
+    source:      str
+    format:      DocFormat
+    pages:       list[Page]                       = field(default_factory=list)
+    page_count:  int                              = 0
+    is_scanned:  bool                             = False
+    source_url:  str | None                       = None
+    metadata:    dict[str, Any]                   = field(default_factory=dict)
+    chunk_state: ChunkPipelineState | None        = field(default=None, repr=False)
 
     # ------------------------------------------------------------------ #
     # Convenience helpers

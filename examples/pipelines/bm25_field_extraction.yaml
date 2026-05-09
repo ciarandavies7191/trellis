@@ -1,0 +1,62 @@
+pipeline:
+  id: bm25_field_extraction
+  goal: >
+    Ingest a large document, use BM25 keyword retrieval to locate the relevant
+    section without reading every page, then extract structured fields from that
+    section and write a JSON artifact.
+
+  # Swap out the path and prompt to point at any document and section.
+  # This pipeline uses Meta's 2025 10-K as a concrete example, targeting the
+  # Human Capital Resources section to extract workforce facts.
+
+  tasks:
+
+    # ── 1. Ingest the document ────────────────────────────────────────────────
+    - id: ingest
+      tool: ingest_document
+      inputs:
+        path: "https://www.sec.gov/Archives/edgar/data/1326801/000162828026003942/meta-20251231.htm"
+
+    # ── 2. BM25 section selection ─────────────────────────────────────────────
+    #
+    # granularity=chunk builds an in-memory BM25 index over the document's
+    # structural chunks (headings, prose paragraphs, tables). Pages whose chunks
+    # score highest against the query terms are returned as a PageList.
+    #
+    # This avoids the LLM page-snippet scan used by the default 'page' mode,
+    # which only sees the first 300 characters per page and can miss sections
+    # that start mid-page or are preceded by a long table of contents.
+    - id: select_section
+      tool: select
+      inputs:
+        document: "{{ingest.output}}"
+        granularity: chunk
+        prompt: "Human Capital Resources employees workforce headcount office cities attrition diversity"
+        top_k: 10
+
+    # ── 3. Extract structured fields ──────────────────────────────────────────
+    - id: extract
+      tool: extract_from_texts
+      inputs:
+        document: "{{select_section.output}}"
+        prompt: |
+          Extract every workforce and human capital fact stated in the document.
+          Return a JSON object with the following fields (null if not stated):
+
+          - total_employees: integer — exact global headcount as stated
+          - as_of_date: string — ISO date the headcount applies to (e.g. "2025-12-31")
+          - office_cities: integer — number of cities with offices worldwide
+          - full_time_employees: integer or null
+          - part_time_employees: integer or null
+          - female_employees_pct: number or null — percentage
+          - underrepresented_minorities_pct: number or null — percentage
+          - voluntary_attrition_pct: number or null
+          - source_quote: string — exact sentence(s) stating total employees and office cities
+
+    # ── 4. Write JSON artifact ────────────────────────────────────────────────
+    - id: export_result
+      tool: export
+      inputs:
+        data: "{{extract.output.extracted}}"
+        format: json
+        filename: "meta_2025_workforce"

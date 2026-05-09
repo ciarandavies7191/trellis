@@ -18,7 +18,10 @@ import textwrap
 import urllib.error
 import urllib.parse
 import urllib.request
-from typing import Any, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+
+if TYPE_CHECKING:
+    from trellis.retrieval.pipeline import ChunkPipeline
 import litellm  # type: ignore
 import fitz  # PyMuPDF  # type: ignore
 try:
@@ -718,8 +721,9 @@ class IngestDocumentTool(BaseTool):
     can always treat `.text` as ready to use.
     """
 
-    def __init__(self, name: str = "ingest_document"):
+    def __init__(self, name: str = "ingest_document", chunk_pipeline: ChunkPipeline | None = None):
         super().__init__(name, "Load a document and fully resolve it (including OCR) into a DocumentHandle")
+        self._chunk_pipeline = chunk_pipeline
 
     def execute(
         self,
@@ -771,6 +775,7 @@ class IngestDocumentTool(BaseTool):
                         )
                         continue
                     _apply_ocr_to_pages(h.pages, model)
+                    self._run_chunk_pipeline(h, url)
                     handles.append(h)
                 continue
 
@@ -793,6 +798,7 @@ class IngestDocumentTool(BaseTool):
 
             # Eagerly run OCR on any scanned/image-heavy pages
             _apply_ocr_to_pages(handle.pages, model)
+            self._run_chunk_pipeline(handle, item)
             handles.append(handle)
 
         if not handles:
@@ -803,6 +809,15 @@ class IngestDocumentTool(BaseTool):
             )
 
         return handles[0] if len(handles) == 1 else handles
+
+    def _run_chunk_pipeline(self, handle: DocumentHandle, source_hint: str) -> None:
+        if self._chunk_pipeline is None:
+            return
+        import hashlib
+        document_id = hashlib.sha256(source_hint.encode()).hexdigest()[:16]
+        tenant_id = getattr(handle, "_tenant_id", "default")
+        state = self._chunk_pipeline.run_sync(handle, tenant_id, document_id)
+        handle.chunk_state = state
 
     def get_inputs(self) -> Dict[str, ToolInput]:
         return {
