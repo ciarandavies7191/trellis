@@ -1,5 +1,5 @@
 """
-Trellis CLI — validate and run pipelines.
+Trellis CLI — validate, run, and compile pipelines.
 
 Commands:
   trellis validate PATH
@@ -14,6 +14,9 @@ Commands:
                   [--ollama-host URL] [--ollama-model NAME]
                   [--extract-model NAME]
                   [--env-file PATH]
+  trellis compile [PROMPT] [--prompt-file PATH] [--output PATH]
+                  [--model NAME] [--max-repairs N] [--json]
+                  [--env-file PATH]
 
 Examples (PowerShell):
   trellis validate .\pipelines\example.yaml
@@ -23,6 +26,9 @@ Examples (PowerShell):
   trellis run .\pipelines\spreads\plan.yaml --env-file .env
   trellis run .\pipelines\example.yaml --llm-provider openai --openai-api-key $env:OPENAI_API_KEY --openai-model gpt-4o
   trellis run .\pipelines\example.yaml --env-file .env
+  trellis compile "Fetch Apple 10-K from SEC EDGAR and summarise key risks" --output pipeline.yaml
+  trellis compile --prompt-file my_prompt.txt --model anthropic/claude-haiku-4-5-20251001
+  trellis compile "Summarise a PDF" --json > pipeline.yaml
 """
 
 from __future__ import annotations
@@ -45,6 +51,7 @@ from trellis.execution.orchestrator import Orchestrator, PlanRunResult
 from trellis.execution.dag import ExecutionOptions
 from trellis.validation.graph import pipeline_execution_waves, plan_execution_waves
 from trellis.validation.contract import validate_contract
+from trellis.compiler import PipelineCompiler, CompilerError
 
 app = typer.Typer(help="Trellis CLI — validate and run pipelines", no_args_is_help=True)
 
@@ -537,6 +544,152 @@ def run(
         except Exception as exc:  # noqa: BLE001
             typer.secho(f"Run failed: {exc}", fg=typer.colors.RED)
             raise typer.Exit(code=3)
+
+
+@app.command()
+def compile(
+    prompt: Optional[str] = typer.Argument(
+        None,
+        help="Natural-language description of the pipeline to compile. "
+             "Pass either this argument or --prompt-file.",
+    ),
+    prompt_file: Optional[Path] = typer.Option(
+        None,
+        "--prompt-file",
+        exists=True,
+        readable=True,
+        help="Path to a text file whose contents are used as the prompt.",
+    ),
+    output: Optional[Path] = typer.Option(
+        None,
+        "--output",
+        "-o",
+        help="Write the compiled YAML to this file. "
+             "If omitted, the YAML is printed to stdout.",
+    ),
+    model: Optional[str] = typer.Option(
+        None,
+        "--model",
+        help="litellm model string to use for compilation "
+             "(e.g. 'anthropic/claude-haiku-4-5-20251001'). "
+             "Falls back to TRELLIS_COMPILER_MODEL → TRELLIS_LLM_MODEL.",
+    ),
+    max_repairs: int = typer.Option(
+        2,
+        "--max-repairs",
+        min=0,
+        help="Maximum number of repair attempts after a validation failure.",
+    ),
+    output_json: bool = typer.Option(
+        False,
+        "--json",
+        help="Print only the compiled YAML to stdout, with no decorative output. "
+             "Useful for piping: trellis compile '...' --json > pipeline.yaml",
+    ),
+    env_file: Optional[Path] = typer.Option(
+        None,
+        "--env-file",
+        exists=False,
+        help="Path to a .env file to load (default: ./.env if present)",
+    ),
+) -> None:
+    """Compile a natural-language prompt into a validated pipeline YAML.
+
+    The prompt can be supplied as a positional argument or read from a file
+    with --prompt-file.  Exactly one of these must be provided.
+
+    The compiler calls an LLM (configured via TRELLIS_COMPILER_MODEL or
+    TRELLIS_LLM_MODEL) and validates the response against the Pipeline/Plan
+    models.  If the first attempt fails validation, it retries with the
+    error context up to --max-repairs times.
+
+    By default the compiled YAML is printed to stdout.  Use --output to
+    write it to a file instead.  Use --json to suppress all decorative
+    output and emit only the raw YAML (good for shell pipelines).
+    """
+    _configure_logging()
+    _load_env_file(env_file)
+
+    # --- Resolve prompt text -------------------------------------------
+    if prompt and prompt_file:
+        typer.secho(
+            "Provide either a PROMPT argument or --prompt-file, not both.",
+            fg=typer.colors.RED,
+        )
+        raise typer.Exit(code=2)
+
+    if not prompt and not prompt_file:
+        typer.secho(
+            "A prompt is required. Pass it as an argument or use --prompt-file.",
+            fg=typer.colors.RED,
+        )
+        raise typer.Exit(code=2)
+
+    if prompt_file:
+        prompt_text = prompt_file.read_text(encoding="utf-8").strip()
+        if not prompt_text:
+            typer.secho(f"Prompt file {prompt_file} is empty.", fg=typer.colors.RED)
+            raise typer.Exit(code=2)
+    else:
+        prompt_text = (prompt or "").strip()
+        if not prompt_text:
+            typer.secho("Prompt must not be empty.", fg=typer.colors.RED)
+            raise typer.Exit(code=2)
+
+    # --- Run compiler --------------------------------------------------
+    compiler_instance = PipelineCompiler(model=model or None)
+
+    if not output_json:
+        typer.secho("Compiling…", fg=typer.colors.CYAN)
+
+    async def _compile() -> None:
+        return await compiler_instance.compile(
+            prompt_text,
+            max_repair_attempts=max_repairs,
+        )
+
+    try:
+        result = asyncio.run(_compile())
+    except CompilerError as exc:
+        typer.secho(f"Compilation failed after {exc.attempts} attempt(s):", fg=typer.colors.RED)
+        typer.secho(f"  {exc.last_error}", fg=typer.colors.RED)
+        if exc.last_yaml and not output_json:
+            typer.secho("\nLast LLM output:", fg=typer.colors.YELLOW)
+            typer.echo(exc.last_yaml)
+        raise typer.Exit(code=1)
+    except Exception as exc:  # noqa: BLE001
+        typer.secho(f"Compilation error: {exc}", fg=typer.colors.RED)
+        raise typer.Exit(code=1)
+
+    # --- Output --------------------------------------------------------
+    yaml_text = result.yaml_text
+
+    if output_json:
+        # Machine-readable mode: raw YAML only, no decoration.
+        typer.echo(yaml_text)
+        return
+
+    # Identify what was compiled for the summary line.
+    artifact = result.artifact
+    kind = "pipeline" if result.is_pipeline else "plan"
+    artifact_id = getattr(artifact, "id", "?")
+
+    repair_note = ""
+    if result.attempts > 1:
+        repair_note = f" ({result.attempts - 1} repair(s) needed)"
+
+    if output:
+        output.write_text(yaml_text, encoding="utf-8")
+        typer.secho(
+            f"Compiled {kind} '{artifact_id}'{repair_note} -> {output}",
+            fg=typer.colors.GREEN,
+        )
+    else:
+        typer.secho(
+            f"Compiled {kind} '{artifact_id}'{repair_note}:",
+            fg=typer.colors.GREEN,
+        )
+        typer.echo(yaml_text)
 
 
 def main() -> None:

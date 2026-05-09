@@ -270,12 +270,76 @@ For long-running pipelines use `POST /pipelines/run_async` to get a `run_id`, th
 
 ---
 
+---
+
+## Step 6 — Compile a pipeline from a prompt
+
+Instead of writing YAML by hand, describe what you want in plain English and let the Trellis compiler generate a validated pipeline for you.
+
+```bash
+trellis compile "Fetch Apple's latest 10-K from SEC EDGAR and summarise the key risk factors in bullet points" \
+  --output pipelines/aapl_risks.yaml
+```
+
+```
+Compiling...
+Compiled pipeline 'fetch_apple_risks' -> pipelines/aapl_risks.yaml
+```
+
+The compiler calls an LLM with a system prompt containing the full DSL spec and your registered tool catalog. The response is validated with Pydantic and checked for cycles before it is accepted. If the first attempt fails validation, the compiler re-prompts with the error and tries again (up to `--max-repairs` times, default 2).
+
+Validate and run the result immediately:
+
+```bash
+trellis validate pipelines/aapl_risks.yaml
+trellis run pipelines/aapl_risks.yaml
+```
+
+### Output to stdout (pipe-friendly)
+
+```bash
+# --json prints only the raw YAML — no headers, no stats
+trellis compile "Summarise a PDF report in five executive bullet points" --json \
+  > pipelines/pdf_summary.yaml
+```
+
+### Prompt from a file
+
+For longer or more structured descriptions, put them in a text file:
+
+```bash
+trellis compile --prompt-file prompts/sec_extraction_brief.txt \
+  --output pipelines/sec_extract.yaml
+```
+
+### From Python
+
+The compiler is also available as a Python class:
+
+```python
+import asyncio
+from trellis.compiler import PipelineCompiler
+
+compiler = PipelineCompiler()
+result = asyncio.run(compiler.compile(
+    "Fetch Apple's latest 10-K from SEC EDGAR and summarise key risks."
+))
+print(result.yaml_text)
+print(f"Pipeline id: {result.pipeline.id}")
+print(f"Compiled in {result.attempts} attempt(s)")
+```
+
+`CompilerResult` exposes `pipeline` (or `plan`), `yaml_text`, `attempts`, and a `repair_history` list of `(broken_yaml, error)` pairs from any failed intermediate attempts.
+
+---
+
 ## What's next
 
 | Topic | Where to go |
 |---|---|
 | Full task syntax, tools, templates | [Pipeline DSL reference](PIPELINE-DSL.md) |
 | All CLI flags and environment variables | [CLI reference](interfaces-cli.md) |
+| Compile from prompt — full walkthrough | [Compile tutorial](tutorials/compile-pipeline.md) |
 | API endpoints, request/response schemas | [API reference](interfaces-api.md) |
 | Fan-out, retries, timeouts, plans | [Execution reference](operations-execution.md) |
 | Adding your own tools | [Extensibility](extensibility-index.md) |

@@ -158,7 +158,6 @@ tests/              # Test suite
 
 ## Documentation
 
-Full documentation is at **[https://ciarandavies7191.github.io/trellis](https://ciarandavies7191.github.io/trellis)**:
 
 - [Installation](https://ciarandavies7191.github.io/trellis/installation)
 - [Quickstart](https://ciarandavies7191.github.io/trellis/quickstart)

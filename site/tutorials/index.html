@@ -16,7 +16,7 @@
         <link rel="prev" href="../interfaces-mcp/">
       
       
-        <link rel="next" href="web-search-summarize/">
+        <link rel="next" href="compile-pipeline/">
       
       
         
@@ -629,6 +629,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#compile-a-pipeline-from-a-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compile a Pipeline from a Prompt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#web-search-and-summarization" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -692,6 +703,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="compile-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compile from Prompt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1166,6 +1205,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#compile-a-pipeline-from-a-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compile a Pipeline from a Prompt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#web-search-and-summarization" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1259,6 +1309,12 @@
 <p>Trellis uses <a href="https://docs.litellm.ai/">LiteLLM</a> internally, so any provider it supports works. Pass the model string as <code>"openai/gpt-4o"</code>, <code>"anthropic/claude-3-5-sonnet-20241022"</code>, or <code>"ollama/llama3"</code>.</p>
 <hr />
 <h2 id="tutorials">Tutorials<a class="headerlink" href="#tutorials" title="Permanent link">&para;</a></h2>
+<h3 id="compile-a-pipeline-from-a-prompt"><a href="compile-pipeline/">Compile a Pipeline from a Prompt</a><a class="headerlink" href="#compile-a-pipeline-from-a-prompt" title="Permanent link">&para;</a></h3>
+<p>Describe what you want in plain English and let the Trellis compiler generate a validated pipeline YAML. Covers CLI usage, Python SDK, model selection, repair attempts, and a full SEC extraction end-to-end example.</p>
+<p><strong>Tools:</strong> <code>PipelineCompiler</code> → <code>trellis compile</code><br />
+<strong>Requires:</strong> LLM API key<br />
+<strong>Time:</strong> ~10 minutes</p>
+<hr />
 <h3 id="web-search-and-summarization"><a href="web-search-summarize/">Web Search and Summarization</a><a class="headerlink" href="#web-search-and-summarization" title="Permanent link">&para;</a></h3>
 <p>Search the web for a topic and distil the results into a structured summary using an LLM.</p>
 <p><strong>Tools:</strong> <code>search_web</code> → <code>llm_job</code> → <code>store</code><br />

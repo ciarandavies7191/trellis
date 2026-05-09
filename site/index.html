@@ -679,6 +679,34 @@
   
   
     <li class="md-nav__item">
+      <a href="tutorials/compile-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compile from Prompt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="tutorials/web-search-summarize/" class="md-nav__link">
         
   
@@ -1217,6 +1245,7 @@
 </ul>
 <h2 id="what-you-can-do">What you can do<a class="headerlink" href="#what-you-can-do" title="Permanent link">&para;</a></h2>
 <ul>
+<li><strong>Compile</strong> — describe a pipeline in plain English; get back validated, ready-to-run YAML</li>
 <li>Ingest PDFs, web content, and spreadsheets; OCR image-only pages</li>
 <li>Retrieve and select relevant pages and snippets</li>
 <li>Extract structured fields and tables, or invoke LLM reasoning jobs</li>
@@ -1226,25 +1255,28 @@
 </ul>
 <h2 id="key-concepts">Key concepts<a class="headerlink" href="#key-concepts" title="Permanent link">&para;</a></h2>
 <ul>
+<li><strong>Compiler</strong> — <code>PipelineCompiler</code> takes a natural-language prompt, calls an LLM with the full DSL spec and live tool catalog, validates the YAML response, and retries with error context if validation fails</li>
 <li><strong>Pipeline DSL</strong> — flat task list; dependencies inferred from templates like <code>{{task_id.output}}</code>; explicit <code>await</code> when needed</li>
 <li><strong>Execution</strong> — async DAG with fan-out via <code>parallel_over</code>, retries, per-task timeouts, and execution stats</li>
 <li><strong>ResolutionContext</strong> — carries inputs, params, session state, <code>tenant_id</code>, and a blackboard handle through the run</li>
 <li><strong>Blackboard</strong> — tenant-isolated persisted session store; <code>store</code> task writes are available to all downstream tasks in the same run</li>
 <li><strong>Tool Registry</strong> — async discovery and registration; subclass <code>BaseTool</code> or register callables; built-ins cover ingest, select, extract, compute, <code>llm_job</code>, store, search, and export</li>
 <li><strong>Orchestrator</strong> — builds context, discovers tools, executes pipeline, returns structured <code>RunResult</code>; background queue available</li>
-<li><strong>Interfaces</strong> — FastAPI server, CLI, and MCP server</li>
+<li><strong>Interfaces</strong> — FastAPI server, CLI (validate / run / compile), and MCP server</li>
 </ul>
 <h2 id="project-structure">Project structure<a class="headerlink" href="#project-structure" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>trellis/</code> — core models (Pydantic), validation, template resolution, blackboard, DAG executor, tool registry</li>
+<li><code>trellis/compiler/</code> — <code>PipelineCompiler</code>: prompt → LLM → validated YAML, with repair loop</li>
 <li><code>trellis_api/</code> — FastAPI REST server (run, cancel, status, validate, tools listing)</li>
-<li><code>trellis_cli/</code> — Typer-based CLI for validate and run, with per-run environment overrides</li>
+<li><code>trellis_cli/</code> — Typer-based CLI for validate, run, and compile, with per-run environment overrides</li>
 <li><code>trellis_mcp/</code> — MCP server to expose tools via the Model Context Protocol</li>
 </ul>
 <h2 id="quick-links">Quick links<a class="headerlink" href="#quick-links" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="installation/">Installation</a></li>
 <li><a href="quickstart/">Quickstart</a></li>
+<li><a href="tutorials/compile-pipeline/">Compile from prompt</a></li>
 <li><a href="interfaces-cli/">CLI reference</a></li>
 <li><a href="interfaces-api/">API reference</a></li>
 <li><a href="tools-index/">Tools reference</a></li>

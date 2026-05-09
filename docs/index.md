@@ -13,6 +13,7 @@ Trellis is a modular agentic pipeline system for document and data workflows. It
 
 ## What you can do
 
+- **Compile** — describe a pipeline in plain English; get back validated, ready-to-run YAML
 - Ingest PDFs, web content, and spreadsheets; OCR image-only pages
 - Retrieve and select relevant pages and snippets
 - Extract structured fields and tables, or invoke LLM reasoning jobs
@@ -22,25 +23,28 @@ Trellis is a modular agentic pipeline system for document and data workflows. It
 
 ## Key concepts
 
+- **Compiler** — `PipelineCompiler` takes a natural-language prompt, calls an LLM with the full DSL spec and live tool catalog, validates the YAML response, and retries with error context if validation fails
 - **Pipeline DSL** — flat task list; dependencies inferred from templates like `{{task_id.output}}`; explicit `await` when needed
 - **Execution** — async DAG with fan-out via `parallel_over`, retries, per-task timeouts, and execution stats
 - **ResolutionContext** — carries inputs, params, session state, `tenant_id`, and a blackboard handle through the run
 - **Blackboard** — tenant-isolated persisted session store; `store` task writes are available to all downstream tasks in the same run
 - **Tool Registry** — async discovery and registration; subclass `BaseTool` or register callables; built-ins cover ingest, select, extract, compute, `llm_job`, store, search, and export
 - **Orchestrator** — builds context, discovers tools, executes pipeline, returns structured `RunResult`; background queue available
-- **Interfaces** — FastAPI server, CLI, and MCP server
+- **Interfaces** — FastAPI server, CLI (validate / run / compile), and MCP server
 
 ## Project structure
 
 - `trellis/` — core models (Pydantic), validation, template resolution, blackboard, DAG executor, tool registry
+- `trellis/compiler/` — `PipelineCompiler`: prompt → LLM → validated YAML, with repair loop
 - `trellis_api/` — FastAPI REST server (run, cancel, status, validate, tools listing)
-- `trellis_cli/` — Typer-based CLI for validate and run, with per-run environment overrides
+- `trellis_cli/` — Typer-based CLI for validate, run, and compile, with per-run environment overrides
 - `trellis_mcp/` — MCP server to expose tools via the Model Context Protocol
 
 ## Quick links
 
 - [Installation](installation.md)
 - [Quickstart](quickstart.md)
+- [Compile from prompt](tutorials/compile-pipeline.md)
 - [CLI reference](interfaces-cli.md)
 - [API reference](interfaces-api.md)
 - [Tools reference](tools-index.md)

@@ -1,9 +1,9 @@
 # CLI
 
-The `trellis` command-line tool validates and runs pipelines and plans. It is installed as part of the `trellis-cli` package and reads configuration from `.env` files and CLI flags.
+The `trellis` command-line tool validates, runs, and compiles pipelines and plans. It is installed as part of the `trellis-pipelines` package and reads configuration from `.env` files and CLI flags.
 
 ```bash
-pip install trellis-cli
+pip install trellis-pipelines
 ```
 
 ---
@@ -18,6 +18,7 @@ trellis [OPTIONS] COMMAND [ARGS]...
 |---|---|
 | `validate PATH` | Parse and validate a pipeline or plan YAML; print stats |
 | `run PATH` | Execute a pipeline or plan YAML |
+| `compile [PROMPT]` | Compile a natural-language prompt into a validated pipeline YAML |
 
 Run `trellis --help` or `trellis <command> --help` for full option lists.
 
@@ -137,6 +138,39 @@ These set environment variables for the duration of the run only.
 
 ---
 
+## `trellis compile`
+
+Compiles a natural-language description into a validated Trellis pipeline YAML. The compiler calls an LLM, validates the response against the Pipeline and Plan models (including cycle detection), and retries with the error context if the first attempt fails.
+
+```bash
+trellis compile "Fetch Apple's latest 10-K from SEC EDGAR and summarise key risks"
+```
+
+Prints the compiled YAML to stdout with a header showing the pipeline ID and any repair attempts needed.
+
+### Arguments and options
+
+| Argument / Flag | Default | Description |
+|---|---|---|
+| `PROMPT` | — | Natural-language description of the pipeline (positional). One of `PROMPT` or `--prompt-file` is required. |
+| `--prompt-file PATH` | — | Read the prompt from a text file instead of the command line. |
+| `--output / -o PATH` | — | Write the compiled YAML to a file. When set, the YAML is not printed to stdout — only a confirmation line is shown. |
+| `--model TEXT` | `TRELLIS_COMPILER_MODEL` | litellm model string for the compilation call (e.g. `anthropic/claude-haiku-4-5-20251001`). Falls back to `TRELLIS_LLM_MODEL` then `openai/gpt-4o-mini`. |
+| `--max-repairs N` | `2` | Maximum number of re-prompts after a validation failure before giving up. |
+| `--json` | off | Print only the raw YAML to stdout with no decorative headers or stats. Useful for piping to files. |
+| `--env-file PATH` | `./.env` | Load environment variables from a `.env` file before compiling. |
+
+Exactly one of `PROMPT` or `--prompt-file` must be provided. Passing both is an error.
+
+### How the compiler works
+
+1. The compiler sends the prompt to the configured LLM together with a system prompt that contains the full DSL specification and a live tool catalog derived from the registry.
+2. The LLM's response is validated against the Pipeline or Plan Pydantic models and checked for cycles.
+3. If validation fails, the compiler appends the error to the conversation and re-sends, up to `--max-repairs` additional times.
+4. On success, the validated YAML is returned.
+
+---
+
 ## Examples
 
 ### Validate a pipeline
@@ -209,6 +243,57 @@ trellis run pipelines/sec_extraction.yaml \
 
 The `.env` file is loaded with `override=False` — variables already in the environment take precedence.
 
+### Compile a pipeline from a prompt
+
+```bash
+# Print the compiled YAML to stdout
+trellis compile "Fetch Apple's latest 10-K from SEC EDGAR and summarise key risks"
+
+# Write to a file
+trellis compile "Summarise a PDF report in five executive bullet points" \
+  --output pipelines/pdf_summary.yaml
+
+# Use a smarter model for complex pipelines
+trellis compile "Multi-step SEC extraction with schema-driven field extraction" \
+  --model anthropic/claude-sonnet-4-6 \
+  --output pipelines/sec_extract.yaml
+
+# Allow more repair attempts for tricky prompts
+trellis compile "Fan-out credit risk assessment across ten companies" \
+  --max-repairs 4
+
+# Machine-readable: raw YAML only (good for piping or scripts)
+trellis compile "Search the web for renewable energy trends and summarise" \
+  --json > pipelines/web_search.yaml
+```
+
+### Compile from a prompt file
+
+For long or structured prompts, store the description in a text file:
+
+```text title="prompts/my_pipeline.txt"
+Fetch the latest 10-K filings from SEC EDGAR for Apple, Microsoft, and Google.
+Ingest each document, select the Management Discussion & Analysis section,
+extract the key risk factors as a structured list, and export the results as JSON.
+```
+
+```bash
+trellis compile --prompt-file prompts/my_pipeline.txt \
+  --output pipelines/multi_company_risks.yaml
+
+# Then validate and run
+trellis validate pipelines/multi_company_risks.yaml
+trellis run pipelines/multi_company_risks.yaml
+```
+
+### Compile then immediately validate
+
+```bash
+trellis compile "Fetch AAPL 10-K and summarise risk factors" \
+  --output pipelines/aapl_risks.yaml \
+&& trellis validate pipelines/aapl_risks.yaml
+```
+
 ---
 
 ## Standard output
@@ -240,12 +325,12 @@ trellis run pipelines/extract.yaml --params '...' --json | jq '.extract.revenue'
 
 ## Exit codes
 
-| Code | Meaning |
-|---|---|
-| `0` | Success |
-| `1` | Validation failed (`validate` command) |
-| `2` | Bad argument (invalid JSON, missing session file) |
-| `3` | Pipeline execution failed |
+| Code | Meaning | Commands |
+|---|---|---|
+| `0` | Success | all |
+| `1` | Validation or compilation failure | `validate`, `compile` |
+| `2` | Bad argument (missing prompt, invalid JSON, missing file) | all |
+| `3` | Pipeline execution failed | `run` |
 
 ---
 
@@ -255,10 +340,12 @@ The CLI reads these variables from the environment or a `.env` file:
 
 | Variable | Used by |
 |---|---|
-| `OPENAI_API_KEY` | OpenAI-backed tools |
-| `ANTHROPIC_API_KEY` | Anthropic-backed tools |
+| `OPENAI_API_KEY` | OpenAI-backed tools and compiler |
+| `ANTHROPIC_API_KEY` | Anthropic-backed tools and compiler |
 | `OLLAMA_HOST` | Ollama tool calls |
 | `TRELLIS_LLM_PROVIDER` | Default provider selection |
+| `TRELLIS_LLM_MODEL` | Default model for `llm_job` and compiler fallback |
+| `TRELLIS_COMPILER_MODEL` | Model used by `trellis compile` (overrides `TRELLIS_LLM_MODEL`) |
 | `EXTRACT_TEXT_MODEL` | `extract_from_texts`, `extract_fields` |
 | `SERPAPI_API_KEY` | `search_web` with SerpAPI backend |
 
@@ -266,6 +353,7 @@ The CLI reads these variables from the environment or a `.env` file:
 
 ## Next steps
 
+- [Compile from prompt tutorial](tutorials/compile-pipeline.md) — end-to-end walkthrough of compiling, validating, and running a generated pipeline
 - [API (REST)](interfaces-api.md) — run pipelines over HTTP
 - [Configuration & Environment](operations-configuration.md) — full environment variable reference
 - [Pipeline DSL reference](PIPELINE-DSL.md) — task syntax, params, retries, fan-out

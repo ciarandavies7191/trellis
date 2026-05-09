@@ -24,6 +24,16 @@ Trellis uses [LiteLLM](https://docs.litellm.ai/) internally, so any provider it 
 
 ## Tutorials
 
+### [Compile a Pipeline from a Prompt](compile-pipeline.md)
+
+Describe what you want in plain English and let the Trellis compiler generate a validated pipeline YAML. Covers CLI usage, Python SDK, model selection, repair attempts, and a full SEC extraction end-to-end example.
+
+**Tools:** `PipelineCompiler` → `trellis compile`  
+**Requires:** LLM API key  
+**Time:** ~10 minutes
+
+---
+
 ### [Web Search and Summarization](web-search-summarize.md)
 
 Search the web for a topic and distil the results into a structured summary using an LLM.

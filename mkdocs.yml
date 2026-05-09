@@ -15,6 +15,7 @@ nav:
       - MCP: interfaces-mcp.md
   - Tutorials & Examples:
       - Overview: tutorials/index.md
+      - Compile from Prompt: tutorials/compile-pipeline.md
       - Web Search & Summarization: tutorials/web-search-summarize.md
       - PDF Ingest & Extraction: tutorials/pdf-ingest-extract.md
       - SEC Filing Extraction: tutorials/sec-field-extraction.md

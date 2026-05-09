@@ -590,6 +590,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#trellis-compile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        trellis compile
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="trellis compile">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arguments-and-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arguments and options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-compiler-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the compiler works
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -672,6 +711,39 @@
     <span class="md-ellipsis">
       
         Use an .env file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compile-a-pipeline-from-a-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compile a pipeline from a prompt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compile-from-a-prompt-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compile from a prompt file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compile-then-immediately-validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compile then immediately validate
       
     </span>
   </a>
@@ -833,6 +905,34 @@
     
   
     Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/compile-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compile from Prompt
   
 
     
@@ -1386,6 +1486,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#trellis-compile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        trellis compile
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="trellis compile">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arguments-and-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arguments and options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-compiler-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the compiler works
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1474,6 +1613,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#compile-a-pipeline-from-a-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compile a pipeline from a prompt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compile-from-a-prompt-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compile from a prompt file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compile-then-immediately-validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compile then immediately validate
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1544,8 +1716,8 @@
 
 
 <h1 id="cli">CLI<a class="headerlink" href="#cli" title="Permanent link">&para;</a></h1>
-<p>The <code>trellis</code> command-line tool validates and runs pipelines and plans. It is installed as part of the <code>trellis-cli</code> package and reads configuration from <code>.env</code> files and CLI flags.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>trellis-cli
+<p>The <code>trellis</code> command-line tool validates, runs, and compiles pipelines and plans. It is installed as part of the <code>trellis-pipelines</code> package and reads configuration from <code>.env</code> files and CLI flags.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>trellis-pipelines
 </code></pre></div>
 <hr />
 <h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
@@ -1566,6 +1738,10 @@
 <tr>
 <td><code>run PATH</code></td>
 <td>Execute a pipeline or plan YAML</td>
+</tr>
+<tr>
+<td><code>compile [PROMPT]</code></td>
+<td>Compile a natural-language prompt into a validated pipeline YAML</td>
 </tr>
 </tbody>
 </table>
@@ -1787,70 +1963,170 @@
 </tbody>
 </table>
 <hr />
+<h2 id="trellis-compile"><code>trellis compile</code><a class="headerlink" href="#trellis-compile" title="Permanent link">&para;</a></h2>
+<p>Compiles a natural-language description into a validated Trellis pipeline YAML. The compiler calls an LLM, validates the response against the Pipeline and Plan models (including cycle detection), and retries with the error context if the first attempt fails.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>trellis<span class="w"> </span>compile<span class="w"> </span><span class="s2">&quot;Fetch Apple&#39;s latest 10-K from SEC EDGAR and summarise key risks&quot;</span>
+</code></pre></div>
+<p>Prints the compiled YAML to stdout with a header showing the pipeline ID and any repair attempts needed.</p>
+<h3 id="arguments-and-options">Arguments and options<a class="headerlink" href="#arguments-and-options" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Argument / Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PROMPT</code></td>
+<td>—</td>
+<td>Natural-language description of the pipeline (positional). One of <code>PROMPT</code> or <code>--prompt-file</code> is required.</td>
+</tr>
+<tr>
+<td><code>--prompt-file PATH</code></td>
+<td>—</td>
+<td>Read the prompt from a text file instead of the command line.</td>
+</tr>
+<tr>
+<td><code>--output / -o PATH</code></td>
+<td>—</td>
+<td>Write the compiled YAML to a file. When set, the YAML is not printed to stdout — only a confirmation line is shown.</td>
+</tr>
+<tr>
+<td><code>--model TEXT</code></td>
+<td><code>TRELLIS_COMPILER_MODEL</code></td>
+<td>litellm model string for the compilation call (e.g. <code>anthropic/claude-haiku-4-5-20251001</code>). Falls back to <code>TRELLIS_LLM_MODEL</code> then <code>openai/gpt-4o-mini</code>.</td>
+</tr>
+<tr>
+<td><code>--max-repairs N</code></td>
+<td><code>2</code></td>
+<td>Maximum number of re-prompts after a validation failure before giving up.</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td>off</td>
+<td>Print only the raw YAML to stdout with no decorative headers or stats. Useful for piping to files.</td>
+</tr>
+<tr>
+<td><code>--env-file PATH</code></td>
+<td><code>./.env</code></td>
+<td>Load environment variables from a <code>.env</code> file before compiling.</td>
+</tr>
+</tbody>
+</table>
+<p>Exactly one of <code>PROMPT</code> or <code>--prompt-file</code> must be provided. Passing both is an error.</p>
+<h3 id="how-the-compiler-works">How the compiler works<a class="headerlink" href="#how-the-compiler-works" title="Permanent link">&para;</a></h3>
+<ol>
+<li>The compiler sends the prompt to the configured LLM together with a system prompt that contains the full DSL specification and a live tool catalog derived from the registry.</li>
+<li>The LLM's response is validated against the Pipeline or Plan Pydantic models and checked for cycles.</li>
+<li>If validation fails, the compiler appends the error to the conversation and re-sends, up to <code>--max-repairs</code> additional times.</li>
+<li>On success, the validated YAML is returned.</li>
+</ol>
+<hr />
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
 <h3 id="validate-a-pipeline">Validate a pipeline<a class="headerlink" href="#validate-a-pipeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>trellis<span class="w"> </span>validate<span class="w"> </span>pipelines/sec_extraction.yaml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>trellis<span class="w"> </span>validate<span class="w"> </span>pipelines/sec_extraction.yaml
 </code></pre></div>
 <h3 id="run-with-typed-params">Run with typed params<a class="headerlink" href="#run-with-typed-params" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>trellis<span class="w"> </span>run<span class="w"> </span>pipelines/sec_extraction.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="s1">    &quot;ticker&quot;: &quot;AAPL&quot;,</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="s1">    &quot;company&quot;: &quot;Apple Inc.&quot;,</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="s1">    &quot;period_end&quot;: &quot;2024-09-30&quot;,</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="s1">    &quot;period_type&quot;: &quot;annual&quot;</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="s1">  }&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>trellis<span class="w"> </span>run<span class="w"> </span>pipelines/sec_extraction.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="s1">    &quot;ticker&quot;: &quot;AAPL&quot;,</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="s1">    &quot;company&quot;: &quot;Apple Inc.&quot;,</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="s1">    &quot;period_end&quot;: &quot;2024-09-30&quot;,</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s1">    &quot;period_type&quot;: &quot;annual&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
 <h3 id="run-with-legacy-inputs">Run with legacy inputs<a class="headerlink" href="#run-with-legacy-inputs" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>trellis<span class="w"> </span>run<span class="w"> </span>pipelines/search_summarize.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>--inputs<span class="w"> </span><span class="s1">&#39;{&quot;query&quot;: &quot;renewable energy trends 2024&quot;}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>trellis<span class="w"> </span>run<span class="w"> </span>pipelines/search_summarize.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>--inputs<span class="w"> </span><span class="s1">&#39;{&quot;query&quot;: &quot;renewable energy trends 2024&quot;}&#39;</span>
 </code></pre></div>
 <h3 id="run-with-a-session-file">Run with a session file<a class="headerlink" href="#run-with-a-session-file" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>trellis<span class="w"> </span>run<span class="w"> </span>pipelines/spreads/spread.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>--session-file<span class="w"> </span>session.json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>--timeout<span class="w"> </span><span class="m">60</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>trellis<span class="w"> </span>run<span class="w"> </span>pipelines/spreads/spread.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>--session-file<span class="w"> </span>session.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--timeout<span class="w"> </span><span class="m">60</span>
 </code></pre></div>
 <p>Where <code>session.json</code> might be:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">&quot;document_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://example.com/10k.pdf&quot;</span><span class="p">,</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">&quot;schema_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;schemas/income_statement.json&quot;</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">{</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nt">&quot;document_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://example.com/10k.pdf&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="nt">&quot;schema_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;schemas/income_statement.json&quot;</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="machine-readable-output">Machine-readable output<a class="headerlink" href="#machine-readable-output" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>trellis<span class="w"> </span>run<span class="w"> </span>pipelines/sec_extraction.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{&quot;ticker&quot;: &quot;AAPL&quot;, &quot;period_end&quot;: &quot;2024-09-30&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>--json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>&gt;<span class="w"> </span>outputs/result.json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>trellis<span class="w"> </span>run<span class="w"> </span>pipelines/sec_extraction.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{&quot;ticker&quot;: &quot;AAPL&quot;, &quot;period_end&quot;: &quot;2024-09-30&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>--json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>&gt;<span class="w"> </span>outputs/result.json
 </code></pre></div>
 <h3 id="override-llm-provider-inline">Override LLM provider inline<a class="headerlink" href="#override-llm-provider-inline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>trellis<span class="w"> </span>run<span class="w"> </span>pipelines/summarize.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>--inputs<span class="w"> </span><span class="s1">&#39;{&quot;query&quot;: &quot;market trends&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>--openai-api-key<span class="w"> </span><span class="nv">$OPENAI_API_KEY</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>--openai-model<span class="w"> </span>gpt-4o-mini
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>trellis<span class="w"> </span>run<span class="w"> </span>pipelines/summarize.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>--inputs<span class="w"> </span><span class="s1">&#39;{&quot;query&quot;: &quot;market trends&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>--openai-api-key<span class="w"> </span><span class="nv">$OPENAI_API_KEY</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span>--openai-model<span class="w"> </span>gpt-4o-mini
 </code></pre></div>
 <h3 id="use-an-env-file">Use an <code>.env</code> file<a class="headerlink" href="#use-an-env-file" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>trellis<span class="w"> </span>run<span class="w"> </span>pipelines/sec_extraction.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{&quot;ticker&quot;: &quot;MSFT&quot;, &quot;period_end&quot;: &quot;2024-06-30&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>--env-file<span class="w"> </span>.env.production
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>trellis<span class="w"> </span>run<span class="w"> </span>pipelines/sec_extraction.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>--params<span class="w"> </span><span class="s1">&#39;{&quot;ticker&quot;: &quot;MSFT&quot;, &quot;period_end&quot;: &quot;2024-06-30&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>--env-file<span class="w"> </span>.env.production
 </code></pre></div>
 <p>The <code>.env</code> file is loaded with <code>override=False</code> — variables already in the environment take precedence.</p>
+<h3 id="compile-a-pipeline-from-a-prompt">Compile a pipeline from a prompt<a class="headerlink" href="#compile-a-pipeline-from-a-prompt" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Print the compiled YAML to stdout</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>trellis<span class="w"> </span>compile<span class="w"> </span><span class="s2">&quot;Fetch Apple&#39;s latest 10-K from SEC EDGAR and summarise key risks&quot;</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Write to a file</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>trellis<span class="w"> </span>compile<span class="w"> </span><span class="s2">&quot;Summarise a PDF report in five executive bullet points&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span>--output<span class="w"> </span>pipelines/pdf_summary.yaml
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1"># Use a smarter model for complex pipelines</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>trellis<span class="w"> </span>compile<span class="w"> </span><span class="s2">&quot;Multi-step SEC extraction with schema-driven field extraction&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">  </span>--model<span class="w"> </span>anthropic/claude-sonnet-4-6<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span>--output<span class="w"> </span>pipelines/sec_extract.yaml
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c1"># Allow more repair attempts for tricky prompts</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>trellis<span class="w"> </span>compile<span class="w"> </span><span class="s2">&quot;Fan-out credit risk assessment across ten companies&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">  </span>--max-repairs<span class="w"> </span><span class="m">4</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="c1"># Machine-readable: raw YAML only (good for piping or scripts)</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>trellis<span class="w"> </span>compile<span class="w"> </span><span class="s2">&quot;Search the web for renewable energy trends and summarise&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="w">  </span>--json<span class="w"> </span>&gt;<span class="w"> </span>pipelines/web_search.yaml
+</code></pre></div>
+<h3 id="compile-from-a-prompt-file">Compile from a prompt file<a class="headerlink" href="#compile-from-a-prompt-file" title="Permanent link">&para;</a></h3>
+<p>For long or structured prompts, store the description in a text file:</p>
+<div class="highlight"><span class="filename">prompts/my_pipeline.txt</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Fetch the latest 10-K filings from SEC EDGAR for Apple, Microsoft, and Google.
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Ingest each document, select the Management Discussion &amp; Analysis section,
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>extract the key risk factors as a structured list, and export the results as JSON.
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>trellis<span class="w"> </span>compile<span class="w"> </span>--prompt-file<span class="w"> </span>prompts/my_pipeline.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span>--output<span class="w"> </span>pipelines/multi_company_risks.yaml
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Then validate and run</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>trellis<span class="w"> </span>validate<span class="w"> </span>pipelines/multi_company_risks.yaml
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>trellis<span class="w"> </span>run<span class="w"> </span>pipelines/multi_company_risks.yaml
+</code></pre></div>
+<h3 id="compile-then-immediately-validate">Compile then immediately validate<a class="headerlink" href="#compile-then-immediately-validate" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>trellis<span class="w"> </span>compile<span class="w"> </span><span class="s2">&quot;Fetch AAPL 10-K and summarise risk factors&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span>--output<span class="w"> </span>pipelines/aapl_risks.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="o">&amp;&amp;</span><span class="w"> </span>trellis<span class="w"> </span>validate<span class="w"> </span>pipelines/aapl_risks.yaml
+</code></pre></div>
 <hr />
 <h2 id="standard-output">Standard output<a class="headerlink" href="#standard-output" title="Permanent link">&para;</a></h2>
 <p>When <code>--json</code> is <strong>not</strong> set, <code>trellis run</code> prints three sections:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Outputs:
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>{
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  &quot;fetch&quot;: { &quot;status&quot;: &quot;success&quot;, ... },
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  &quot;extract&quot;: { &quot;revenue&quot;: 391035, ... },
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  &quot;export_json&quot;: { &quot;path&quot;: &quot;/abs/path/result.json&quot;, &quot;size&quot;: 312 }
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>}
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>Stats:
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>{
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>  &quot;waves_executed&quot;: 5,
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>  &quot;tasks_executed&quot;: 6
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>}
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Outputs:
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>{
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>  &quot;fetch&quot;: { &quot;status&quot;: &quot;success&quot;, ... },
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>  &quot;extract&quot;: { &quot;revenue&quot;: 391035, ... },
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>  &quot;export_json&quot;: { &quot;path&quot;: &quot;/abs/path/result.json&quot;, &quot;size&quot;: 312 }
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>}
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>Stats:
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>{
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>  &quot;waves_executed&quot;: 5,
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>  &quot;tasks_executed&quot;: 6
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>}
 </code></pre></div>
 <p>When <code>--json</code> is set, only the outputs JSON is printed to stdout — suitable for piping:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>trellis<span class="w"> </span>run<span class="w"> </span>pipelines/extract.yaml<span class="w"> </span>--params<span class="w"> </span><span class="s1">&#39;...&#39;</span><span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.extract.revenue&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>trellis<span class="w"> </span>run<span class="w"> </span>pipelines/extract.yaml<span class="w"> </span>--params<span class="w"> </span><span class="s1">&#39;...&#39;</span><span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.extract.revenue&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="exit-codes">Exit codes<a class="headerlink" href="#exit-codes" title="Permanent link">&para;</a></h2>
@@ -1859,24 +2135,29 @@
 <tr>
 <th>Code</th>
 <th>Meaning</th>
+<th>Commands</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>0</code></td>
 <td>Success</td>
+<td>all</td>
 </tr>
 <tr>
 <td><code>1</code></td>
-<td>Validation failed (<code>validate</code> command)</td>
+<td>Validation or compilation failure</td>
+<td><code>validate</code>, <code>compile</code></td>
 </tr>
 <tr>
 <td><code>2</code></td>
-<td>Bad argument (invalid JSON, missing session file)</td>
+<td>Bad argument (missing prompt, invalid JSON, missing file)</td>
+<td>all</td>
 </tr>
 <tr>
 <td><code>3</code></td>
 <td>Pipeline execution failed</td>
+<td><code>run</code></td>
 </tr>
 </tbody>
 </table>
@@ -1893,11 +2174,11 @@
 <tbody>
 <tr>
 <td><code>OPENAI_API_KEY</code></td>
-<td>OpenAI-backed tools</td>
+<td>OpenAI-backed tools and compiler</td>
 </tr>
 <tr>
 <td><code>ANTHROPIC_API_KEY</code></td>
-<td>Anthropic-backed tools</td>
+<td>Anthropic-backed tools and compiler</td>
 </tr>
 <tr>
 <td><code>OLLAMA_HOST</code></td>
@@ -1906,6 +2187,14 @@
 <tr>
 <td><code>TRELLIS_LLM_PROVIDER</code></td>
 <td>Default provider selection</td>
+</tr>
+<tr>
+<td><code>TRELLIS_LLM_MODEL</code></td>
+<td>Default model for <code>llm_job</code> and compiler fallback</td>
+</tr>
+<tr>
+<td><code>TRELLIS_COMPILER_MODEL</code></td>
+<td>Model used by <code>trellis compile</code> (overrides <code>TRELLIS_LLM_MODEL</code>)</td>
 </tr>
 <tr>
 <td><code>EXTRACT_TEXT_MODEL</code></td>
@@ -1920,6 +2209,7 @@
 <hr />
 <h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
+<li><a href="../tutorials/compile-pipeline/">Compile from prompt tutorial</a> — end-to-end walkthrough of compiling, validating, and running a generated pipeline</li>
 <li><a href="../interfaces-api/">API (REST)</a> — run pipelines over HTTP</li>
 <li><a href="../operations-configuration/">Configuration &amp; Environment</a> — full environment variable reference</li>
 <li><a href="../PIPELINE-DSL/">Pipeline DSL reference</a> — task syntax, params, retries, fan-out</li>
