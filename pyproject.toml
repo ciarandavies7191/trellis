@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 # Replace the name below with your chosen PyPI name before publishing.
 # The import name ("trellis", "trellis_api", etc.) is unaffected by this field.
 name = "trellis-pipelines"
-version = "0.1.0"
+version = "0.1.1"
 description = "Modular agentic pipeline system for document and data workflows"
 readme = "README.md"
 license = {file = "LICENSE"}

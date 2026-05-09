@@ -29,7 +29,10 @@
       "Bash(ls *.py)",
       "Bash(ls scripts/)",
       "Bash(trellis validate:*)",
-      "Bash(curl -s https://pypi.org/pypi/trellis/json)"
+      "Bash(curl -s https://pypi.org/pypi/trellis/json)",
+      "Bash(curl *)",
+      "Bash(rm uv.lock)",
+      "Bash(uv lock *)"
     ]
   }
 }
