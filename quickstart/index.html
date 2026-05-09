@@ -421,6 +421,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#step-6-compile-a-pipeline-from-a-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Compile a pipeline from a prompt
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 6 — Compile a pipeline from a prompt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#output-to-stdout-pipe-friendly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output to stdout (pipe-friendly)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prompt-from-a-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompt from a file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Python
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#whats-next" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -693,6 +743,34 @@
     
   
     Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/compile-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compile from Prompt
   
 
     
@@ -1235,6 +1313,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#step-6-compile-a-pipeline-from-a-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Compile a pipeline from a prompt
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 6 — Compile a pipeline from a prompt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#output-to-stdout-pipe-friendly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output to stdout (pipe-friendly)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prompt-from-a-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompt from a file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Python
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#whats-next" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1474,6 +1602,45 @@
 </code></pre></div>
 <p>For long-running pipelines use <code>POST /pipelines/run_async</code> to get a <code>run_id</code>, then poll <code>GET /pipelines/runs/{run_id}</code> for status and results.</p>
 <hr />
+<hr />
+<h2 id="step-6-compile-a-pipeline-from-a-prompt">Step 6 — Compile a pipeline from a prompt<a class="headerlink" href="#step-6-compile-a-pipeline-from-a-prompt" title="Permanent link">&para;</a></h2>
+<p>Instead of writing YAML by hand, describe what you want in plain English and let the Trellis compiler generate a validated pipeline for you.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>trellis<span class="w"> </span>compile<span class="w"> </span><span class="s2">&quot;Fetch Apple&#39;s latest 10-K from SEC EDGAR and summarise the key risk factors in bullet points&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span>--output<span class="w"> </span>pipelines/aapl_risks.yaml
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Compiling...
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Compiled pipeline &#39;fetch_apple_risks&#39; -&gt; pipelines/aapl_risks.yaml
+</code></pre></div>
+<p>The compiler calls an LLM with a system prompt containing the full DSL spec and your registered tool catalog. The response is validated with Pydantic and checked for cycles before it is accepted. If the first attempt fails validation, the compiler re-prompts with the error and tries again (up to <code>--max-repairs</code> times, default 2).</p>
+<p>Validate and run the result immediately:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>trellis<span class="w"> </span>validate<span class="w"> </span>pipelines/aapl_risks.yaml
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>trellis<span class="w"> </span>run<span class="w"> </span>pipelines/aapl_risks.yaml
+</code></pre></div>
+<h3 id="output-to-stdout-pipe-friendly">Output to stdout (pipe-friendly)<a class="headerlink" href="#output-to-stdout-pipe-friendly" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># --json prints only the raw YAML — no headers, no stats</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>trellis<span class="w"> </span>compile<span class="w"> </span><span class="s2">&quot;Summarise a PDF report in five executive bullet points&quot;</span><span class="w"> </span>--json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span>&gt;<span class="w"> </span>pipelines/pdf_summary.yaml
+</code></pre></div>
+<h3 id="prompt-from-a-file">Prompt from a file<a class="headerlink" href="#prompt-from-a-file" title="Permanent link">&para;</a></h3>
+<p>For longer or more structured descriptions, put them in a text file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>trellis<span class="w"> </span>compile<span class="w"> </span>--prompt-file<span class="w"> </span>prompts/sec_extraction_brief.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span>--output<span class="w"> </span>pipelines/sec_extract.yaml
+</code></pre></div>
+<h3 id="from-python">From Python<a class="headerlink" href="#from-python" title="Permanent link">&para;</a></h3>
+<p>The compiler is also available as a Python class:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">trellis.compiler</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineCompiler</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="n">compiler</span> <span class="o">=</span> <span class="n">PipelineCompiler</span><span class="p">()</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="n">result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>    <span class="s2">&quot;Fetch Apple&#39;s latest 10-K from SEC EDGAR and summarise key risks.&quot;</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="p">))</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">yaml_text</span><span class="p">)</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pipeline id: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Compiled in </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">attempts</span><span class="si">}</span><span class="s2"> attempt(s)&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><code>CompilerResult</code> exposes <code>pipeline</code> (or <code>plan</code>), <code>yaml_text</code>, <code>attempts</code>, and a <code>repair_history</code> list of <code>(broken_yaml, error)</code> pairs from any failed intermediate attempts.</p>
+<hr />
 <h2 id="whats-next">What's next<a class="headerlink" href="#whats-next" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1490,6 +1657,10 @@
 <tr>
 <td>All CLI flags and environment variables</td>
 <td><a href="../interfaces-cli/">CLI reference</a></td>
+</tr>
+<tr>
+<td>Compile from prompt — full walkthrough</td>
+<td><a href="../tutorials/compile-pipeline/">Compile tutorial</a></td>
 </tr>
 <tr>
 <td>API endpoints, request/response schemas</td>
