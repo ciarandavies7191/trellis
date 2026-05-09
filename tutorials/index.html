@@ -662,6 +662,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#bm25-section-extraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BM25 Section Extraction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#sec-filing-field-extraction" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1238,6 +1249,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#bm25-section-extraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BM25 Section Extraction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#sec-filing-field-extraction" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1327,6 +1349,12 @@
 <strong>Requires:</strong> LLM API key<br />
 <strong>Time:</strong> ~10 minutes</p>
 <hr />
+<h3 id="bm25-section-extraction"><a href="bm25-section-extraction/">BM25 Section Extraction</a><a class="headerlink" href="#bm25-section-extraction" title="Permanent link">&para;</a></h3>
+<p>Extract structured fields from a specific section of a large document using keyword-based BM25 retrieval. Covers how chunk-mode <code>select</code> works, when to use it over page-mode, and how to build a BM25 index directly from the Python SDK.</p>
+<p><strong>Tools:</strong> <code>ingest_document</code> → <code>select</code> (BM25 mode) → <code>extract_from_texts</code> → <code>export</code><br />
+<strong>Requires:</strong> LLM API key<br />
+<strong>Time:</strong> ~10 minutes</p>
+<hr />
 <h3 id="sec-filing-field-extraction"><a href="sec-field-extraction/">SEC Filing Field Extraction</a><a class="headerlink" href="#sec-filing-field-extraction" title="Permanent link">&para;</a></h3>
 <p>Fetch a public 10-K or 10-Q from SEC EDGAR, ingest it, and extract typed financial fields against a declared schema. The full document-intelligence workflow end-to-end.</p>
 <p><strong>Tools:</strong> <code>fetch_data</code> → <code>ingest_document</code> → <code>select</code> → <code>load_schema</code> → <code>extract_fields</code> → <code>export</code><br />
@@ -1384,6 +1412,14 @@
 <tr>
 <td><code>extract_sec_field.yaml</code></td>
 <td>Full SEC extraction: schema + manual + fetch + extract + export</td>
+</tr>
+<tr>
+<td><code>bm25_field_extraction.yaml</code></td>
+<td>BM25 section selection + <code>extract_from_texts</code> on a large HTML filing</td>
+</tr>
+<tr>
+<td><code>meta_10k_workforce.yaml</code></td>
+<td>Workforce facts from Meta's 2025 10-K using BM25 select</td>
 </tr>
 </tbody>
 </table>
