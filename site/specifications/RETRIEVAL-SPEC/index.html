@@ -1,0 +1,2537 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Modular agentic pipeline system for document and data workflows">
+      
+      
+      
+        <link rel="canonical" href="https://ciarandavies7191.github.io/trellis/specifications/RETRIEVAL-SPEC/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/trellis-full.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Trellis Retrieval Architecture — Technical Specification - Trellis</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#trellis-retrieval-architecture-technical-specification" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Trellis" class="md-header__button md-logo" aria-label="Trellis" data-md-component="logo">
+      
+  <img src="../../assets/trellis-full.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Trellis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Trellis Retrieval Architecture — Technical Specification
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ciarandavies7191/trellis" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Trellis" class="md-nav__button md-logo" aria-label="Trellis" data-md-component="logo">
+      
+  <img src="../../assets/trellis-full.svg" alt="logo">
+
+    </a>
+    Trellis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ciarandavies7191/trellis" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PIPELINE-DSL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline DSL Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools & Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interfaces
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Interfaces
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API (REST)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials & Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials & Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/compile-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compile from Prompt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/web-search-summarize/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Search & Summarization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/pdf-ingest-extract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PDF Ingest & Extraction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/sec-field-extraction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SEC Filing Extraction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/export-results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exporting Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration & Environment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution Backends & Run Queue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations-blackboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Persistence & Multi-tenancy (Blackboard)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extensibility-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extensibility
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development & Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting & FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog & Versioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security & Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../support/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    License & Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Motivation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-problem-taxonomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Problem Taxonomy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Architecture Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Architecture Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Principle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-data-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Data Models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Data Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-chunktype" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 ChunkType
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-chunkmetadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 ChunkMetadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-structuredfact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 StructuredFact
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-chunkfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 ChunkFilter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-scoredchunk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 ScoredChunk
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-retrievalresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 RetrievalResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-plugin-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Plugin Interfaces
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Plugin Interfaces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-sectionclassifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 SectionClassifier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-synonymvocabulary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 SynonymVocabulary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-fieldtaxonomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 FieldTaxonomy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-retrievalregistry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 RetrievalRegistry
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-component-specifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Component Specifications
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Component Specifications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-structuralchunker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 StructuralChunker
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-metadataextractor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 MetadataExtractor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-bm25indexer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 BM25Indexer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-documentvectorindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 DocumentVectorIndex
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-factextractor-structuredfactstore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 FactExtractor + StructuredFactStore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-chunkpipeline-chunkpipelinestate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 ChunkPipeline + ChunkPipelineState
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#67-crossencoderreranker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7 CrossEncoderReranker
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#68-retrievalorchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8 RetrievalOrchestrator
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-select-tool-extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. select Tool Extension
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. select Tool Extension">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-input-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Input Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-dsl-usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. DSL Usage Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. DSL Usage Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-financial-spreading-pin-point-extraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Financial Spreading — Pin-Point Extraction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-mortgage-processing-income-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Mortgage Processing — Income Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-credit-underwriting-multi-document-reconciliation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Credit Underwriting — Multi-Document Reconciliation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-compliance-review-clause-level-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 Compliance Review — Clause-Level Retrieval
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85-mrm-validation-finding-extraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 MRM — Validation Finding Extraction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-package-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Package Layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-ingest_document-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. ingest_document Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-deploy-time-configuration-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Deploy-Time Configuration Examples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-test-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Test Coverage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Dependencies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. Dependencies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Required
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Optional
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-implementation-priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Implementation Priority
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="trellis-retrieval-architecture-technical-specification">Trellis Retrieval Architecture — Technical Specification<a class="headerlink" href="#trellis-retrieval-architecture-technical-specification" title="Permanent link">&para;</a></h1>
+<p><strong>Spec ID:</strong> TRELLIS-RETRIEVAL-v1.1<br />
+<strong>DSL Version:</strong> Pipeline DSL v1.4<br />
+<strong>Status:</strong> Draft — Implementation Ready<br />
+<strong>Audience:</strong> IDE coding agents, contributors<br />
+<strong>Depends on:</strong> <code>ARCHITECTURE.md</code>, <code>DESIGN.md</code>, <code>PIPELINE-DSL.md</code></p>
+<hr />
+<h2 id="1-motivation">1. Motivation<a class="headerlink" href="#1-motivation" title="Permanent link">&para;</a></h2>
+<p>The current <code>select</code> tool operates at page granularity using an LLM-driven inventory
+scan. This is adequate for broad-scope goals ("Risk factors", "Revenue overview") but
+fails systematically for fine-grained extraction and multi-document comparison workloads.</p>
+<p>Trellis is a generalist framework. The retrieval problem appears across every
+finance-adjacent document workflow:</p>
+<table>
+<thead>
+<tr>
+<th>Workload</th>
+<th>Document types</th>
+<th>Retrieval challenge</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SEC filing analysis</td>
+<td>10-K, 10-Q</td>
+<td>Pin-point table cell extraction across N filings, period alignment</td>
+</tr>
+<tr>
+<td>Financial spreading</td>
+<td>Income statements, balance sheets</td>
+<td>Exact field extraction against a known schema</td>
+</tr>
+<tr>
+<td>Mortgage processing</td>
+<td>Applications, appraisals, income verifications</td>
+<td>Cross-document fact reconciliation across a loan package</td>
+</tr>
+<tr>
+<td>Credit underwriting</td>
+<td>Credit reports, bank statements, tax returns</td>
+<td>Specific field extraction from heterogeneous formats</td>
+</tr>
+<tr>
+<td>Compliance review</td>
+<td>Policy documents, audit reports, regulatory filings</td>
+<td>Clause-level retrieval across large document sets</td>
+</tr>
+<tr>
+<td>MRM (Model Risk)</td>
+<td>Validation reports, model documentation</td>
+<td>Section-level retrieval across technical documents</td>
+</tr>
+</tbody>
+</table>
+<p>The retrieval architecture in this spec is <strong>domain-agnostic</strong>. It provides a
+general-purpose chunking, indexing, and retrieval stack. Domain-specific knowledge
+(section classifiers, synonym vocabularies, canonical field taxonomies) is injected
+as configuration at deploy time, not hardcoded into the framework.</p>
+<hr />
+<h2 id="2-problem-taxonomy">2. Problem Taxonomy<a class="headerlink" href="#2-problem-taxonomy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Failure Mode</th>
+<th>Description</th>
+<th>Wrong Fix</th>
+<th>Right Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Granularity mismatch</strong></td>
+<td>Page-level chunks are too coarse for pin-point extraction</td>
+<td>Better LLM prompting</td>
+<td>Sub-page structural chunking</td>
+</tr>
+<tr>
+<td><strong>Vocabulary brittleness</strong></td>
+<td>Same concept, different label across documents or document types</td>
+<td>Larger embedding model</td>
+<td>Domain synonym expansion (injected at deploy time)</td>
+</tr>
+<tr>
+<td><strong>Structural sparsity</strong></td>
+<td>Table chunk <code>"2,847 | 3,012 | 2,654"</code> has near-zero semantic content without row/column context</td>
+<td>None — embedding models cannot fix this</td>
+<td>Metadata-enriched chunks carrying row/column labels</td>
+</tr>
+<tr>
+<td><strong>Multi-document misalignment</strong></td>
+<td>Same field extracted inconsistently across a document set</td>
+<td>Post-hoc deduplication</td>
+<td>Canonical field taxonomy (domain-specific, injected)</td>
+</tr>
+<tr>
+<td><strong>Context dilution</strong></td>
+<td>Irrelevant sections flood extraction context</td>
+<td>Larger context window</td>
+<td>Metadata pre-filter before retrieval</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-architecture-overview">3. Architecture Overview<a class="headerlink" href="#3-architecture-overview" title="Permanent link">&para;</a></h2>
+<p>The retrieval architecture introduces two parallel lookup tiers that compose within
+the existing <code>select</code> tool interface. The DSL author sees no new complexity. The
+runtime selects the appropriate execution path based on query parameters.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ingest_document (existing, unchanged interface)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    └──► ChunkPipeline  [NEW — runs at ingest time, async-capable]
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>              ├──► StructuralChunker     → ChunkList
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>              ├──► MetadataExtractor     → ChunkMetadata[]       (uses injected SectionClassifier)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>              ├──► BM25Indexer           → DocumentBM25Index     (uses injected SynonymVocabulary)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>              ├──► EmbeddingIndexer      → DocumentVectorIndex   (async, eventually consistent)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>              └──► FactExtractor         → StructuredFactStore   (uses injected FieldTaxonomy)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>select (extended — new execution paths, existing page-mode interface preserved)
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    ├──► granularity: page  → existing LLM inventory scan (unchanged)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    └──► granularity: chunk → RetrievalOrchestrator
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>              ├──► 1. Metadata pre-filter  (ChunkFilter applied before any search)
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>              ├──► 2. Tier 1: StructuredFactStore exact lookup
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>              │         ├── HIT  → return facts + chunk back-references for context
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>              │         └── MISS → fall through
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>              ├──► 3. Tier 2: Hybrid BM25 + vector search → optional CrossEncoder re-rank
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>              └──► 4. Optional: Tier 1 vs Tier 2 cross-validation (confidence / warning)
+</code></pre></div>
+<h3 id="design-principle">Design Principle<a class="headerlink" href="#design-principle" title="Permanent link">&para;</a></h3>
+<p>The retrieval stack is a <strong>general engine</strong>. Everything domain-specific is a plugin:</p>
+<table>
+<thead>
+<tr>
+<th>Plugin</th>
+<th>Interface</th>
+<th>Example: SEC filings</th>
+<th>Example: Mortgage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SectionClassifier</code></td>
+<td>Maps chunk text → section label</td>
+<td><code>income_statement</code>, <code>balance_sheet</code></td>
+<td><code>borrower_income</code>, <code>property_appraisal</code></td>
+</tr>
+<tr>
+<td><code>SynonymVocabulary</code></td>
+<td>Maps canonical term → surface variants</td>
+<td><code>revenue → ["net revenues", "total net sales"]</code></td>
+<td><code>annual_income → ["gross income", "yearly earnings"]</code></td>
+</tr>
+<tr>
+<td><code>FieldTaxonomy</code></td>
+<td>Maps raw label → canonical field key</td>
+<td><code>"Net revenues" → "revenue.total"</code></td>
+<td><code>"Gross monthly income" → "income.gross_monthly"</code></td>
+</tr>
+</tbody>
+</table>
+<p>None of these plugins are part of the core framework. They are registered at deploy time
+by the operator, exactly as <code>FunctionRegistry</code> and <code>SchemaRegistry</code> are today.</p>
+<hr />
+<h2 id="4-data-models">4. Data Models<a class="headerlink" href="#4-data-models" title="Permanent link">&para;</a></h2>
+<p>All new models live in <code>trellis/retrieval/models.py</code>.</p>
+<h3 id="41-chunktype">4.1 <code>ChunkType</code><a class="headerlink" href="#41-chunktype" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">ChunkType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">TABLE</span> <span class="o">=</span> <span class="s2">&quot;table&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">PROSE</span> <span class="o">=</span> <span class="s2">&quot;prose&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">HEADING</span> <span class="o">=</span> <span class="s2">&quot;heading&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">FOOTNOTE</span> <span class="o">=</span> <span class="s2">&quot;footnote&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">CAPTION</span> <span class="o">=</span> <span class="s2">&quot;caption&quot;</span>
+</code></pre></div>
+<h3 id="42-chunkmetadata">4.2 <code>ChunkMetadata</code><a class="headerlink" href="#42-chunkmetadata" title="Permanent link">&para;</a></h3>
+<p>Extracted once at ingest time. Stored in parallel to index vectors. Section labels
+and field labels are populated by injected plugins — the framework stores whatever
+strings those plugins emit without interpreting them.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nd">@dataclass</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">ChunkMetadata</span><span class="p">:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">chunk_id</span><span class="p">:</span> <span class="nb">str</span>                       <span class="c1"># stable uuid</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">document_id</span><span class="p">:</span> <span class="nb">str</span>                    <span class="c1"># back-ref to source DocumentHandle</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">tenant_id</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">page</span><span class="p">:</span> <span class="nb">int</span>                           <span class="c1"># 1-based source page</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">chunk_type</span><span class="p">:</span> <span class="n">ChunkType</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">section_label</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>        <span class="c1"># domain-specific; populated by SectionClassifier</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>                                        <span class="c1"># e.g. &quot;income_statement&quot;, &quot;borrower_income&quot;,</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>                                        <span class="c1"># &quot;model_validation_summary&quot; — framework is agnostic</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="n">period_labels</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>            <span class="c1"># normalized period strings if detected; empty otherwise</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="n">period_ends</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>              <span class="c1"># ISO dates if detected; empty otherwise</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="n">row_labels</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>               <span class="c1"># table row headers (empty for non-TABLE chunks)</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="n">column_labels</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>            <span class="c1"># table column headers (empty for non-TABLE chunks)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="n">extra</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>               <span class="c1"># plugin-populated free-form metadata</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span>                           <span class="c1"># raw chunk text (for BM25 and context delivery)</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>    <span class="n">embedding</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>    <span class="c1"># populated async by EmbeddingIndexer</span>
+</code></pre></div>
+<p><code>section_label</code> uses a flat string rather than an enum so that domain plugins can
+define their own label vocabularies without modifying the framework.</p>
+<p><code>extra</code> is a schema-free extension point for domain-specific metadata that does not
+fit the standard fields. Examples: <code>{"loan_id": "...", "applicant": "..."}</code> for
+mortgage processing, <code>{"model_id": "...", "validation_stage": "..."}</code> for MRM.</p>
+<h3 id="43-structuredfact">4.3 <code>StructuredFact</code><a class="headerlink" href="#43-structuredfact" title="Permanent link">&para;</a></h3>
+<p>The Tier 1 lookup record. Domain-agnostic: <code>section</code> and <code>field_canonical</code> are
+populated by the operator's <code>FieldTaxonomy</code> plugin and are opaque strings to the
+framework. The framework stores, indexes, and retrieves them without interpreting
+what they mean.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nd">@dataclass</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">StructuredFact</span><span class="p">:</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">fact_id</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">tenant_id</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">document_id</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">chunk_id</span><span class="p">:</span> <span class="nb">str</span>                       <span class="c1"># back-ref to source ChunkMetadata</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">section</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>             <span class="c1"># from SectionClassifier plugin</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">field_raw</span><span class="p">:</span> <span class="nb">str</span>                      <span class="c1"># label exactly as it appears in the document</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="n">field_canonical</span><span class="p">:</span> <span class="nb">str</span>                <span class="c1"># normalized via FieldTaxonomy plugin</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">value</span><span class="p">:</span> <span class="nb">str</span>                          <span class="c1"># raw string; callers parse as needed</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">value_numeric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>      <span class="c1"># parsed if value is numeric</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">unit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>                 <span class="c1"># &quot;$&quot;, &quot;months&quot;, &quot;bps&quot;, &quot;%&quot; etc. if detected</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="n">period_label</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>         <span class="c1"># from ChunkMetadata.period_labels if applicable</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span>                   <span class="c1"># extraction confidence [0.0, 1.0]</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    <span class="n">extra</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>               <span class="c1"># plugin-populated free-form provenance</span>
+</code></pre></div>
+<h3 id="44-chunkfilter">4.4 <code>ChunkFilter</code><a class="headerlink" href="#44-chunkfilter" title="Permanent link">&para;</a></h3>
+<p>Query-time pre-filter applied before any index search. Field names match
+<code>ChunkMetadata</code>. <code>section_labels</code> accepts whatever label vocabulary the operator's
+<code>SectionClassifier</code> emits.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nd">@dataclass</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">ChunkFilter</span><span class="p">:</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">document_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">chunk_types</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">ChunkType</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">section_labels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>   <span class="c1"># domain-defined; framework is agnostic</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">period_labels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">extra_filters</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># matched against ChunkMetadata.extra</span>
+</code></pre></div>
+<h3 id="45-scoredchunk">4.5 <code>ScoredChunk</code><a class="headerlink" href="#45-scoredchunk" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nd">@dataclass</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">ScoredChunk</span><span class="p">:</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">chunk</span><span class="p">:</span> <span class="n">ChunkMetadata</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">score</span><span class="p">:</span> <span class="nb">float</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">retrieval_method</span><span class="p">:</span> <span class="nb">str</span>    <span class="c1"># &quot;bm25&quot; | &quot;dense&quot; | &quot;hybrid&quot; | &quot;rerank&quot;</span>
+</code></pre></div>
+<h3 id="46-retrievalresult">4.6 <code>RetrievalResult</code><a class="headerlink" href="#46-retrievalresult" title="Permanent link">&para;</a></h3>
+<p>Unified output from <code>RetrievalOrchestrator</code>. Returned by <code>select</code> in chunk mode.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nd">@dataclass</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">RetrievalResult</span><span class="p">:</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">facts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StructuredFact</span><span class="p">]</span>      <span class="c1"># Tier 1 hits (may be empty)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">chunks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ScoredChunk</span><span class="p">]</span>        <span class="c1"># Tier 2 hits (may be empty)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">tier_used</span><span class="p">:</span> <span class="nb">str</span>                   <span class="c1"># &quot;tier1&quot; | &quot;tier2&quot; | &quot;hybrid&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">warnings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>              <span class="c1"># low-confidence flags, index-not-ready notices</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="n">query_periods</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>         <span class="c1"># period labels used for filtering (if any)</span>
+</code></pre></div>
+<hr />
+<h2 id="5-plugin-interfaces">5. Plugin Interfaces<a class="headerlink" href="#5-plugin-interfaces" title="Permanent link">&para;</a></h2>
+<p>Plugins are registered with <code>RetrievalRegistry</code> at deploy time. All three are
+optional — the framework degrades gracefully when they are absent.</p>
+<h3 id="51-sectionclassifier">5.1 <code>SectionClassifier</code><a class="headerlink" href="#51-sectionclassifier" title="Permanent link">&para;</a></h3>
+<p>Maps a chunk (text + structural signals) to a domain-specific section label.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">SectionClassifier</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="nd">@abstractmethod</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">classify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chunk</span><span class="p">:</span> <span class="n">ChunkMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="sd">        Return a domain-specific section label, or None if the chunk</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="sd">        does not belong to a known section type.</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="sd">        Examples of returned strings (operator-defined):</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="sd">          SEC filings:   &quot;income_statement&quot;, &quot;balance_sheet&quot;, &quot;risk_factors&quot;</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="sd">          Mortgage:      &quot;borrower_income&quot;, &quot;property_appraisal&quot;, &quot;credit_history&quot;</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="sd">          MRM:           &quot;model_description&quot;, &quot;validation_findings&quot;, &quot;limitations&quot;</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="sd">          Compliance:    &quot;policy_obligation&quot;, &quot;control_evidence&quot;, &quot;gap_assessment&quot;</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="sd">        &quot;&quot;&quot;</span>
+</code></pre></div>
+<p>A <code>KeywordSectionClassifier</code> default implementation is provided. It accepts a dict
+mapping label → trigger keywords and classifies by keyword density:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">classifier</span> <span class="o">=</span> <span class="n">KeywordSectionClassifier</span><span class="p">(</span><span class="n">rules</span><span class="o">=</span><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="s2">&quot;income_statement&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;revenue&quot;</span><span class="p">,</span> <span class="s2">&quot;gross profit&quot;</span><span class="p">,</span> <span class="s2">&quot;operating income&quot;</span><span class="p">,</span> <span class="s2">&quot;net income&quot;</span><span class="p">],</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="s2">&quot;balance_sheet&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;total assets&quot;</span><span class="p">,</span> <span class="s2">&quot;total liabilities&quot;</span><span class="p">,</span> <span class="s2">&quot;shareholders equity&quot;</span><span class="p">],</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p">})</span>
+</code></pre></div>
+<p>Operators can replace this with a fine-tuned classifier, an LLM call, or any other
+implementation behind the interface.</p>
+<h3 id="52-synonymvocabulary">5.2 <code>SynonymVocabulary</code><a class="headerlink" href="#52-synonymvocabulary" title="Permanent link">&para;</a></h3>
+<p>Maps canonical terms to the surface-form variants expected in target documents.
+Applied at both BM25 index time and query time.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">SynonymVocabulary</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="nd">@abstractmethod</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">expand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">term</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="sd">        Return surface variants for a canonical term including the term itself.</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="sd">        Returns [term] if no expansions are known.</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="nd">@abstractmethod</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">tokenize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="sd">        Tokenize text with synonym expansion applied.</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="sd">        Used to build the BM25 index and to tokenize queries.</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="sd">        &quot;&quot;&quot;</span>
+</code></pre></div>
+<p>A <code>DictSynonymVocabulary</code> default implementation accepts a plain dict:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">vocab</span> <span class="o">=</span> <span class="n">DictSynonymVocabulary</span><span class="p">({</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="s2">&quot;revenue&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;revenues&quot;</span><span class="p">,</span> <span class="s2">&quot;net revenues&quot;</span><span class="p">,</span> <span class="s2">&quot;total revenues&quot;</span><span class="p">,</span> <span class="s2">&quot;net sales&quot;</span><span class="p">],</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="s2">&quot;net_income&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;net earnings&quot;</span><span class="p">,</span> <span class="s2">&quot;profit for the period&quot;</span><span class="p">,</span> <span class="s2">&quot;net profit&quot;</span><span class="p">],</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">})</span>
+</code></pre></div>
+<h3 id="53-fieldtaxonomy">5.3 <code>FieldTaxonomy</code><a class="headerlink" href="#53-fieldtaxonomy" title="Permanent link">&para;</a></h3>
+<p>Maps raw field labels as they appear in documents to canonical field keys.
+Used by <code>FactExtractor</code> to populate <code>StructuredFact.field_canonical</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">FieldTaxonomy</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="nd">@abstractmethod</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">canonicalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="sd">        Return a canonical field key for a raw label string.</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="sd">        `section` hint may be used to disambiguate (e.g. &quot;assets.total&quot; vs</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="sd">        &quot;liabilities.total&quot; when the raw label is just &quot;Total&quot;).</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="sd">        Returns &quot;unknown.&quot; + slugify(raw_label) if no mapping exists.</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="sd">        &quot;&quot;&quot;</span>
+</code></pre></div>
+<p>A <code>DictFieldTaxonomy</code> default accepts a dict keyed by <code>(section, raw_label)</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">taxonomy</span> <span class="o">=</span> <span class="n">DictFieldTaxonomy</span><span class="p">({</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="p">(</span><span class="s2">&quot;income_statement&quot;</span><span class="p">,</span> <span class="s2">&quot;net revenues&quot;</span><span class="p">):</span> <span class="s2">&quot;revenue.total&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="p">(</span><span class="s2">&quot;income_statement&quot;</span><span class="p">,</span> <span class="s2">&quot;total net sales&quot;</span><span class="p">):</span> <span class="s2">&quot;revenue.total&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="p">(</span><span class="s2">&quot;borrower_income&quot;</span><span class="p">,</span> <span class="s2">&quot;gross monthly income&quot;</span><span class="p">):</span> <span class="s2">&quot;income.gross_monthly&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="p">(</span><span class="s2">&quot;borrower_income&quot;</span><span class="p">,</span> <span class="s2">&quot;base salary&quot;</span><span class="p">):</span> <span class="s2">&quot;income.base_salary&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="p">})</span>
+</code></pre></div>
+<h3 id="54-retrievalregistry">5.4 <code>RetrievalRegistry</code><a class="headerlink" href="#54-retrievalregistry" title="Permanent link">&para;</a></h3>
+<p>Holds registered plugins and makes them available to the retrieval stack.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">RetrievalRegistry</span><span class="p">:</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">register_classifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classifier</span><span class="p">:</span> <span class="n">SectionClassifier</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">register_vocabulary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocabulary</span><span class="p">:</span> <span class="n">SynonymVocabulary</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">register_taxonomy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">taxonomy</span><span class="p">:</span> <span class="n">FieldTaxonomy</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="nd">@property</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">classifier</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SectionClassifier</span><span class="p">:</span> <span class="o">...</span>   <span class="c1"># falls back to NullClassifier</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="nd">@property</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">vocabulary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SynonymVocabulary</span><span class="p">:</span> <span class="o">...</span>   <span class="c1"># falls back to WhitespaceSynonymVocabulary</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="nd">@property</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">taxonomy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FieldTaxonomy</span><span class="p">:</span> <span class="o">...</span>         <span class="c1"># falls back to SlugifyTaxonomy</span>
+</code></pre></div>
+<p>Null/fallback implementations ensure the retrieval stack functions without any
+registered plugins — it produces less precise section labels and canonical keys
+but does not fail.</p>
+<hr />
+<h2 id="6-component-specifications">6. Component Specifications<a class="headerlink" href="#6-component-specifications" title="Permanent link">&para;</a></h2>
+<h3 id="61-structuralchunker">6.1 <code>StructuralChunker</code><a class="headerlink" href="#61-structuralchunker" title="Permanent link">&para;</a></h3>
+<p><strong>Location:</strong> <code>trellis/retrieval/chunker.py</code><br />
+<strong>Replaces:</strong> naive fixed-size character chunking in <code>ingest_document</code>'s HTML-to-pages path<br />
+<strong>Trigger:</strong> called by <code>ChunkPipeline</code> after <code>ingest_document</code> resolves all page text</p>
+<p>The chunker partitions a fully-resolved <code>DocumentHandle</code> into atomic semantic units.
+It is document-format-aware but domain-agnostic — it produces structural boundaries
+without interpreting what the sections mean. Interpretation is delegated entirely to
+the <code>SectionClassifier</code> plugin in the subsequent <code>MetadataExtractor</code> step.</p>
+<p><strong>PDF chunking hierarchy:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Level 1 — Outline tree (PyMuPDF ToC)
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    Level 2 — Font size statistics (section boundary detection)
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>        Level 3 — Spatial position (column break, header/footer region)
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>            Level 4 — Content patterns (table start/end, footnote markers)
+</code></pre></div>
+<p><strong>Rules:</strong></p>
+<ul>
+<li>Tables are atomic. A table spanning multiple pages is one chunk. Never split mid-row.</li>
+<li>Section headings are emitted as standalone <code>HEADING</code> chunks to preserve
+  heading→body associations in downstream retrieval.</li>
+<li>Footnotes are separated from body prose and tagged <code>FOOTNOTE</code>.</li>
+<li>Prose paragraphs within a section are grouped into chunks of ≤512 tokens
+  (tiktoken <code>cl100k_base</code>) without splitting mid-sentence.</li>
+<li>Column headers are extracted from the first non-empty row → <code>column_labels</code>.
+  Row headers (first column of each row) → <code>row_labels</code>.</li>
+</ul>
+<p><strong>XLSX rules:</strong></p>
+<ul>
+<li>Each logical table (contiguous non-empty range) per sheet is one chunk.</li>
+<li>Sheet name preserved via <code>Page.sheet_name</code>.</li>
+</ul>
+<p><strong>Output:</strong> <code>list[ChunkMetadata]</code> with <code>text</code>, <code>row_labels</code>, <code>column_labels</code> populated.
+<code>section_label</code> and <code>period_labels</code> are empty at this stage; populated by <code>MetadataExtractor</code>.</p>
+<hr />
+<h3 id="62-metadataextractor">6.2 <code>MetadataExtractor</code><a class="headerlink" href="#62-metadataextractor" title="Permanent link">&para;</a></h3>
+<p><strong>Location:</strong> <code>trellis/retrieval/metadata.py</code></p>
+<p>Runs over each <code>ChunkMetadata</code> after chunking. Populates <code>section_label</code>,
+<code>period_labels</code>, <code>period_ends</code>. Uses the registered <code>SectionClassifier</code> and a
+domain-agnostic period regex that fires only when date/period patterns are present.</p>
+<p><strong>Section labelling:</strong> delegates entirely to the registered <code>SectionClassifier</code>.
+The extractor does not interpret the returned label. If no classifier is registered,
+<code>section_label</code> remains <code>None</code>.</p>
+<p><strong>Period detection</strong> is domain-agnostic. It fires on any document containing temporal
+references in column headers or prose — financial statements, loan applications,
+audit reports, and model validation documents all contain dates:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">PERIOD_PATTERNS</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="sa">r</span><span class="s2">&quot;(?:three|six|nine|twelve)\s+months?\s+ended\s+(\w+\s+\d{1,2},?\s+\d</span><span class="si">{4}</span><span class="s2">)&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="sa">r</span><span class="s2">&quot;(?:year|quarter|period)\s+ended\s+(\w+\s+\d{1,2},?\s+\d</span><span class="si">{4}</span><span class="s2">)&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="sa">r</span><span class="s2">&quot;(Q[1-4]\s+(?:FY|CY)?\d</span><span class="si">{4}</span><span class="s2">)&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="sa">r</span><span class="s2">&quot;(\d</span><span class="si">{4}</span><span class="s2">-\d</span><span class="si">{2}</span><span class="s2">-\d</span><span class="si">{2}</span><span class="s2">)&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="sa">r</span><span class="s2">&quot;(\d{1,2}/\d{1,2}/\d{2,4})&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="p">]</span>
+</code></pre></div>
+<p>Extracted date strings are normalized to ISO format via <code>dateutil.parser</code>.
+Period detection is <strong>opt-in at query time</strong> via <code>ChunkFilter.period_labels</code>.
+Workflows where temporal alignment is irrelevant (compliance clause search,
+static form extraction) simply omit <code>period_labels</code> from the filter.</p>
+<hr />
+<h3 id="63-bm25indexer">6.3 <code>BM25Indexer</code><a class="headerlink" href="#63-bm25indexer" title="Permanent link">&para;</a></h3>
+<p><strong>Location:</strong> <code>trellis/retrieval/bm25_index.py</code><br />
+<strong>Dependency:</strong> <code>rank-bm25&gt;=0.2.2</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">DocumentBM25Index</span><span class="p">:</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>        <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>        <span class="n">chunks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ChunkMetadata</span><span class="p">],</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>        <span class="n">vocabulary</span><span class="p">:</span> <span class="n">SynonymVocabulary</span><span class="p">,</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    <span class="p">):</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>        <span class="c1"># Tokenize using vocabulary.tokenize() — synonym expansion at index time</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>        <span class="o">...</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>        <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>        <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>        <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>        <span class="n">filters</span><span class="p">:</span> <span class="n">ChunkFilter</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>        <span class="c1"># Returns (chunk_id, bm25_score); query tokenized via same vocabulary</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>        <span class="o">...</span>
+</code></pre></div>
+<p>Because synonym expansion is applied identically at index time and query time via
+<code>SynonymVocabulary.tokenize</code>, BM25 matches on the expanded vocabulary transparently.
+An MRM operator registers a vocabulary covering <code>"PD model" → ["probability of default
+model", "pd estimation model"]</code>; a mortgage operator registers <code>"DTI" → ["debt-to-income
+ratio"]</code>. The index implementation is identical in both cases.</p>
+<hr />
+<h3 id="64-documentvectorindex">6.4 <code>DocumentVectorIndex</code><a class="headerlink" href="#64-documentvectorindex" title="Permanent link">&para;</a></h3>
+<p><strong>Location:</strong> <code>trellis/retrieval/vector_index.py</code><br />
+<strong>Dependencies:</strong> <code>faiss-cpu&gt;=1.7.4</code> (production), <code>numpy&gt;=1.24</code> (always available)</p>
+<p>Two implementations behind a common interface, allowing the operator to select the
+appropriate one based on corpus scale:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">VectorIndex</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    <span class="nd">@abstractmethod</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">upsert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chunk_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">embeddings</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="nd">@abstractmethod</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>        <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>        <span class="n">query_embedding</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>        <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>        <span class="n">filters</span><span class="p">:</span> <span class="n">ChunkFilter</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>        <span class="c1"># Returns (chunk_id, cosine_score)</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>        <span class="o">...</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="k">class</span><span class="w"> </span><span class="nc">NumpyVectorIndex</span><span class="p">(</span><span class="n">VectorIndex</span><span class="p">):</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;In-process cosine similarity. No dependencies beyond numpy.</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="sd">    Adequate for single-document and small corpus workloads (≤5,000 chunks).</span>
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="sd">    Default implementation.&quot;&quot;&quot;</span>
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>    <span class="o">...</span>
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="k">class</span><span class="w"> </span><span class="nc">FAISSVectorIndex</span><span class="p">(</span><span class="n">VectorIndex</span><span class="p">):</span>
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;FAISS flat inner-product index (L2-normalized → cosine similarity).</span>
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a><span class="sd">    Suitable for corpus-scale workloads (≥5,000 chunks).</span>
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a><span class="sd">    Activated by operator registration; interface is identical to NumpyVectorIndex.&quot;&quot;&quot;</span>
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>    <span class="o">...</span>
+</code></pre></div>
+<p>The crossover point is roughly 5,000 chunks. At that scale the latency difference
+between numpy cosine and FAISS becomes meaningful. <code>NumpyVectorIndex</code> is the default;
+<code>FAISSVectorIndex</code> is registered by the operator when corpus scale warrants it.</p>
+<p><strong>Embedding model:</strong> configurable via <code>TRELLIS_EMBEDDING_MODEL</code> environment variable.
+Default: <code>text-embedding-3-small</code> (1536-dim, via litellm). Any model accessible through
+litellm is supported without code changes.</p>
+<p><strong>Index lifecycle:</strong> embedding generation runs as a background <code>asyncio.Task</code>.
+<code>ChunkPipelineState.embedding_complete</code> tracks readiness. <code>select</code> checks readiness
+before querying; falls back to BM25-only with a warning if not yet ready.</p>
+<hr />
+<h3 id="65-factextractor-structuredfactstore">6.5 <code>FactExtractor</code> + <code>StructuredFactStore</code><a class="headerlink" href="#65-factextractor-structuredfactstore" title="Permanent link">&para;</a></h3>
+<p><strong>Location:</strong> <code>trellis/retrieval/fact_store.py</code></p>
+<p>Tier 1 is an optional precision layer. It is most valuable when the document set
+contains structured tabular content with known field semantics — financial statements,
+standardised application forms, templated reports. For free-form documents (legal
+opinions, narrative audit reports), Tier 1 produces few hits and Tier 2 carries
+the load. The framework does not require Tier 1 to function.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">StructuredFactStore</span><span class="p">:</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="sd">    In-memory fact store keyed by</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="sd">    (tenant_id, document_id, section, field_canonical).</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="sd">    Serializable to/from JSON for session persistence.</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">upsert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">facts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StructuredFact</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>        <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>        <span class="n">tenant_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>        <span class="n">document_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>        <span class="n">sections</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>        <span class="n">field_canonical</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>        <span class="n">period_labels</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">StructuredFact</span><span class="p">]:</span> <span class="o">...</span>
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">has_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span> <span class="o">...</span>
+</code></pre></div>
+<p><code>FactExtractor</code> runs over <code>TABLE</code> chunks using the registered <code>FieldTaxonomy</code> to map
+raw row labels to canonical keys. It is a generic table-cell extractor: it reads
+<code>row_labels</code> × <code>column_labels</code> intersections and emits one <code>StructuredFact</code> per cell.
+Whether those facts are useful downstream depends entirely on the operator's taxonomy.</p>
+<p>For document types where structured data is available directly from an external source
+(structured data APIs, standardised data feeds), <code>StructuredFact</code> records can be
+ingested directly at <code>fetch_data</code> time, bypassing PDF extraction entirely. This is an
+operator-level integration decision.</p>
+<hr />
+<h3 id="66-chunkpipeline-chunkpipelinestate">6.6 <code>ChunkPipeline</code> + <code>ChunkPipelineState</code><a class="headerlink" href="#66-chunkpipeline-chunkpipelinestate" title="Permanent link">&para;</a></h3>
+<p><strong>Location:</strong> <code>trellis/retrieval/pipeline.py</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nd">@dataclass</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">ChunkPipelineState</span><span class="p">:</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="n">document_id</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="n">tenant_id</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="n">chunking_complete</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    <span class="n">metadata_complete</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    <span class="n">bm25_complete</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>    <span class="n">fact_extraction_complete</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>    <span class="n">embedding_complete</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>        <span class="c1"># async — lags behind synchronous steps</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>    <span class="n">error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="k">class</span><span class="w"> </span><span class="nc">ChunkPipeline</span><span class="p">:</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">registry</span><span class="p">:</span> <span class="n">RetrievalRegistry</span><span class="p">):</span> <span class="o">...</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>        <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>        <span class="n">handle</span><span class="p">:</span> <span class="n">DocumentHandle</span><span class="p">,</span>
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>        <span class="n">tenant_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>        <span class="n">document_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>        <span class="n">background</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChunkPipelineState</span><span class="p">:</span> <span class="o">...</span>
+</code></pre></div>
+<p><strong>Execution order:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>1. StructuralChunker.chunk(handle)               → ChunkList       [sync, fast]
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>2. MetadataExtractor.extract(chunks, registry)   → ChunkMetadata[] [sync, fast]
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>3. DocumentBM25Index.build(chunks, vocabulary)   → index           [sync, &lt;200ms]
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>4. FactExtractor.extract(chunks, taxonomy)       → facts           [sync, variable]
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>5. EmbeddingIndexer.embed_and_upsert(chunks)     → vector index    [async if background=True]
+</code></pre></div>
+<p>Steps 1–4 complete synchronously before <code>ingest_document</code> returns. Step 5 runs as a
+background <code>asyncio.Task</code>. The cancellation path for Step 5 is wired to
+<code>ExecutionOptions.cancel_event</code> to prevent orphaned embedding API calls on pipeline
+cancellation.</p>
+<hr />
+<h3 id="67-crossencoderreranker">6.7 <code>CrossEncoderReranker</code><a class="headerlink" href="#67-crossencoderreranker" title="Permanent link">&para;</a></h3>
+<p><strong>Location:</strong> <code>trellis/retrieval/reranker.py</code><br />
+<strong>Dependency:</strong> <code>sentence-transformers&gt;=2.6</code> (optional)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">CrossEncoderReranker</span><span class="p">:</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cross-encoder/ms-marco-MiniLM-L-6-v2&quot;</span><span class="p">):</span> <span class="o">...</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">rerank</span><span class="p">(</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>        <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>        <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>        <span class="n">candidates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ScoredChunk</span><span class="p">],</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>        <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ScoredChunk</span><span class="p">]:</span> <span class="o">...</span>
+</code></pre></div>
+<p>Applied when <code>select</code> is called with <code>rerank: true</code> and candidate set is ≤50 chunks.
+If <code>sentence-transformers</code> is not installed, returns the hybrid-ranked candidates
+unchanged with a warning added to <code>RetrievalResult</code>.</p>
+<hr />
+<h3 id="68-retrievalorchestrator">6.8 <code>RetrievalOrchestrator</code><a class="headerlink" href="#68-retrievalorchestrator" title="Permanent link">&para;</a></h3>
+<p><strong>Location:</strong> <code>trellis/retrieval/orchestrator.py</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">RetrievalOrchestrator</span><span class="p">:</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>        <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>        <span class="n">fact_store</span><span class="p">:</span> <span class="n">StructuredFactStore</span><span class="p">,</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>        <span class="n">bm25_indexes</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">DocumentBM25Index</span><span class="p">],</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>        <span class="n">vector_index</span><span class="p">:</span> <span class="n">VectorIndex</span><span class="p">,</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>        <span class="n">reranker</span><span class="p">:</span> <span class="n">CrossEncoderReranker</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>        <span class="n">embedding_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>        <span class="n">registry</span><span class="p">:</span> <span class="n">RetrievalRegistry</span><span class="p">,</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>    <span class="p">):</span> <span class="o">...</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">retrieve</span><span class="p">(</span>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>        <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>        <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>        <span class="n">filters</span><span class="p">:</span> <span class="n">ChunkFilter</span><span class="p">,</span>
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a>        <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>        <span class="n">use_rerank</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RetrievalResult</span><span class="p">:</span> <span class="o">...</span>
+</code></pre></div>
+<p><strong>Hybrid ranking via Reciprocal Rank Fusion:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">reciprocal_rank_fusion</span><span class="p">(</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>    <span class="n">bm25_results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>    <span class="n">dense_results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>    <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>    <span class="n">scores</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>    <span class="k">for</span> <span class="n">rank</span><span class="p">,</span> <span class="p">(</span><span class="n">chunk_id</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">bm25_results</span><span class="p">):</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>        <span class="n">scores</span><span class="p">[</span><span class="n">chunk_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">chunk_id</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="n">rank</span><span class="p">)</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>    <span class="k">for</span> <span class="n">rank</span><span class="p">,</span> <span class="p">(</span><span class="n">chunk_id</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dense_results</span><span class="p">):</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>        <span class="n">scores</span><span class="p">[</span><span class="n">chunk_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">chunk_id</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="n">rank</span><span class="p">)</span>
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="7-select-tool-extension">7. <code>select</code> Tool Extension<a class="headerlink" href="#7-select-tool-extension" title="Permanent link">&para;</a></h2>
+<p><strong>Location:</strong> <code>trellis/tools/impls/select.py</code> (existing file, extended)</p>
+<p>All existing behaviour is preserved when <code>granularity</code> is absent or <code>"page"</code>.</p>
+<h3 id="new-input-parameters">New Input Parameters<a class="headerlink" href="#new-input-parameters" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>granularity</code></td>
+<td><code>"page" \| "chunk"</code></td>
+<td>no</td>
+<td><code>"page"</code></td>
+<td><code>"chunk"</code> activates structured retrieval</td>
+</tr>
+<tr>
+<td><code>filter</code></td>
+<td>dict (→ <code>ChunkFilter</code>)</td>
+<td>no</td>
+<td><code>None</code></td>
+<td>Pre-filter before search. All sub-fields optional. <code>section_labels</code> values are domain-defined strings</td>
+</tr>
+<tr>
+<td><code>rerank</code></td>
+<td>bool</td>
+<td>no</td>
+<td><code>False</code></td>
+<td>Apply cross-encoder re-ranking to top-k candidates</td>
+</tr>
+<tr>
+<td><code>top_k</code></td>
+<td>int</td>
+<td>no</td>
+<td><code>15</code></td>
+<td>Chunks to return in chunk mode</td>
+</tr>
+</tbody>
+</table>
+<p>In <code>granularity: chunk</code> mode, <code>select</code> emits a <code>RetrievalResult</code>. Downstream tools
+(<code>extract_fields</code>, <code>extract_from_texts</code>, <code>extract_from_tables</code>, <code>llm_job</code>) accept
+<code>RetrievalResult</code> as a valid <code>DocumentInput</code>. <code>RetrievalResult.facts</code> can be consumed
+directly by <code>llm_job</code> or <code>compute</code> tasks, bypassing further extraction when Tier 1
+provides sufficient coverage.</p>
+<hr />
+<h2 id="8-dsl-usage-examples">8. DSL Usage Examples<a class="headerlink" href="#8-dsl-usage-examples" title="Permanent link">&para;</a></h2>
+<p>The <code>select</code> interface is identical across all workload types. Domain specificity lives
+entirely in <code>filter.section_labels</code>, which the operator's <code>SectionClassifier</code> populates.</p>
+<h3 id="81-financial-spreading-pin-point-extraction">8.1 Financial Spreading — Pin-Point Extraction<a class="headerlink" href="#81-financial-spreading-pin-point-extraction" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select_income_statement</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">    </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{ingest_report.output}}&quot;</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Diluted</span><span class="nv"> </span><span class="s">weighted</span><span class="nv"> </span><span class="s">average</span><span class="nv"> </span><span class="s">shares</span><span class="nv"> </span><span class="s">outstanding</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">earnings</span><span class="nv"> </span><span class="s">per</span><span class="nv"> </span><span class="s">share&quot;</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">    </span><span class="nt">granularity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chunk</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="w">    </span><span class="nt">filter</span><span class="p">:</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="w">      </span><span class="nt">section_labels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">income_statement</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="w">      </span><span class="nt">period_labels</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{resolve_periods.output}}&quot;</span>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="w">    </span><span class="nt">rerank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<h3 id="82-mortgage-processing-income-verification">8.2 Mortgage Processing — Income Verification<a class="headerlink" href="#82-mortgage-processing-income-verification" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select_income_sections</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="w">    </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{ingest_loan_package.output}}&quot;</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Borrower</span><span class="nv"> </span><span class="s">income,</span><span class="nv"> </span><span class="s">employment</span><span class="nv"> </span><span class="s">history,</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">salary</span><span class="nv"> </span><span class="s">verification&quot;</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="w">    </span><span class="nt">granularity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chunk</span>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="w">    </span><span class="nt">filter</span><span class="p">:</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="w">      </span><span class="nt">section_labels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">borrower_income</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">employment_verification</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<h3 id="83-credit-underwriting-multi-document-reconciliation">8.3 Credit Underwriting — Multi-Document Reconciliation<a class="headerlink" href="#83-credit-underwriting-multi-document-reconciliation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select_credit_data</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="w">    </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{ingest_credit_package.output}}&quot;</span><span class="w">    </span><span class="c1"># list of handles</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Outstanding</span><span class="nv"> </span><span class="s">balances,</span><span class="nv"> </span><span class="s">payment</span><span class="nv"> </span><span class="s">history,</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">delinquency</span><span class="nv"> </span><span class="s">records&quot;</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="w">    </span><span class="nt">granularity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chunk</span>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="w">    </span><span class="nt">filter</span><span class="p">:</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="w">      </span><span class="nt">section_labels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">tradeline_summary</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">derogatory_marks</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">payment_history</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="w">    </span><span class="nt">top_k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+</code></pre></div>
+<h3 id="84-compliance-review-clause-level-retrieval">8.4 Compliance Review — Clause-Level Retrieval<a class="headerlink" href="#84-compliance-review-clause-level-retrieval" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select_obligations</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="w">    </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{ingest_policy_docs.output}}&quot;</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Data</span><span class="nv"> </span><span class="s">retention</span><span class="nv"> </span><span class="s">obligations</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">breach</span><span class="nv"> </span><span class="s">notification</span><span class="nv"> </span><span class="s">requirements&quot;</span>
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="w">    </span><span class="nt">granularity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chunk</span>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="w">    </span><span class="nt">filter</span><span class="p">:</span>
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a><span class="w">      </span><span class="nt">section_labels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">policy_obligation</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">regulatory_requirement</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a><span class="w">    </span><span class="nt">rerank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<h3 id="85-mrm-validation-finding-extraction">8.5 MRM — Validation Finding Extraction<a class="headerlink" href="#85-mrm-validation-finding-extraction" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select_findings</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">  </span><span class="nt">inputs</span><span class="p">:</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span><span class="nt">document</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{ingest_validation_report.output}}&quot;</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">    </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Model</span><span class="nv"> </span><span class="s">limitations,</span><span class="nv"> </span><span class="s">compensating</span><span class="nv"> </span><span class="s">controls,</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">remediation</span><span class="nv"> </span><span class="s">actions&quot;</span>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="w">    </span><span class="nt">granularity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chunk</span>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">    </span><span class="nt">filter</span><span class="p">:</span>
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="w">      </span><span class="nt">section_labels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">validation_findings</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">model_limitations</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">remediation</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<hr />
+<h2 id="9-package-layout">9. Package Layout<a class="headerlink" href="#9-package-layout" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>trellis/retrieval/
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>├── __init__.py
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>├── models.py          # ChunkType, ChunkMetadata, StructuredFact, ChunkFilter,
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>│                      # ScoredChunk, RetrievalResult, ChunkPipelineState
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>├── plugins.py         # SectionClassifier, SynonymVocabulary, FieldTaxonomy,
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>│                      # RetrievalRegistry; default implementations:
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>│                      # KeywordSectionClassifier, DictSynonymVocabulary,
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>│                      # DictFieldTaxonomy, NullClassifier, SlugifyTaxonomy
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>├── chunker.py         # StructuralChunker (PDF + XLSX)
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>├── metadata.py        # MetadataExtractor
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>├── bm25_index.py      # DocumentBM25Index
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>├── vector_index.py    # VectorIndex (ABC), NumpyVectorIndex, FAISSVectorIndex
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>├── fact_store.py      # StructuredFact, StructuredFactStore, FactExtractor
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>├── reranker.py        # CrossEncoderReranker
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>├── rrf.py             # reciprocal_rank_fusion()
+<a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a>├── orchestrator.py    # RetrievalOrchestrator
+<a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>└── pipeline.py        # ChunkPipeline, ChunkPipelineState
+</code></pre></div>
+<p><code>RetrievalRegistry</code> and <code>StructuredFactStore</code> are injected into the <code>Orchestrator</code>
+at startup alongside the existing <code>ToolRegistry</code> and <code>Blackboard</code>, following the
+established dependency injection pattern.</p>
+<hr />
+<h2 id="10-ingest_document-integration">10. <code>ingest_document</code> Integration<a class="headerlink" href="#10-ingest_document-integration" title="Permanent link">&para;</a></h2>
+<p>After existing OCR and page resolution completes, <code>ingest_document</code> triggers
+<code>ChunkPipeline.run(handle, tenant_id, document_id, background=True)</code>. The handle is
+returned immediately with <code>handle.chunk_state</code> attached.</p>
+<p><code>chunk_pipeline</code> is injected at <code>ingest_document</code> construction time. If not injected
+(tests, minimal deployments), the chunk pipeline is skipped and <code>handle.chunk_state</code>
+is <code>None</code>. Page-mode <code>select</code> continues to function regardless.</p>
+<hr />
+<h2 id="11-deploy-time-configuration-examples">11. Deploy-Time Configuration Examples<a class="headerlink" href="#11-deploy-time-configuration-examples" title="Permanent link">&para;</a></h2>
+<p>Plugin registration happens at operator startup, mirroring the <code>FunctionRegistry</code> and
+<code>SchemaRegistry</code> registration patterns.</p>
+<p><strong>SEC filing deployment:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="n">registry</span> <span class="o">=</span> <span class="n">RetrievalRegistry</span><span class="p">()</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="n">registry</span><span class="o">.</span><span class="n">register_classifier</span><span class="p">(</span><span class="n">KeywordSectionClassifier</span><span class="p">({</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>    <span class="s2">&quot;income_statement&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;revenue&quot;</span><span class="p">,</span> <span class="s2">&quot;gross profit&quot;</span><span class="p">,</span> <span class="s2">&quot;net income&quot;</span><span class="p">,</span> <span class="s2">&quot;operating income&quot;</span><span class="p">],</span>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>    <span class="s2">&quot;balance_sheet&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;total assets&quot;</span><span class="p">,</span> <span class="s2">&quot;total liabilities&quot;</span><span class="p">,</span> <span class="s2">&quot;shareholders equity&quot;</span><span class="p">],</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>    <span class="s2">&quot;cash_flow&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;operating activities&quot;</span><span class="p">,</span> <span class="s2">&quot;investing activities&quot;</span><span class="p">,</span> <span class="s2">&quot;financing activities&quot;</span><span class="p">],</span>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>    <span class="s2">&quot;risk_factors&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;risk&quot;</span><span class="p">,</span> <span class="s2">&quot;uncertainty&quot;</span><span class="p">,</span> <span class="s2">&quot;may adversely affect&quot;</span><span class="p">],</span>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="p">}))</span>
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a><span class="n">registry</span><span class="o">.</span><span class="n">register_vocabulary</span><span class="p">(</span><span class="n">DictSynonymVocabulary</span><span class="p">({</span>
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>    <span class="s2">&quot;revenue&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;revenues&quot;</span><span class="p">,</span> <span class="s2">&quot;net revenues&quot;</span><span class="p">,</span> <span class="s2">&quot;total revenues&quot;</span><span class="p">,</span> <span class="s2">&quot;net sales&quot;</span><span class="p">],</span>
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>    <span class="s2">&quot;net_income&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;net earnings&quot;</span><span class="p">,</span> <span class="s2">&quot;profit for the period&quot;</span><span class="p">,</span> <span class="s2">&quot;net profit&quot;</span><span class="p">],</span>
+<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a>    <span class="s2">&quot;capex&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;capital expenditures&quot;</span><span class="p">,</span> <span class="s2">&quot;purchases of property plant and equipment&quot;</span><span class="p">],</span>
+<a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a><span class="p">}))</span>
+</code></pre></div>
+<p><strong>Mortgage deployment:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="n">registry</span><span class="o">.</span><span class="n">register_classifier</span><span class="p">(</span><span class="n">KeywordSectionClassifier</span><span class="p">({</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>    <span class="s2">&quot;borrower_income&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;gross income&quot;</span><span class="p">,</span> <span class="s2">&quot;base salary&quot;</span><span class="p">,</span> <span class="s2">&quot;employment income&quot;</span><span class="p">,</span> <span class="s2">&quot;monthly income&quot;</span><span class="p">],</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>    <span class="s2">&quot;property_appraisal&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;appraised value&quot;</span><span class="p">,</span> <span class="s2">&quot;market value&quot;</span><span class="p">,</span> <span class="s2">&quot;property description&quot;</span><span class="p">],</span>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>    <span class="s2">&quot;credit_history&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;credit score&quot;</span><span class="p">,</span> <span class="s2">&quot;fico&quot;</span><span class="p">,</span> <span class="s2">&quot;derogatory&quot;</span><span class="p">,</span> <span class="s2">&quot;payment history&quot;</span><span class="p">],</span>
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>    <span class="s2">&quot;liabilities&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;monthly obligations&quot;</span><span class="p">,</span> <span class="s2">&quot;debt payments&quot;</span><span class="p">,</span> <span class="s2">&quot;outstanding balance&quot;</span><span class="p">],</span>
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="p">}))</span>
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="n">registry</span><span class="o">.</span><span class="n">register_vocabulary</span><span class="p">(</span><span class="n">DictSynonymVocabulary</span><span class="p">({</span>
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>    <span class="s2">&quot;annual_income&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;gross annual income&quot;</span><span class="p">,</span> <span class="s2">&quot;yearly earnings&quot;</span><span class="p">,</span> <span class="s2">&quot;total annual compensation&quot;</span><span class="p">],</span>
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>    <span class="s2">&quot;dti&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;debt-to-income&quot;</span><span class="p">,</span> <span class="s2">&quot;debt to income ratio&quot;</span><span class="p">,</span> <span class="s2">&quot;monthly debt obligations&quot;</span><span class="p">],</span>
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a><span class="p">}))</span>
+</code></pre></div>
+<p><strong>MRM deployment:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="n">registry</span><span class="o">.</span><span class="n">register_classifier</span><span class="p">(</span><span class="n">KeywordSectionClassifier</span><span class="p">({</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>    <span class="s2">&quot;model_description&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;model purpose&quot;</span><span class="p">,</span> <span class="s2">&quot;methodology&quot;</span><span class="p">,</span> <span class="s2">&quot;theoretical basis&quot;</span><span class="p">],</span>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>    <span class="s2">&quot;validation_findings&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;finding&quot;</span><span class="p">,</span> <span class="s2">&quot;observation&quot;</span><span class="p">,</span> <span class="s2">&quot;exception&quot;</span><span class="p">,</span> <span class="s2">&quot;concern&quot;</span><span class="p">],</span>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>    <span class="s2">&quot;model_limitations&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;limitation&quot;</span><span class="p">,</span> <span class="s2">&quot;weakness&quot;</span><span class="p">,</span> <span class="s2">&quot;assumption&quot;</span><span class="p">,</span> <span class="s2">&quot;caveat&quot;</span><span class="p">],</span>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>    <span class="s2">&quot;remediation&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;remediation&quot;</span><span class="p">,</span> <span class="s2">&quot;action item&quot;</span><span class="p">,</span> <span class="s2">&quot;compensating control&quot;</span><span class="p">,</span> <span class="s2">&quot;recommendation&quot;</span><span class="p">],</span>
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="p">}))</span>
+</code></pre></div>
+<hr />
+<h2 id="12-test-coverage">12. Test Coverage<a class="headerlink" href="#12-test-coverage" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>tests/
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>├── unit/retrieval/
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>│   ├── test_chunker.py
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>│   ├── test_metadata_extractor.py
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>│   ├── test_plugins.py               # KeywordSectionClassifier, DictSynonymVocabulary,
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>│   │                                 # DictFieldTaxonomy, fallback/null implementations
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>│   ├── test_bm25_index.py
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>│   ├── test_vector_index.py          # NumpyVectorIndex; FAISSVectorIndex interface parity
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>│   ├── test_fact_store.py
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a>│   ├── test_reranker.py
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>│   ├── test_rrf.py
+<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a>│   └── test_retrieval_orchestrator.py
+<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a>└── integration/retrieval/
+<a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a>    ├── test_chunk_pipeline.py        # ingest → chunk → index round-trip
+<a id="__codelineno-33-15" name="__codelineno-33-15" href="#__codelineno-33-15"></a>    ├── test_select_chunk_mode.py     # select with granularity:chunk and section filter
+<a id="__codelineno-33-16" name="__codelineno-33-16" href="#__codelineno-33-16"></a>    └── test_cross_document.py        # multi-document retrieval with ChunkFilter
+</code></pre></div>
+<p><strong>Fixture documents</strong> (<code>tests/fixtures/retrieval/</code>) must cover multiple document
+types to validate domain-agnosticism. Minimum required set: one financial statement
+PDF (tabular, structured), one form-based PDF (synthetic loan application), and one
+prose-heavy document (synthetic compliance policy). Each fixture includes a
+ground-truth extraction file against which integration tests assert exact field values
+and verify section label accuracy.</p>
+<hr />
+<h2 id="13-dependencies">13. Dependencies<a class="headerlink" href="#13-dependencies" title="Permanent link">&para;</a></h2>
+<h3 id="new-required">New Required<a class="headerlink" href="#new-required" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Version</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rank-bm25</code></td>
+<td><code>&gt;=0.2.2</code></td>
+<td>BM25 index</td>
+</tr>
+<tr>
+<td><code>numpy</code></td>
+<td>already required</td>
+<td><code>NumpyVectorIndex</code>, RRF</td>
+</tr>
+<tr>
+<td><code>python-dateutil</code></td>
+<td><code>&gt;=2.8</code></td>
+<td>Period date normalisation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="new-optional">New Optional<a class="headerlink" href="#new-optional" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Version</th>
+<th>Purpose</th>
+<th>Fallback</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>faiss-cpu</code></td>
+<td><code>&gt;=1.7.4</code></td>
+<td><code>FAISSVectorIndex</code> for corpus scale</td>
+<td><code>NumpyVectorIndex</code></td>
+</tr>
+<tr>
+<td><code>sentence-transformers</code></td>
+<td><code>&gt;=2.6</code></td>
+<td>Cross-encoder re-ranking</td>
+<td>No re-ranking; hybrid rank preserved</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="14-implementation-priority">14. Implementation Priority<a class="headerlink" href="#14-implementation-priority" title="Permanent link">&para;</a></h2>
+<p><strong>Phase 1 — Structural chunking + metadata + plugin interfaces</strong><br />
+<code>StructuralChunker</code>, <code>MetadataExtractor</code>, <code>plugins.py</code> with null fallbacks,
+<code>ChunkPipelineState</code>. Wire into <code>ingest_document</code>. Validate chunk quality against all
+three fixture document types before building indexes on top.</p>
+<p><strong>Phase 2 — Hybrid retrieval (BM25 + numpy cosine)</strong><br />
+<code>DocumentBM25Index</code>, <code>NumpyVectorIndex</code>, <code>RetrievalOrchestrator</code> with RRF,
+<code>ChunkFilter</code>. Extend <code>select</code> with <code>granularity: chunk</code>. Integration tests across
+all fixture types; confirm section label filtering produces correct candidates for
+each workload class.</p>
+<p><strong>Phase 3 — Structured fact store</strong><br />
+<code>StructuredFactStore</code>, <code>FactExtractor</code>, <code>FieldTaxonomy</code> plugin interface.
+Tier 1 → Tier 2 fallback chain in <code>RetrievalOrchestrator</code>.</p>
+<p><strong>Phase 4 — FAISS + cross-encoder (scale + precision)</strong><br />
+<code>FAISSVectorIndex</code>, async embedding background path with cancellation wiring,
+<code>CrossEncoderReranker</code>. Both activated by operator registration; defaults unchanged.</p>
+<hr />
+<h2 id="15-open-questions">15. Open Questions<a class="headerlink" href="#15-open-questions" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong><code>ChunkPipelineState</code> placement.</strong> Attaching state to <code>DocumentHandle</code> keeps the
+   tool interface clean but adds a concern to the document model. Alternative: a
+   tenant-scoped <code>ChunkPipelineRegistry</code> keyed by <code>document_id</code>, mirroring the
+   <code>SchemaRegistry</code> pattern. Decision needed before Phase 1 ships.</p>
+</li>
+<li>
+<p><strong>Vector index persistence.</strong> Current spec builds indexes in-memory per session.
+   For deployments with large or frequently-reused document corpora, a persistent
+   vector store (file-serialized FAISS, ChromaDB, Qdrant) avoids re-embedding on
+   every session. Pluggable <code>VectorIndex</code> interface supports this without framework
+   changes — persistence is an operator-level deployment choice.</p>
+</li>
+<li>
+<p><strong><code>SectionClassifier</code> LLM option.</strong> <code>KeywordSectionClassifier</code> is fast and
+   transparent but brittle on novel or heterogeneous document types. An
+   <code>LLMSectionClassifier</code> that uses a <code>llm_job</code>-style call for ambiguous chunks is
+   a natural extension behind the existing interface. Latency and cost trade-offs
+   need evaluation before recommending it as a default.</p>
+</li>
+<li>
+<p><strong>Embedding model domain sensitivity.</strong> General-purpose embeddings perform well on
+   prose but degrade on sparse table content. Whether a domain-tuned model materially
+   improves retrieval precision is an empirical question best answered by running the
+   fixture ground-truth benchmarks across candidate models before committing.</p>
+</li>
+</ol>
+<hr />
+<p><em>End of spec. See <code>ARCHITECTURE.md</code> for the overall package layout and extension
+patterns that this spec extends.</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      © 2026 Trellis contributors
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/ciarandavies7191/trellis" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

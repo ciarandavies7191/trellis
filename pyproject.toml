@@ -3,11 +3,8 @@ requires = ["setuptools>=65", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-# NOTE: "trellis" is already registered on PyPI (Phillip J. Eby, v0.7a2).
-# Replace the name below with your chosen PyPI name before publishing.
-# The import name ("trellis", "trellis_api", etc.) is unaffected by this field.
 name = "trellis-pipelines"
-version = "0.2.0"
+version = "0.3.0"
 description = "Modular agentic pipeline system for document and data workflows"
 readme = "README.md"
 license = {file = "LICENSE"}
