@@ -2,12 +2,14 @@
 
 Provider-agnostic `llm_job` tool backed by litellm.
 Configuration via environment variables (override per-call via inputs):
- - TRELLIS_LLM_MODEL: default litellm model string (default: "openai/gpt-4o-mini")
+ - TRELLIS_LLM_MODEL:         default litellm model string (default: "openai/gpt-4o-mini")
+ - TRELLIS_LLM_SYSTEM_PROMPT: default system message injected into every llm_job call.
+                               Set to an empty string to disable the default.
 
 Extra kwargs behavior
 ----------------------
 Any keyword argument that is not a control parameter (model, temperature,
-max_tokens) is treated as *context data* and serialised into the prompt
+max_tokens, system) is treated as *context data* and serialised into the prompt
 before the caller-supplied prompt text.  This lets tasks pass structured
 objects alongside the prompt without having to manually embed them:
 
@@ -42,8 +44,18 @@ from ..base import BaseTool, ToolInput, ToolOutput
 
 DEFAULT_LLM_MODEL = os.getenv("TRELLIS_LLM_MODEL", "openai/gpt-4o-mini")
 
+# Injected as a system message on every llm_job call unless overridden.
+# Suppresses the conversational preamble that many instruction-tuned models add.
+# Set TRELLIS_LLM_SYSTEM_PROMPT="" to disable, or override per-task via `system:`.
+_DEFAULT_SYSTEM_PROMPT = os.getenv(
+    "TRELLIS_LLM_SYSTEM_PROMPT",
+    "Respond directly with the requested content. "
+    "Do not add conversational openers, preamble, or restatements of the task. "
+    "Begin your response immediately with the substantive content.",
+)
+
 # kwargs that control litellm — never treated as context data
-_CONTROL_PARAMS = frozenset({"model", "temperature", "max_tokens"})
+_CONTROL_PARAMS = frozenset({"model", "temperature", "max_tokens", "system"})
 
 
 def _to_json_safe(val: Any, _depth: int = 0) -> Any:
@@ -136,8 +148,9 @@ class LLMTool(BaseTool):
 
         Args:
             prompt:      Instruction text for the LLM.
-            **kwargs:    Control params (model, temperature, max_tokens) plus any
-                         context data to inject into the prompt (see module docstring).
+            **kwargs:    Control params (model, temperature, max_tokens, system) plus
+                         any context data to inject into the prompt (see module docstring).
+                         Pass ``system=""`` to suppress the default system message.
 
         Returns:
             LLM response string.
@@ -156,13 +169,22 @@ class LLMTool(BaseTool):
         temperature: Optional[float] = kwargs.get("temperature")
         max_tokens: Optional[int] = kwargs.get("max_tokens")
 
+        # system: explicit None means "use default"; explicit "" means "no system message"
+        system_kwarg = kwargs.get("system", None)
+        system_prompt: str = _DEFAULT_SYSTEM_PROMPT if system_kwarg is None else system_kwarg
+
         # Collect non-control kwargs as context data and inject into prompt
         context = {k: v for k, v in kwargs.items() if k not in _CONTROL_PARAMS}
         full_prompt = _build_prompt(prompt, context)
 
+        messages: list[Dict[str, str]] = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": full_prompt})
+
         call_kwargs: Dict[str, Any] = {
             "model": model,
-            "messages": [{"role": "user", "content": full_prompt}],
+            "messages": messages,
         }
         if temperature is not None:
             call_kwargs["temperature"] = temperature
@@ -180,6 +202,16 @@ class LLMTool(BaseTool):
                 description="Input prompt for the LLM",
                 required=True,
                 accepted_types=(str,),
+            ),
+            "system": ToolInput(
+                name="system",
+                description=(
+                    "System message sent before the user prompt. "
+                    "Defaults to TRELLIS_LLM_SYSTEM_PROMPT (anti-preamble instruction). "
+                    "Pass an empty string to send no system message."
+                ),
+                required=False,
+                default=None,
             ),
             "temperature": ToolInput(
                 name="temperature",

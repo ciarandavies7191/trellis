@@ -247,6 +247,16 @@ class FetchTool(BaseTool):
 
             items = companies if isinstance(companies, list) else [companies]
             resolved = _resolve_to_ciks(items)
+            resolved_inputs = {r["input"] for r in resolved}
+            unresolved = [i for i in items if i and i.strip() and i.strip() not in resolved_inputs]
+            if unresolved:
+                raise ValueError(
+                    f"fetch_data(sec_edgar): could not resolve the following companies to a CIK "
+                    f"in the SEC EDGAR ticker index: {unresolved}. "
+                    f"Use the current ticker symbol (e.g. 'META') or the exact SEC-registered "
+                    f"company name (e.g. 'Meta Platforms, Inc.'). "
+                    f"Companies that have rebranded must be referenced by their current name."
+                )
             results: list[dict[str, Any]] = []
             for entry in resolved:
                 cik = entry["cik"]

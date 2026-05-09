@@ -293,6 +293,15 @@ def resolve(value: Any, ctx: ResolutionContext) -> Any:
         def _replace(m: re.Match) -> str:
             expr = m.group(1).strip()
             resolved = _resolve_expr(expr, ctx)
+            # dicts and lists: JSON-serialize so they land in prompt strings cleanly.
+            # CPython's dict/list inherit __str__ from object (they only define
+            # __repr__), so the object.__str__ guard below would incorrectly reject
+            # them — handle them explicitly first.
+            if isinstance(resolved, (dict, list)):
+                try:
+                    return json.dumps(resolved, ensure_ascii=False, default=str)
+                except Exception:
+                    return str(resolved)
             if not isinstance(resolved, (str, int, float, bool, type(None))):
                 if type(resolved).__str__ is object.__str__:
                     raise ResolutionError(

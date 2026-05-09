@@ -17,7 +17,8 @@ authors = [
 requires-python = ">=3.12"
 keywords = [
     "pipeline", "agentic", "dag", "document", "extraction",
-    "llm", "pdf", "sec", "etl", "workflow",
+    "llm", "pdf", "sec", "etl", "workflow", "orchestration", "automation",
+    "finance", "business", "productivity",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",

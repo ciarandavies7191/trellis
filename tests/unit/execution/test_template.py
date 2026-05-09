@@ -212,8 +212,43 @@ class TestResolveInterpolation:
         assert "Page one." in result
         assert "Page two." in result
 
+    def test_embedded_dict_is_json_serialized(self, ctx: ResolutionContext) -> None:
+        """A dict resolved in an embedded template is JSON-serialized, not rejected."""
+        import json
+        result = resolve("Data: {{fetch_financials.output}}", ctx)
+        assert isinstance(result, str)
+        # The JSON blob should be parseable back to the original dict
+        payload = json.loads(result[len("Data: "):])
+        assert payload["companies"] == ["Google", "Apple"]
+
+    def test_embedded_list_is_json_serialized(self, ctx: ResolutionContext) -> None:
+        """A list resolved in an embedded template is JSON-serialized."""
+        import json
+        result = resolve("Items: {{fetch_list.output}}", ctx)
+        assert isinstance(result, str)
+        payload = json.loads(result[len("Items: "):])
+        assert payload == ["item_a", "item_b", "item_c"]
+
+    def test_embedded_dict_from_task_output_mixed_prompt(self, ctx: ResolutionContext) -> None:
+        """The real-world pattern: prompt text + embedded dict → string with JSON."""
+        result = resolve(
+            "Summarize the key risk factors from this document: {{fetch_financials.output}}",
+            ctx,
+        )
+        assert isinstance(result, str)
+        assert "Summarize the key risk factors" in result
+        assert '"companies"' in result  # JSON key present
+
+    def test_embedded_nested_dict_is_json_serialized(self, ctx: ResolutionContext) -> None:
+        """A nested dict field accessed via path is also JSON-serialized when embedded."""
+        import json
+        result = resolve("Meta: {{fetch_financials.output.metadata}}", ctx)
+        assert result.startswith("Meta: ")
+        payload = json.loads(result[len("Meta: "):])
+        assert payload == {"source": "sec_edgar", "year": 2025}
+
     def test_embedded_complex_object_without_str_raises(self) -> None:
-        """A non-primitive object without __str__ in an embedded template raises ResolutionError."""
+        """A domain object without a custom __str__ in an embedded template raises ResolutionError."""
         from dataclasses import dataclass
 
         @dataclass
@@ -223,7 +258,7 @@ class TestResolveInterpolation:
         ctx = ResolutionContext(
             task_outputs={"t": _Opaque(value=42)},
         )
-        with pytest.raises(ResolutionError, match="__str__\\.* cannot be safely interpolated|cannot be safely interpolated"):
+        with pytest.raises(ResolutionError, match="cannot be safely interpolated"):
             resolve("Result: {{t.output}}", ctx)
 
 
