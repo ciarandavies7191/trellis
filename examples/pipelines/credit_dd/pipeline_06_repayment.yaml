@@ -1,0 +1,50 @@
+# Pipeline 06 — Repayment & Liquidity
+# Pure LLM analysis using only session data; no new data collection.
+#
+# Requires: session.canonical_metrics, session.deal_metadata, session.step_05_output
+# Writes:   session.step_06_output
+
+pipeline:
+  id: step_06_repayment
+  goal: "Repayment capacity and liquidity analysis"
+
+  tasks:
+    - id: generate
+      tool: llm_job
+      inputs:
+        model: "anthropic/claude-haiku-4-5"
+        max_tokens: 2500
+        canonical_metrics: "{{session.canonical_metrics}}"
+        deal_metadata: "{{session.deal_metadata}}"
+        capital_structure: "{{session.step_05_output}}"
+        prompt: |
+          You are a senior credit analyst producing the Repayment & Liquidity
+          section of a credit memo for {{session.ticker}}.
+
+          Using the canonical metrics, deal metadata, and capital structure
+          section provided above, write a comprehensive Repayment & Liquidity
+          section including:
+
+          1. **Primary Repayment Source**: EBITDA-to-debt service coverage,
+             FCF generation capacity, FCF/Total Debt ratio
+          2. **Repayment Timeline Analysis**: Time to repay (Total Debt / FCF),
+             debt service schedule vs FCF capacity
+          3. **Secondary Repayment Sources**: Asset coverage, alternative
+             liquidity (revolvers, asset sales)
+          4. **Liquidity Position**: Cash + undrawn commitments, liquidity
+             runway, seasonal considerations
+          5. **Coverage Ratios Table**: Interest coverage, fixed-charge coverage,
+             debt-service coverage ratio (current + projected post-facility)
+          6. **Structural Considerations**: Upstream cash flow restrictions,
+             cross-default provisions, springing vs maintenance covenants
+
+          Format coverage ratios as a markdown table.
+      retry:
+        max_attempts: 2
+        backoff_seconds: 5
+
+    - id: store_output
+      tool: store
+      inputs:
+        key: step_06_output
+        value: "{{generate.output}}"

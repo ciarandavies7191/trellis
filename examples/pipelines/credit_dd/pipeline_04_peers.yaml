@@ -1,0 +1,99 @@
+# Pipeline 04 — Industry & Peers
+# Collects XBRL data for up to three named peer companies and generates
+# an Industry Overview + Peer Comparison section.
+#
+# Requires: session.ticker, session.canonical_metrics
+# Writes:   session.step_04_output
+#
+# Invocation:
+#   trellis run pipeline_04_peers.yaml \
+#     --params '{"peer_1": "WBA", "peer_2": "CI", "peer_3": "UNH"}'
+
+pipeline:
+  id: step_04_peers
+  goal: "Industry overview and peer positioning"
+
+  params:
+    peer_1:
+      type: string
+      description: "First peer ticker symbol"
+    peer_2:
+      type: string
+      description: "Second peer ticker symbol"
+    peer_3:
+      type: string
+      description: "Third peer ticker symbol (optional)"
+      default: ""
+
+  tasks:
+    - id: search_industry
+      tool: search_web
+      inputs:
+        query: "{{session.ticker}} competitors peer companies industry comparison 2025 2026"
+        top_n: 5
+
+    - id: peer_xbrl_1
+      tool: fetch_sec_xbrl
+      inputs:
+        ticker: "{{params.peer_1}}"
+        concept_list_max_chars: 0
+
+    - id: peer_spread_1
+      tool: compute
+      inputs:
+        function: build_financial_spread
+        xbrl_data: "{{peer_xbrl_1.output}}"
+        schema_mapping: "{{session.xbrl_schema_mapping}}"
+        fiscal_years: 1
+
+    - id: peer_xbrl_2
+      tool: fetch_sec_xbrl
+      inputs:
+        ticker: "{{params.peer_2}}"
+        concept_list_max_chars: 0
+
+    - id: peer_spread_2
+      tool: compute
+      inputs:
+        function: build_financial_spread
+        xbrl_data: "{{peer_xbrl_2.output}}"
+        schema_mapping: "{{session.xbrl_schema_mapping}}"
+        fiscal_years: 1
+
+    - id: generate
+      tool: llm_job
+      inputs:
+        model: "anthropic/claude-haiku-4-5"
+        max_tokens: 3000
+        subject_metrics: "{{session.canonical_metrics}}"
+        peer_1_metrics: "{{peer_spread_1.output.canonical_metrics}}"
+        peer_1_ticker: "{{params.peer_1}}"
+        peer_2_metrics: "{{peer_spread_2.output.canonical_metrics}}"
+        peer_2_ticker: "{{params.peer_2}}"
+        industry_search: "{{search_industry.output}}"
+        prompt: |
+          You are a senior credit analyst producing the Industry & Peers section
+          of a credit memo for {{session.ticker}}.
+
+          Using the canonical metrics for the subject company and peers provided above,
+          write a comprehensive Industry & Peers section including:
+
+          1. **Industry Overview** (2-3 paragraphs): market dynamics, competitive intensity,
+             regulatory environment, key credit drivers for this sector
+          2. **Peer Comparison Table**: Revenue, EBITDA Margin, Gross Leverage,
+             Net Leverage, Interest Coverage, FCF/Debt for subject + each peer
+          3. **Positioning Commentary** (1-2 paragraphs): where the subject company
+             sits vs peers on key credit metrics, strengths and weaknesses
+          4. **Market Position**: estimated market share, competitive moat,
+             barriers to entry
+
+          Format the peer comparison as a markdown table. All figures in $M or x (turns).
+      retry:
+        max_attempts: 2
+        backoff_seconds: 5
+
+    - id: store_output
+      tool: store
+      inputs:
+        key: step_04_output
+        value: "{{generate.output}}"

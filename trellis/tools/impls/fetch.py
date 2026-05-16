@@ -96,6 +96,29 @@ def _pad_cik(cik: str | int) -> str:
     return f"{n:010d}"
 
 
+def resolve_ticker_to_cik(ticker: str) -> str:
+    """Public API: resolve a ticker symbol to a zero-padded 10-digit CIK string.
+
+    Args:
+        ticker: Exchange ticker symbol (case-insensitive).
+
+    Returns:
+        Zero-padded 10-digit CIK string, e.g. ``"0000009092"``.
+
+    Raises:
+        ValueError: if the ticker is not found in the SEC EDGAR index.
+    """
+    _load_ticker_index()
+    t = ticker.strip().upper()
+    cik = _ticker_to_cik_cache.get(t)
+    if cik is None:
+        raise ValueError(
+            f"Ticker {ticker!r} not found in SEC EDGAR ticker index. "
+            "Use the current exchange ticker symbol (e.g. 'META', 'CVS')."
+        )
+    return _pad_cik(cik)
+
+
 def _resolve_to_ciks(entities: Iterable[str]) -> list[dict[str, str]]:
     """Resolve a list of company names or tickers to CIK strings.
 

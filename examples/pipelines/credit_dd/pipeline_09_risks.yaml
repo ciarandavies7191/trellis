@@ -1,0 +1,69 @@
+# Pipeline 09 — Risks & Mitigants
+# Fetches 10-K Item 1A risk factors and synthesises with all prior step
+# outputs to produce a comprehensive risk assessment.
+#
+# Requires: session.canonical_metrics + all step_0N_output keys
+# Writes:   session.step_09_output
+
+pipeline:
+  id: step_09_risks
+  goal: "Comprehensive risk assessment with citation enforcement"
+
+  tasks:
+    - id: risk_factors
+      tool: fetch_10k_sections
+      inputs:
+        ticker: "{{session.ticker}}"
+        sections: ["risk_factors"]
+        max_chars_per_section: 8000
+
+    - id: generate
+      tool: llm_job
+      inputs:
+        model: "anthropic/claude-opus-4-6"
+        max_tokens: 6000
+        canonical_metrics: "{{session.canonical_metrics}}"
+        risk_factors_10k: "{{risk_factors.output.risk_factors}}"
+        historical_financials: "{{session.step_02_output}}"
+        obligor_overview: "{{session.step_03_output}}"
+        industry_peers: "{{session.step_04_output}}"
+        capital_structure: "{{session.step_05_output}}"
+        repayment_liquidity: "{{session.step_06_output}}"
+        proforma_stress: "{{session.step_07_output}}"
+        projections_dcf: "{{session.step_08_output}}"
+        prompt: |
+          You are a senior credit analyst producing the Risks & Mitigants section
+          of a credit memo for {{session.ticker}}.
+
+          Using the 10-K risk factors and all prior memo sections provided above,
+          write a comprehensive Risks & Mitigants section:
+
+          **Structure each risk as**:
+          - Risk title (bold)
+          - Severity: High / Medium / Low
+          - Description (2-3 sentences citing the source — e.g., "per 10-K Item 1A")
+          - Mitigant (1-2 sentences)
+
+          **Risk categories to cover** (include at least 2 risks per category):
+          1. Business/Operational Risks
+          2. Financial/Leverage Risks
+          3. Market/Competitive Risks
+          4. Regulatory/Legal Risks
+          5. Macro/Cyclical Risks
+          6. Structural/Transaction-Specific Risks
+
+          End with a **Risk Heat Map** markdown table:
+          | Risk | Likelihood | Impact | Severity |
+          |---|---|---|---|
+
+          Every risk must cite evidence from the provided data — do not invent risks
+          that are not supported by the 10-K or financial data.
+      retry:
+        max_attempts: 2
+        backoff_seconds: 10
+
+    - id: store_output
+      tool: store
+      inputs:
+        key: step_09_output
+        value: "{{generate.output}}"

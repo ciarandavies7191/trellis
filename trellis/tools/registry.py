@@ -106,7 +106,8 @@ class AsyncToolRegistry:
 
     def discover_impls(self) -> None:
         """
-        Import all modules under trellis.tools.impls and auto-register BaseTool subclasses.
+        Import all modules under trellis.tools.impls (recursing into subpackages)
+        and auto-register BaseTool subclasses found in each module.
         """
         pkg_name = "trellis.tools.impls"
         logger.debug("Discovering tools in package %s", pkg_name)
@@ -116,8 +117,13 @@ class AsyncToolRegistry:
             raise RuntimeError(f"Failed to import {pkg_name}: {exc}") from exc
 
         discovered: list[str] = []
-        for mod_info in pkgutil.iter_modules(getattr(pkg, "__path__", []), pkg_name + "."):
-            module = importlib.import_module(mod_info.name)
+        # walk_packages recurses into subpackages; iter_modules only visits direct children.
+        for mod_info in pkgutil.walk_packages(getattr(pkg, "__path__", []), pkg_name + "."):
+            try:
+                module = importlib.import_module(mod_info.name)
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("Skipping %s during tool discovery: %s", mod_info.name, exc)
+                continue
             for _, obj in inspect.getmembers(module, inspect.isclass):
                 if not issubclass(obj, BaseTool) or obj is BaseTool:
                     continue
@@ -179,12 +185,24 @@ class ToolRegistryManager:
 
 def build_default_registry() -> AsyncToolRegistry:
     """Create an AsyncToolRegistry with discovered implementations (no aliases)."""
+    # Import config early so proxy env-vars are set before any HTTP calls.
+    import trellis.config  # noqa: F401
+
     from trellis.registry.finance_functions import build_finance_registry
     from trellis.tools.impls.compute import ComputeTool
 
     reg = AsyncToolRegistry()
     reg.discover_impls()
+
+    # Build a merged FunctionRegistry: finance + credit-DD functions.
+    finance_reg = build_finance_registry()
+    try:
+        from trellis.registry.credit_functions import register_credit_functions
+        register_credit_functions(finance_reg)
+    except ImportError:
+        pass  # credit_functions not available (optional)
+
     # discover_impls() instantiates ComputeTool with function_registry=None.
-    # Re-register it with the built-in finance FunctionRegistry.
-    reg.register_tool(ComputeTool(function_registry=build_finance_registry()))
+    # Re-register it with the merged FunctionRegistry.
+    reg.register_tool(ComputeTool(function_registry=finance_reg))
     return reg

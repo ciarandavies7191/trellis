@@ -1,0 +1,147 @@
+# Pipeline 02 — Historical Financials
+# Extracts XBRL financial data, builds a 3-year financial spread via
+# deterministic computation, validates accounting identities, then runs an
+# Opus authoring pass to produce the Historical Financials memo section.
+#
+# Requires: session.ticker (set by pipeline_01_term_sheet)
+# Writes:   session.canonical_metrics, session.step_02_output
+#
+# Invocation:
+#   trellis run pipeline_02_financials.yaml
+
+pipeline:
+  id: step_02_financials
+  goal: "Extract XBRL financials, build spread, author Historical Financials section"
+
+  tasks:
+    # ── Pre-collection (all three run in parallel) ──────────────────────
+    - id: xbrl_data
+      tool: fetch_sec_xbrl
+      inputs:
+        ticker: "{{session.ticker}}"
+
+    - id: company_profile
+      tool: fetch_sec_company_profile
+      inputs:
+        ticker: "{{session.ticker}}"
+
+    - id: filing_sections
+      tool: fetch_10k_sections
+      inputs:
+        ticker: "{{session.ticker}}"
+        sections: ["debt_note", "mda_nongaap"]
+        max_chars_per_section: 25000
+
+    # ── Schema discovery: map XBRL concept names → canonical fields ──────
+    - id: schema_discovery
+      tool: llm_job
+      inputs:
+        model: "anthropic/claude-opus-4-6"
+        max_tokens: 1500
+        prompt: |
+          You are mapping SEC XBRL concept names to canonical financial fields
+          for a credit analysis pipeline.
+
+          Return ONLY a JSON object mapping each canonical field name to the
+          best matching XBRL concept path (format: taxonomy/ConceptName).
+          Use null if no suitable concept exists.
+
+          AVAILABLE XBRL CONCEPTS:
+          {{xbrl_data.output.concept_list}}
+
+          REQUIRED CANONICAL FIELDS:
+          revenue, cogs, gross_profit, operating_income, net_income, da,
+          interest_expense, total_assets, total_debt, current_debt,
+          cash, equity, cfo, capex
+
+          Return only valid JSON — no explanation, no markdown fences.
+      retry:
+        max_attempts: 2
+        backoff_seconds: 5
+
+    # ── Deterministic spread construction ────────────────────────────────
+    - id: spread
+      tool: compute
+      inputs:
+        function: build_financial_spread
+        xbrl_data: "{{xbrl_data.output}}"
+        schema_mapping: "{{schema_discovery.output}}"
+        fiscal_years: 3
+
+    # ── Accounting-identity validation ───────────────────────────────────
+    - id: validation
+      tool: compute
+      inputs:
+        function: validate_spread
+        spread_data: "{{spread.output}}"
+
+    # ── Opus authoring pass ───────────────────────────────────────────────
+    - id: author
+      tool: llm_job
+      inputs:
+        model: "anthropic/claude-opus-4-6"
+        max_tokens: 6000
+        spread: "{{spread.output}}"
+        validation: "{{validation.output}}"
+        debt_note: "{{filing_sections.output.debt_note}}"
+        mda_nongaap: "{{filing_sections.output.mda_nongaap}}"
+        company_profile: "{{company_profile.output}}"
+        prompt: |
+          You are a senior credit analyst producing the Historical Financials
+          section of a credit memo for {{session.ticker}}.
+
+          Using the XBRL spread, validation status, 10-K debt note, and
+          management non-GAAP reconciliation provided above, write a
+          comprehensive Historical Financials section including:
+          1. A 3-year income statement table (Revenue, Gross Profit, EBITDA, Net Income)
+          2. A balance sheet summary (Total Assets, Total Debt, Net Debt, Equity)
+          3. Cash flow highlights (CFO, CapEx, FCF)
+          4. Key credit metrics (Gross Leverage, Net Leverage, Interest Coverage)
+          5. Management-adjusted EBITDA reconciliation (from mda_nongaap)
+          6. Debt maturity schedule (from debt_note)
+          7. 2-3 paragraph narrative commentary on trends and credit implications
+
+          If validation shows FAIL status, note the data quality issue inline.
+
+          After the markdown content, output the canonical metrics JSON block
+          between these exact markers (on their own lines):
+          <!--CANONICAL_METRICS_START-->
+          { ... }
+          <!--CANONICAL_METRICS_END-->
+
+          The canonical metrics JSON must conform to the session.canonical_metrics
+          schema. Use spread.output.canonical_metrics as the base and override
+          ebitda_adjusted with the management-adjusted figure if found in mda_nongaap.
+      retry:
+        max_attempts: 2
+        backoff_seconds: 10
+
+    # ── Parse and store canonical metrics ────────────────────────────────
+    - id: extract_canonical
+      tool: extract_fields
+      inputs:
+        document: "{{author.output}}"
+        schema:
+          type: object
+          properties:
+            canonical_metrics:
+              type: object
+              description: "JSON block between CANONICAL_METRICS_START and CANONICAL_METRICS_END markers"
+
+    - id: store_canonical
+      tool: store
+      inputs:
+        key: canonical_metrics
+        value: "{{extract_canonical.output.canonical_metrics}}"
+
+    - id: store_xbrl_schema
+      tool: store
+      inputs:
+        key: xbrl_schema_mapping
+        value: "{{schema_discovery.output}}"
+
+    - id: store_output
+      tool: store
+      inputs:
+        key: step_02_output
+        value: "{{author.output}}"

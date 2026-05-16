@@ -1,0 +1,106 @@
+# Pipeline 03 — Obligor Overview
+# Collects company profile, credit ratings, and corporate structure;
+# generates the Obligor Overview memo section.
+#
+# Requires: session.ticker, session.canonical_metrics
+# Writes:   session.step_03_output, session.step_03_ratings
+
+pipeline:
+  id: step_03_obligor
+  goal: "Build Obligor Overview — company profile, credit snapshot, corporate structure"
+
+  tasks:
+    - id: company_profile
+      tool: fetch_sec_company_profile
+      inputs:
+        ticker: "{{session.ticker}}"
+
+    - id: edgar_ratings
+      tool: fetch_sec_ratings
+      inputs:
+        ticker: "{{session.ticker}}"
+        lookback_months: 24
+
+    - id: search_ratings_sp
+      tool: search_web
+      inputs:
+        query: "{{session.ticker}} S&P credit rating long-term issuer 2026"
+        top_n: 5
+
+    - id: search_ratings_moodys
+      tool: search_web
+      inputs:
+        query: "{{session.ticker}} Moody's credit rating senior unsecured 2026"
+        top_n: 5
+
+    - id: search_structure
+      tool: search_web
+      inputs:
+        query: "{{session.ticker}} corporate structure subsidiaries Exhibit 21 10-K"
+        top_n: 3
+
+    - id: generate
+      tool: llm_job
+      inputs:
+        model: "anthropic/claude-sonnet-4-6"
+        max_tokens: 4000
+        canonical_metrics: "{{session.canonical_metrics}}"
+        sec_profile: "{{company_profile.output}}"
+        edgar_ratings: "{{edgar_ratings.output}}"
+        ratings_search_sp: "{{search_ratings_sp.output}}"
+        ratings_search_moodys: "{{search_ratings_moodys.output}}"
+        structure_search: "{{search_structure.output}}"
+        prompt: |
+          You are a senior credit analyst producing the Obligor Overview section
+          of a credit memo for {{session.ticker}}.
+
+          Using the SEC profile, credit ratings, and search results provided above,
+          write a comprehensive Obligor Overview including:
+
+          1. **Company Profile**: Business description, industry/SIC, HQ, incorporation,
+             fiscal year end, major business segments
+          2. **Credit Ratings Snapshot**: Current ratings from S&P, Moody's, Fitch
+             (cite sources with filing date where available from edgar_ratings)
+          3. **Key Financial Snapshot**: Revenue, EBITDA, Total Debt, Gross Leverage
+             (from canonical_metrics — format as a compact table)
+          4. **Corporate Structure**: Borrower entity, material subsidiaries,
+             guarantor structure, jurisdiction of incorporation
+          5. **Ownership**: Public float, major institutional shareholders if available
+
+          At the end of the section, emit ratings as a JSON block between these markers:
+          <!--RATINGS_START-->
+          {"sp": "...", "moodys": "...", "fitch": "..."}
+          <!--RATINGS_END-->
+          Use null for any agency where no rating was found.
+      retry:
+        max_attempts: 3
+        backoff_seconds: 5
+
+    - id: extract_ratings
+      tool: extract_fields
+      inputs:
+        document: "{{generate.output}}"
+        schema:
+          type: object
+          properties:
+            sp:
+              type: string
+              description: "S&P issuer credit rating, e.g. BB+"
+            moodys:
+              type: string
+              description: "Moody's issuer credit rating, e.g. Ba1"
+            fitch:
+              type: string
+              description: "Fitch issuer credit rating, e.g. BB+"
+
+    - id: store_ratings
+      tool: store
+      inputs:
+        key: step_03_ratings
+        value: "{{extract_ratings.output}}"
+
+    - id: store_output
+      tool: store
+      inputs:
+        key: step_03_output
+        value: "{{generate.output}}"
