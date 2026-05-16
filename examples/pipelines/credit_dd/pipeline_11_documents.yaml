@@ -1,0 +1,28 @@
+# Pipeline 11 — Document Export (auto, no human review needed)
+# Assembles all approved step outputs into DOCX, PDF, PPTX, and XLSX.
+# Run after all other pipelines are complete and approved.
+#
+# Requires: all session.step_NN_output keys, session.deal_metadata
+# Produces: files in outputs/{ticker}/
+
+pipeline:
+  id: step_11_documents
+  goal: "Export all approved step outputs to DOCX, PDF, PPTX, XLSX"
+
+  tasks:
+    - id: export
+      tool: generate_documents
+      inputs:
+        step_outputs:
+          step_02_output: "{{session.step_02_output}}"
+          step_03_output: "{{session.step_03_output}}"
+          step_04_output: "{{session.step_04_output}}"
+          step_05_output: "{{session.step_05_output}}"
+          step_06_output: "{{session.step_06_output}}"
+          step_07_output: "{{session.step_07_output}}"
+          step_08_output: "{{session.step_08_output}}"
+          step_09_output: "{{session.step_09_output}}"
+          step_10_output: "{{session.step_10_output}}"
+          step_12_output: "{{session.step_12_output}}"
+        deal_metadata: "{{session.deal_metadata}}"
+        output_dir: "./outputs/{{session.ticker}}"

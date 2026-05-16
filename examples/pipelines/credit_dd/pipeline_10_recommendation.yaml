@@ -1,0 +1,73 @@
+# Pipeline 10 — Credit Recommendation
+# Final synthesis: integrates all prior sections to produce a formal
+# credit recommendation with decision matrix.
+#
+# Requires: session.canonical_metrics, session.deal_metadata, all step outputs
+# Writes:   session.step_10_output
+
+pipeline:
+  id: step_10_recommendation
+  goal: "Credit recommendation with decision matrix"
+
+  tasks:
+    - id: generate
+      tool: llm_job
+      inputs:
+        model: "anthropic/claude-opus-4-6"
+        max_tokens: 8000
+        canonical_metrics: "{{session.canonical_metrics}}"
+        deal_metadata: "{{session.deal_metadata}}"
+        historical_financials: "{{session.step_02_output}}"
+        obligor_overview: "{{session.step_03_output}}"
+        industry_peers: "{{session.step_04_output}}"
+        capital_structure: "{{session.step_05_output}}"
+        repayment_liquidity: "{{session.step_06_output}}"
+        proforma_stress: "{{session.step_07_output}}"
+        projections_dcf: "{{session.step_08_output}}"
+        risks_mitigants: "{{session.step_09_output}}"
+        rating_classification: "{{session.step_12_output}}"
+        prompt: |
+          You are a senior credit officer producing the final Credit Recommendation
+          section for {{session.ticker}}.
+
+          Synthesise all memo sections provided above to produce:
+
+          ## Recommendation: [APPROVE / APPROVE WITH CONDITIONS / DECLINE]
+
+          ### Executive Summary
+          3-5 bullet points summarising the credit thesis.
+
+          ### Decision Matrix
+          | Factor | Assessment | Weight | Score (1-5) |
+          |---|---|---|---|
+          [Include: Financial Strength, Business Quality, Management Quality,
+           Industry Position, Capital Structure, Repayment Capacity, Covenant Package]
+
+          ### Key Strengths (2-4 bullet points)
+
+          ### Key Concerns (2-4 bullet points, each with a proposed mitigant)
+
+          ### Recommended Terms
+          - Facility amount: ${{session.deal_metadata.facility_amount_mm}}MM
+          - Product: {{session.deal_metadata.facility_product}}
+          - Pricing: {{session.deal_metadata.facility_pricing_display}}
+          - Tenor: [recommend]
+          - Key covenants: [list with recommended levels]
+          - Conditions precedent: [list material CPs]
+
+          ### Monitoring Triggers
+          List 3-5 specific financial or operational triggers that should prompt
+          re-review of the credit.
+
+          Be direct. The recommendation must be unambiguous. If approving,
+          state the specific conditions clearly. If declining, explain the
+          primary reason in one sentence.
+      retry:
+        max_attempts: 2
+        backoff_seconds: 10
+
+    - id: store_output
+      tool: store
+      inputs:
+        key: step_10_output
+        value: "{{generate.output}}"

@@ -1,0 +1,65 @@
+# Pipeline 05 — Capital Structure
+# Fetches the 10-K debt note and generates the Capital Structure section
+# covering debt stack, maturity schedule, and interest rate risk.
+#
+# Requires: session.ticker, session.canonical_metrics, session.deal_metadata
+# Writes:   session.step_05_output
+
+pipeline:
+  id: step_05_capstruct
+  goal: "Capital structure, debt stack, maturity schedule, interest rate risk"
+
+  tasks:
+    - id: debt_note
+      tool: fetch_10k_sections
+      inputs:
+        ticker: "{{session.ticker}}"
+        sections: ["debt_note"]
+        max_chars_per_section: 25000
+
+    - id: search_hedging
+      tool: search_web
+      inputs:
+        query: "{{session.ticker}} interest rate swap derivative hedge 2025 annual report"
+        top_n: 3
+
+    - id: generate
+      tool: llm_job
+      inputs:
+        model: "anthropic/claude-haiku-4-5"
+        max_tokens: 4000
+        canonical_metrics: "{{session.canonical_metrics}}"
+        deal_metadata: "{{session.deal_metadata}}"
+        debt_note: "{{debt_note.output.debt_note}}"
+        hedging_search: "{{search_hedging.output}}"
+        prompt: |
+          You are a senior credit analyst producing the Capital Structure section
+          of a credit memo for {{session.ticker}}.
+
+          Using the canonical metrics, deal metadata, 10-K debt note, and
+          hedging search results provided above, write a comprehensive
+          Capital Structure section including:
+
+          1. **Debt Stack Table**: Instrument, Amount ($M), Maturity, Rate/Spread,
+             Security/Priority for each tranche (extract from debt_note)
+          2. **Proposed Facility**: How the new facility (from deal_metadata) fits
+             into the existing capital structure
+          3. **Maturity Schedule**: Year-by-year debt maturities table
+             (extract from debt_note if available)
+          4. **Interest Rate Risk**: Fixed vs floating split, hedging programs,
+             sensitivity analysis (extract from hedging_search and debt_note)
+          5. **Security and Covenants**: Collateral package, financial covenants
+             (from deal_metadata.covenants), negative covenants
+          6. **Liquidity**: Undrawn revolvers, cash on hand, liquidity headroom
+
+          Format debt stack and maturity schedule as markdown tables.
+          All figures in $M or %.
+      retry:
+        max_attempts: 2
+        backoff_seconds: 5
+
+    - id: store_output
+      tool: store
+      inputs:
+        key: step_05_output
+        value: "{{generate.output}}"

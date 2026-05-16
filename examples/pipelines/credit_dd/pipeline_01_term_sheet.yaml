@@ -1,0 +1,44 @@
+# Pipeline 01 — Term Sheet
+# Validates and stores deal metadata into session state.
+# This is always the first pipeline to run; all subsequent pipelines read
+# session.ticker, session.deal_metadata, and session.canonical_metrics.
+#
+# Invocation:
+#   trellis run pipeline_01_term_sheet.yaml --params '{
+#     "deal_metadata": {
+#       "ticker": "CVS",
+#       "borrower_name": "CVS Health Corporation",
+#       "facility_amount_mm": 1000,
+#       "facility_product": "Term Loan B",
+#       "facility_pricing": "SOFR+150",
+#       "facility_pricing_display": "SOFR + 150bps",
+#       "facility_spread_bps": 150,
+#       "facility_deal_type": "Leveraged",
+#       "facility_purpose": "General corporate purposes",
+#       "covenants": [
+#         {"id": "c1","name": "Gross Leverage","type": "gross_leverage","value": 5.5,"direction": "max"}
+#       ]
+#     }
+#   }'
+
+pipeline:
+  id: step_01_term_sheet
+  goal: "Validate and store deal term sheet into session"
+
+  params:
+    deal_metadata:
+      type: object
+      description: "Full deal metadata object (see schema in TRELLIS_IMPLEMENTATION_SPEC.md)"
+
+  tasks:
+    - id: store_deal
+      tool: store
+      inputs:
+        key: deal_metadata
+        value: "{{params.deal_metadata}}"
+
+    - id: store_ticker
+      tool: store
+      inputs:
+        key: ticker
+        value: "{{params.deal_metadata.ticker}}"

@@ -1,0 +1,26 @@
+# Pipeline 07 — Pro Forma / Stress
+# Deterministic computation only — no LLM call.
+# Reads canonical_metrics and facility terms from session and produces
+# the full pro-forma impact table + stress scenarios + covenant tests.
+#
+# Requires: session.canonical_metrics, session.deal_metadata
+# Writes:   session.step_07_output
+
+pipeline:
+  id: step_07_proforma
+  goal: "Deterministic pro forma impact and stress scenario computation"
+
+  tasks:
+    - id: compute
+      tool: compute
+      inputs:
+        function: compute_proforma_stress
+        canonical_metrics: "{{session.canonical_metrics}}"
+        facility: "{{session.deal_metadata}}"
+        covenants: "{{session.deal_metadata.covenants}}"
+
+    - id: store_output
+      tool: store
+      inputs:
+        key: step_07_output
+        value: "{{compute.output.markdown}}"

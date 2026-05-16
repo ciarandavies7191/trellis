@@ -1,0 +1,80 @@
+# Pipeline 12 — Rating & Classification
+# Maps the credit to rating agency methodology scorecards and OCC loan
+# classification categories.  Runs in parallel with pipeline_09_risks (Batch C).
+#
+# Requires: session.canonical_metrics, session.step_03_ratings + prior step outputs
+# Writes:   session.step_12_output
+
+pipeline:
+  id: step_12_rating
+  goal: "Rating agency methodology mapping and OCC loan classification"
+
+  tasks:
+    - id: generate
+      tool: llm_job
+      inputs:
+        model: "anthropic/claude-opus-4-6"
+        max_tokens: 4000
+        canonical_metrics: "{{session.canonical_metrics}}"
+        credit_ratings: "{{session.step_03_ratings}}"
+        obligor_overview: "{{session.step_03_output}}"
+        historical_financials: "{{session.step_02_output}}"
+        capital_structure: "{{session.step_05_output}}"
+        proforma_stress: "{{session.step_07_output}}"
+        repayment_liquidity: "{{session.step_06_output}}"
+        deal_metadata: "{{session.deal_metadata}}"
+        prompt: |
+          You are a senior credit analyst producing the Rating & Classification
+          section of a credit memo for {{session.ticker}}.
+
+          Using the financial data and memo sections provided above, produce:
+
+          ## Rating Agency Methodology Assessment
+
+          ### S&P Corporate Criteria Mapping
+          | Factor | S&P Category | Score/Assessment |
+          |---|---|---|
+          Include: Competitive Position, Profitability, Cash Flow/Leverage,
+          Financial Policy, Liquidity, Management/Governance
+
+          **Implied S&P Rating**: [derive from scorecard]
+          **Reported S&P Rating**: {{session.step_03_ratings.sp}} (if available)
+          **Variance explanation** (if any)
+
+          ### Moody's CFG Methodology Mapping
+          Apply Moody's Corporate Family Rating methodology:
+          | Factor | Weight | Assessment | Score |
+          |---|---|---|---|
+
+          **Implied Moody's CFR**: [derive from scorecard]
+          **Reported Moody's Rating**: {{session.step_03_ratings.moodys}} (if available)
+
+          ## OCC Loan Classification
+
+          Classify the proposed facility under OCC loan classification:
+          - **Pass** (1-3): Sound credits with no significant weaknesses
+          - **Special Mention** (4): Potential weaknesses deserving close attention
+          - **Substandard** (5): Well-defined weaknesses jeopardising repayment
+          - **Doubtful** (6): Collection in full is highly questionable
+
+          **Recommended OCC Classification**: [classification]
+          **Justification**: [2-3 sentences citing specific financial metrics
+          and structural factors supporting the classification]
+
+          ## Summary
+          | Dimension | Assessment |
+          |---|---|
+          | Market Rating (S&P) | {{session.step_03_ratings.sp}} |
+          | Market Rating (Moody's) | {{session.step_03_ratings.moodys}} |
+          | Implied Rating (Internal) | [your assessment] |
+          | OCC Classification | [your classification] |
+          | Internal Credit Grade | [1-10 scale, where 1=best, 10=worst] |
+      retry:
+        max_attempts: 2
+        backoff_seconds: 10
+
+    - id: store_output
+      tool: store
+      inputs:
+        key: step_12_output
+        value: "{{generate.output}}"

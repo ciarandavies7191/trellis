@@ -1,0 +1,53 @@
+# Pipeline 08 — Projections & DCF
+# LLM contributes expert-judgment parameters only; all math is deterministic.
+# For investment-grade credits (BBB-/Baa3 or better) the model returns
+# bypass=true and no projections are generated.
+#
+# Requires: session.canonical_metrics, session.step_03_ratings, session.step_04_output
+# Writes:   session.step_08_output
+
+pipeline:
+  id: step_08_projections
+  goal: "5-year projections and DCF valuation (non-IG credits only)"
+
+  tasks:
+    # LLM contributes expert-judgment parameters only
+    - id: set_assumptions
+      tool: llm_job
+      inputs:
+        model: "anthropic/claude-sonnet-4-6"
+        max_tokens: 600
+        canonical_metrics: "{{session.canonical_metrics}}"
+        credit_ratings: "{{session.step_03_ratings}}"
+        industry_context: "{{session.step_04_output}}"
+        prompt: |
+          You are a credit analyst setting DCF model assumptions for {{session.ticker}}.
+
+          IG GATE: If the credit rating is BBB- or higher (S&P/Fitch) or Baa3 or
+          higher (Moody's), return exactly this JSON and nothing else:
+          {"bypass": true, "reason": "Investment grade — projections not required"}
+
+          Otherwise, return a JSON assumptions object:
+          {
+            "bypass": false,
+            "beta_u": <float — 0.60 utilities | 0.80 industrials | 1.0 tech | 1.2 E&P>,
+            "terminal_growth_adj": <float — adjustment to 2.5% base, e.g. -0.005>,
+            "ebitda_margin_adj": <float — adjustment to historical margin, e.g. -0.01>,
+            "rev_growth_adj": <float — adjustment to historical CAGR, e.g. 0.0>,
+            "rationale": "<2 sentences on sector and company-specific factors>"
+          }
+
+          Return only valid JSON. No explanation outside the JSON object.
+
+    - id: run_model
+      tool: compute
+      inputs:
+        function: run_dcf_model
+        canonical_metrics: "{{session.canonical_metrics}}"
+        assumptions: "{{set_assumptions.output}}"
+
+    - id: store_output
+      tool: store
+      inputs:
+        key: step_08_output
+        value: "{{run_model.output.markdown}}"
