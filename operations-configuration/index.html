@@ -1594,12 +1594,17 @@
 <tr>
 <td><code>TRELLIS_SEARCH_PROVIDER</code></td>
 <td><code>duckduckgo</code></td>
-<td>Default search backend (<code>duckduckgo</code> or <code>serpapi</code>)</td>
+<td>Default search backend (<code>duckduckgo</code>, <code>serpapi</code>, or <code>tavily</code>)</td>
 </tr>
 <tr>
 <td><code>SERPAPI_API_KEY</code></td>
 <td>—</td>
 <td>SerpAPI key; setting this enables Google-backed search</td>
+</tr>
+<tr>
+<td><code>TAVILY_API_KEY</code></td>
+<td>—</td>
+<td>Tavily API key; setting this enables Tavily-backed search</td>
 </tr>
 <tr>
 <td><code>TRELLIS_SEARCH_TOP_N</code></td>
@@ -1618,7 +1623,7 @@
 </tr>
 </tbody>
 </table>
-<p>When <code>SERPAPI_API_KEY</code> is set and <code>provider</code> is <code>serpapi</code>, the <code>search_web</code> tool uses Google results via SerpAPI. Otherwise it falls back to DuckDuckGo HTML scraping (no key required).</p>
+<p>When <code>SERPAPI_API_KEY</code> is set and <code>provider</code> is <code>serpapi</code>, the <code>search_web</code> tool uses Google results via SerpAPI. When <code>TAVILY_API_KEY</code> is set and <code>provider</code> is <code>tavily</code>, it uses Tavily's search API instead — recommended when DuckDuckGo's HTML endpoint is being blocked by anti-bot gateways. Otherwise it falls back to DuckDuckGo HTML scraping (no key required).</p>
 <hr />
 <h2 id="sec-edgar">SEC EDGAR<a class="headerlink" href="#sec-edgar" title="Permanent link">&para;</a></h2>
 <table>
@@ -1844,6 +1849,11 @@
 <td><code>SERPAPI_API_KEY</code></td>
 <td>—</td>
 <td><code>search_web</code> SerpAPI backend</td>
+</tr>
+<tr>
+<td><code>TAVILY_API_KEY</code></td>
+<td>—</td>
+<td><code>search_web</code> Tavily backend</td>
 </tr>
 <tr>
 <td><code>TRELLIS_SEARCH_PROVIDER</code></td>
