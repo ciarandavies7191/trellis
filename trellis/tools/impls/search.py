@@ -3,11 +3,13 @@
 Backends:
 - DuckDuckGo HTML (default; no API key required)
 - SerpAPI (if SERPAPI_API_KEY is set), engine=google
+- Tavily (if TAVILY_API_KEY is set) — recommended alternative when DuckDuckGo's
+  HTML endpoint is blocked by anti-bot gateways.
 
 Inputs:
 - query: str | list[str]
 - top_n: int = 5
-- provider: str | None ("duckduckgo" | "serpapi")
+- provider: str | None ("duckduckgo" | "serpapi" | "tavily")
 - timeout: int = 15 (seconds)
 
 Output:
@@ -28,7 +30,10 @@ import urllib.request
 from ..base import BaseTool, ToolInput, ToolOutput
 
 
-_USER_AGENT = os.getenv("TRELLIS_USER_AGENT", "Trellis/0.1 (+https://example.com; contact@example.com)")
+_USER_AGENT = os.getenv(
+    "TRELLIS_USER_AGENT",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+)
 _DEFAULT_PROVIDER = os.getenv("TRELLIS_SEARCH_PROVIDER", "duckduckgo").strip().lower() or "duckduckgo"
 _DEFAULT_TOP_N = int(os.getenv("TRELLIS_SEARCH_TOP_N", "5"))
 _DEFAULT_TIMEOUT = int(os.getenv("TRELLIS_SEARCH_TIMEOUT", "15"))
@@ -39,8 +44,24 @@ def _http_get(url: str, *, timeout: int) -> bytes:
         url,
         headers={
             "User-Agent": _USER_AGENT,
-            "Accept": "text/html,application/json;q=0.9,*/*;q=0.8",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.9",
         },
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as resp:  # nosec - controlled URLs
+        return resp.read()
+
+
+def _http_post_json(url: str, payload: Dict[str, Any], *, timeout: int) -> bytes:
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "User-Agent": _USER_AGENT,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+        method="POST",
     )
     with urllib.request.urlopen(req, timeout=timeout) as resp:  # nosec - controlled URLs
         return resp.read()
@@ -67,6 +88,39 @@ def _search_serpapi(query: str, *, top_n: int, timeout: int) -> List[Dict[str, s
         title = item.get("title") or ""
         snippet = item.get("snippet") or item.get("snippet_highlighted_words", [""])[:1][0]
         link = item.get("link") or item.get("displayed_link") or ""
+        if link:
+            results.append({
+                "title": str(title),
+                "snippet": str(snippet),
+                "url": str(link),
+            })
+    return results
+
+
+_TAVILY_SEARCH_URL = "https://api.tavily.com/search"
+
+
+def _search_tavily(query: str, *, top_n: int, timeout: int) -> List[Dict[str, str]]:
+    api_key = os.getenv("TAVILY_API_KEY")
+    if not api_key:
+        return []
+    payload = {
+        "api_key": api_key,
+        "query": query,
+        "search_depth": "basic",
+        "include_answer": False,
+        "max_results": max(1, min(top_n, 20)),
+    }
+    try:
+        data = _http_post_json(_TAVILY_SEARCH_URL, payload, timeout=timeout)
+        obj = json.loads(data.decode("utf-8"))
+    except Exception:
+        return []
+    results: List[Dict[str, str]] = []
+    for item in obj.get("results", [])[:top_n]:
+        title = item.get("title") or ""
+        snippet = item.get("content") or ""
+        link = item.get("url") or ""
         if link:
             results.append({
                 "title": str(title),
@@ -166,6 +220,8 @@ class SearchWebTool(BaseTool):
             results: List[Dict[str, str]] = []
             if provider_lc == "serpapi" and os.getenv("SERPAPI_API_KEY"):
                 results = _search_serpapi(q, top_n=top_n, timeout=timeout)
+            elif provider_lc == "tavily" and os.getenv("TAVILY_API_KEY"):
+                results = _search_tavily(q, top_n=top_n, timeout=timeout)
             if not results:
                 results = _search_duckduckgo_html(q, top_n=top_n, timeout=timeout)
             for r in results:
@@ -178,7 +234,7 @@ class SearchWebTool(BaseTool):
         return {
             "query": ToolInput(name="query", description="Query string or list of queries", required=True),
             "top_n": ToolInput(name="top_n", description="Max results per query", required=False, default=_DEFAULT_TOP_N),
-            "provider": ToolInput(name="provider", description="Search provider (duckduckgo|serpapi)", required=False, default=_DEFAULT_PROVIDER),
+            "provider": ToolInput(name="provider", description="Search provider (duckduckgo|serpapi|tavily)", required=False, default=_DEFAULT_PROVIDER),
             "timeout": ToolInput(name="timeout", description="HTTP timeout (seconds)", required=False, default=_DEFAULT_TIMEOUT),
         }
 

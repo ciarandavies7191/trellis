@@ -1663,7 +1663,7 @@
 <td><a href="#search_web">search_web</a></td>
 <td><code>search_web</code></td>
 <td>No</td>
-<td>Web search via DuckDuckGo or SerpAPI</td>
+<td>Web search via DuckDuckGo, SerpAPI, or Tavily</td>
 </tr>
 <tr>
 <td><a href="#compute">compute</a></td>
@@ -2546,7 +2546,7 @@
 </code></pre></div>
 <hr />
 <h2 id="search_web">search_web<a class="headerlink" href="#search_web" title="Permanent link">&para;</a></h2>
-<p>Performs web search and returns titles, snippets, and URLs. Uses DuckDuckGo by default (no API key required). Falls back automatically to DuckDuckGo if SerpAPI is configured but fails.</p>
+<p>Performs web search and returns titles, snippets, and URLs. Uses DuckDuckGo by default (no API key required). Falls back automatically to DuckDuckGo if SerpAPI or Tavily is configured but fails. Tavily is recommended as an alternative to DuckDuckGo when its HTML endpoint is being blocked by anti-bot gateways.</p>
 <p><strong>Inputs</strong></p>
 <table>
 <thead>
@@ -2578,7 +2578,7 @@
 <td>str</td>
 <td>No</td>
 <td><code>duckduckgo</code></td>
-<td><code>duckduckgo</code> or <code>serpapi</code></td>
+<td><code>duckduckgo</code>, <code>serpapi</code>, or <code>tavily</code></td>
 </tr>
 <tr>
 <td><code>timeout</code></td>
@@ -2633,6 +2633,11 @@
 <td><code>SERPAPI_API_KEY</code></td>
 <td>—</td>
 <td>Required for SerpAPI provider</td>
+</tr>
+<tr>
+<td><code>TAVILY_API_KEY</code></td>
+<td>—</td>
+<td>Required for Tavily provider</td>
 </tr>
 </tbody>
 </table>

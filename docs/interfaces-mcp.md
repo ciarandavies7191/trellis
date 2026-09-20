@@ -50,7 +50,7 @@ The MCP server will expose each registered Trellis tool as an MCP tool, with:
   "tools": [
     {
       "name": "search_web",
-      "description": "Search the web using DuckDuckGo or SerpAPI.",
+      "description": "Search the web using DuckDuckGo, SerpAPI, or Tavily.",
       "inputSchema": {
         "type": "object",
         "properties": {

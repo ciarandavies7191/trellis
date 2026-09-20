@@ -193,6 +193,15 @@ class DocumentHandle:
             for p in self.pages
         )
 
+    def __iter__(self):
+        return iter(self.pages)
+
+    def __len__(self) -> int:
+        return len(self.pages)
+
+    def __getitem__(self, index: int) -> Page:
+        return self.pages[index]
+
 
 # ---------------------------------------------------------------------------
 # PageList  (produced by `select`)
@@ -250,6 +259,15 @@ class PageList:
             len(p.text) < threshold and p.image_bytes is not None
             for p in self.pages
         )
+
+    def __iter__(self):
+        return iter(self.pages)
+
+    def __len__(self) -> int:
+        return len(self.pages)
+
+    def __getitem__(self, index: int) -> Page:
+        return self.pages[index]
 
 
 # ---------------------------------------------------------------------------

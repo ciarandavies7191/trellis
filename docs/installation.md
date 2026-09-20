@@ -7,7 +7,7 @@ Trellis requires **Python 3.12 or later** and works on Linux, macOS, and Windows
 ## Install with pip
 
 ```bash
-pip install trellis
+pip install trellis-pipelines
 ```
 
 This installs the core runtime: the pipeline executor, tool registry, blackboard, and models. The CLI, API server, and MCP adapter are available as optional extras (see below).
@@ -19,13 +19,13 @@ This installs the core runtime: the pipeline executor, tool registry, blackboard
 [uv](https://github.com/astral-sh/uv) is a fast Python package manager that resolves and installs dependencies significantly faster than pip.
 
 ```bash
-uv pip install trellis
+uv pip install trellis-pipelines
 ```
 
 Or add it to a project:
 
 ```bash
-uv add trellis
+uv add trellis-pipelines
 ```
 
 ---
@@ -45,22 +45,22 @@ Install one or more extras with brackets:
 
 ```bash
 # CLI only
-pip install "trellis[cli]"
+pip install "trellis-pipelines[cli]"
 
 # API server
-pip install "trellis[api]"
+pip install "trellis-pipelines[api]"
 
 # CLI + API together
-pip install "trellis[cli,api]"
+pip install "trellis-pipelines[cli,api]"
 
 # Everything including dev tooling
-pip install "trellis[cli,api,dev]"
+pip install "trellis-pipelines[cli,api,dev]"
 ```
 
 With uv:
 
 ```bash
-uv pip install "trellis[cli,api]"
+uv pip install "trellis-pipelines[cli,api]"
 ```
 
 ---

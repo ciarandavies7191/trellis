@@ -7,7 +7,7 @@ Guided walkthroughs that show complete, runnable pipelines from install through 
 Install Trellis with the extras you need for these tutorials:
 
 ```bash
-pip install "trellis[cli]"
+pip install "trellis-pipelines[cli]"
 ```
 
 Most tutorials call an LLM. Set at least one provider key before running them:

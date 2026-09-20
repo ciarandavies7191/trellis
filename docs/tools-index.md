@@ -17,7 +17,7 @@ Built-in tool catalog and the async discovery/registration system that connects 
 | [load_schema](#load_schema) | `load_schema` | No | Resolve a field schema from file, dict, or document |
 | [llm_job](#llm_job) | `llm_job` | Yes | General LLM reasoning and generation |
 | [fetch_data](#fetch_data) | `fetch_data` | No | Fetch SEC EDGAR filings or HTTP URLs |
-| [search_web](#search_web) | `search_web` | No | Web search via DuckDuckGo or SerpAPI |
+| [search_web](#search_web) | `search_web` | No | Web search via DuckDuckGo, SerpAPI, or Tavily |
 | [compute](#compute) | `compute` | No | Invoke a registered deterministic function |
 | [store](#store) | `store` | No | Persist a value to the session blackboard |
 | [export](#export) | `export` | No | Write output to JSON, Markdown, CSV, or XLSX |
@@ -569,7 +569,7 @@ Fetches data from SEC EDGAR or a generic HTTP URL. In SEC mode, resolves the com
 
 ## search_web
 
-Performs web search and returns titles, snippets, and URLs. Uses DuckDuckGo by default (no API key required). Falls back automatically to DuckDuckGo if SerpAPI is configured but fails.
+Performs web search and returns titles, snippets, and URLs. Uses DuckDuckGo by default (no API key required). Falls back automatically to DuckDuckGo if SerpAPI or Tavily is configured but fails. Tavily is recommended as an alternative to DuckDuckGo when its HTML endpoint is being blocked by anti-bot gateways.
 
 **Inputs**
 
@@ -577,7 +577,7 @@ Performs web search and returns titles, snippets, and URLs. Uses DuckDuckGo by d
 |---|---|---|---|---|
 | `query` | str or list[str] | Yes | — | Search query or list of queries |
 | `top_n` | int | No | `5` | Max results per query |
-| `provider` | str | No | `duckduckgo` | `duckduckgo` or `serpapi` |
+| `provider` | str | No | `duckduckgo` | `duckduckgo`, `serpapi`, or `tavily` |
 | `timeout` | int | No | `15` | HTTP timeout in seconds |
 
 **Output**
@@ -607,6 +607,7 @@ When `query` is a list, all results are merged into a single flat list with the 
 | `TRELLIS_SEARCH_TOP_N` | `5` | Default result count |
 | `TRELLIS_SEARCH_TIMEOUT` | `15` | Default HTTP timeout |
 | `SERPAPI_API_KEY` | — | Required for SerpAPI provider |
+| `TAVILY_API_KEY` | — | Required for Tavily provider |
 
 **Minimal example**
 

@@ -116,13 +116,14 @@ PYMUPDF_RASTERIZE_DPI=300 trellis run pipelines/ingest_scanned.yaml --params '..
 
 | Variable | Default | Description |
 |---|---|---|
-| `TRELLIS_SEARCH_PROVIDER` | `duckduckgo` | Default search backend (`duckduckgo` or `serpapi`) |
+| `TRELLIS_SEARCH_PROVIDER` | `duckduckgo` | Default search backend (`duckduckgo`, `serpapi`, or `tavily`) |
 | `SERPAPI_API_KEY` | — | SerpAPI key; setting this enables Google-backed search |
+| `TAVILY_API_KEY` | — | Tavily API key; setting this enables Tavily-backed search |
 | `TRELLIS_SEARCH_TOP_N` | `5` | Default number of results returned per query |
 | `TRELLIS_SEARCH_TIMEOUT` | `15` | HTTP timeout in seconds for search requests |
 | `TRELLIS_USER_AGENT` | `Trellis/0.1 (...)` | `User-Agent` header sent with search requests |
 
-When `SERPAPI_API_KEY` is set and `provider` is `serpapi`, the `search_web` tool uses Google results via SerpAPI. Otherwise it falls back to DuckDuckGo HTML scraping (no key required).
+When `SERPAPI_API_KEY` is set and `provider` is `serpapi`, the `search_web` tool uses Google results via SerpAPI. When `TAVILY_API_KEY` is set and `provider` is `tavily`, it uses Tavily's search API instead — recommended when DuckDuckGo's HTML endpoint is being blocked by anti-bot gateways. Otherwise it falls back to DuckDuckGo HTML scraping (no key required).
 
 ---
 
@@ -221,6 +222,7 @@ result = asyncio.run(orch.run_pipeline(pipeline, params={"ticker": "AAPL", "peri
 | `EXTRACT_MIN_NATIVE_CHARS` | `80` | `ingest_document` OCR trigger |
 | `EXTRACT_IMAGE_COVERAGE_THRESHOLD` | `0.25` | `ingest_document` OCR trigger |
 | `SERPAPI_API_KEY` | — | `search_web` SerpAPI backend |
+| `TAVILY_API_KEY` | — | `search_web` Tavily backend |
 | `TRELLIS_SEARCH_PROVIDER` | `duckduckgo` | `search_web` default backend |
 | `TRELLIS_SEARCH_TOP_N` | `5` | `search_web` result count |
 | `TRELLIS_SEARCH_TIMEOUT` | `15` | `search_web` HTTP timeout (s) |

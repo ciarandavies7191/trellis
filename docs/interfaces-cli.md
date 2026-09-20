@@ -348,6 +348,7 @@ The CLI reads these variables from the environment or a `.env` file:
 | `TRELLIS_COMPILER_MODEL` | Model used by `trellis compile` (overrides `TRELLIS_LLM_MODEL`) |
 | `EXTRACT_TEXT_MODEL` | `extract_from_texts`, `extract_fields` |
 | `SERPAPI_API_KEY` | `search_web` with SerpAPI backend |
+| `TAVILY_API_KEY` | `search_web` with Tavily backend |
 
 ---
 

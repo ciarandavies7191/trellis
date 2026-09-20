@@ -1,3 +1,4 @@
+import json
 import urllib.request
 
 import pytest
@@ -19,7 +20,7 @@ class StubHTTPResponse:
         return False
 
 
-@pytest.mark.parametrize("provider", [None, "duckduckgo", "serpapi"])  # serpapi falls back without key
+@pytest.mark.parametrize("provider", [None, "duckduckgo", "serpapi", "tavily"])  # serpapi/tavily fall back without key
 def test_search_web_parses_duckduckgo_html(monkeypatch, provider):
     # Minimal DuckDuckGo HTML with two results; tool will cap by top_n
     sample_html = (
@@ -79,4 +80,42 @@ def test_search_web_accepts_string_query(monkeypatch):
     r0 = results[0]
     assert r0["title"].lower().startswith("ti")
     assert r0["url"].startswith("https://ti.com/")
+
+
+def test_search_web_uses_tavily_when_key_set(monkeypatch):
+    monkeypatch.setenv("TAVILY_API_KEY", "test-key")
+
+    tavily_payload = {
+        "results": [
+            {"title": "TI Investor Day 2023", "url": "https://ti.com/idp/2023", "content": "Investor day deck"},
+            {"title": "TI Investor Day 2024", "url": "https://ti.com/idp/2024", "content": "Slides and webcast"},
+        ]
+    }
+    sample_body = json.dumps(tavily_payload).encode("utf-8")
+
+    captured_requests = []
+
+    def fake_urlopen(req, timeout=15):
+        captured_requests.append(req)
+        return StubHTTPResponse(sample_body)
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+    tool = SearchWebTool()
+    out = tool.execute(query="ti investor day", top_n=1, provider="tavily", timeout=5)
+
+    assert out["status"] == "success"
+    results = out["results"]
+    assert len(results) == 1
+    assert results[0]["title"] == "TI Investor Day 2023"
+    assert results[0]["url"] == "https://ti.com/idp/2023"
+    assert results[0]["snippet"] == "Investor day deck"
+
+    assert len(captured_requests) == 1
+    req = captured_requests[0]
+    assert req.full_url == "https://api.tavily.com/search"
+    assert req.get_method() == "POST"
+    body = json.loads(req.data.decode("utf-8"))
+    assert body["api_key"] == "test-key"
+    assert body["query"] == "ti investor day"
 

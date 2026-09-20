@@ -5,7 +5,7 @@ This guide takes you from zero to a running pipeline in about five minutes. You 
 **Before you start:** make sure Trellis is installed with the `cli` and `api` extras.
 
 ```bash
-pip install "trellis[cli,api]"
+pip install "trellis-pipelines[cli,api]"
 ```
 
 ---

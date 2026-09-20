@@ -94,7 +94,7 @@ Document processing pipeline: `ingest_document → select → extract_from_texts
   - PDFs: digital-text, image-only, or mixed; `ingest_document` eagerly OCRs image-heavy pages; images/logos/photos are retained in `Page.image_bytes` for downstream table extraction
   - Excel: multi-sheet workbooks; `Page.sheet_name` is preserved; `extract_from_tables` can return multiple tables per sheet and includes `sheet_name` in results
 
-> Note: `search_web` defaults to DuckDuckGo HTML; set `SERPAPI_API_KEY` to enable Google via SerpAPI (`provider: serpapi`). See `examples/pipelines/web_search_investor_day.yaml` for a concrete raw web content pipeline using `search_web → llm_job → store`.
+> Note: `search_web` defaults to DuckDuckGo HTML; set `SERPAPI_API_KEY` to enable Google via SerpAPI (`provider: serpapi`), or set `TAVILY_API_KEY` to enable Tavily (`provider: tavily`) — recommended when DuckDuckGo's HTML endpoint is blocked by anti-bot gateways. See `examples/pipelines/web_search_investor_day.yaml` for a concrete raw web content pipeline using `search_web → llm_job → store`.
 
 ### Await Barrier
 
