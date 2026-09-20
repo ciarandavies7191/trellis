@@ -1,0 +1,28 @@
+pipeline:
+  id: retrieve_us_inflation_rates
+  goal: "Retrieve latest BBC news on U.S. inflation rates for today's date"
+  tasks:
+    - id: fetch_news
+      tool: search_web
+      inputs:
+        query: "BBC news U.S. inflation rates"
+        top_n: 5
+
+    - id: extract_inflation_rate
+      tool: llm_job
+      inputs:
+        prompt: |
+          From the following news search results, extract the latest U.S. inflation rate.
+          Return a JSON object with keys: rate (string, e.g. "3.2%"), period (e.g. "August 2026"),
+          source_url (the most relevant article URL), and summary (one sentence).
+
+          Search results:
+          {{fetch_news.output.results}}
+
+    - id: store_inflation_rate
+      tool: export
+      inputs:
+        content: "{{extract_inflation_rate.output}}"
+        format: json
+        filename: "inflation_rate_output"
+
